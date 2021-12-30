@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 
 public abstract class AbstractCommand implements Command {
     protected static final Logger logger = LogManager.getLogger();
-    //private static final String CONTENT_TYPE = "content-type";
     protected SessionRequestContent content = new SessionRequestContent();
     protected Router router;
 
