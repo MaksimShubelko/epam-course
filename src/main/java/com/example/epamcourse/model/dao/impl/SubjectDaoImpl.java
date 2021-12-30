@@ -19,7 +19,7 @@ public class SubjectDaoImpl implements SubjectDao {
     private static final Logger logger = LogManager.getLogger();
     private static SubjectDao instance = new SubjectDaoImpl();
 
-    private JdbcTemplates<Subject> jdbcTemplate;
+    private JdbcTemplate<Subject> jdbcTemplate;
 
     private static final String FIND_ALL_SUBJECTS = """
             SELECT subject_id, subject_type, mark, applicant_id
@@ -47,7 +47,7 @@ public class SubjectDaoImpl implements SubjectDao {
             """;
 
     private SubjectDaoImpl() {
-        this.jdbcTemplate = new JdbcTemplates<>(new SubjectResultSetHandler());
+        this.jdbcTemplate = new JdbcTemplate<>(new SubjectResultSetHandler());
     }
 
     @Override

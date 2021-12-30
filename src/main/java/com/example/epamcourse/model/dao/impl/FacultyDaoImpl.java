@@ -18,7 +18,7 @@ public class FacultyDaoImpl implements FacultyDao {
     private static final Logger logger = LogManager.getLogger();
     private static FacultyDao instance = new FacultyDaoImpl();
 
-    private JdbcTemplates<Faculty> jdbcTemplate;
+    private JdbcTemplate<Faculty> jdbcTemplate;
 
     private static final String FIND_ALL_FACULTIES = """
             SELECT faculty_id, mark_pass, faculty_name, 

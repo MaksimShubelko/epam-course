@@ -24,10 +24,10 @@ public class TokenDaoImpl {
             WHERE token_id = ?
             """;
 
-    private JdbcTemplates<AccountToken> jdbcTemplate;
+    private JdbcTemplate<AccountToken> jdbcTemplate;
 
     private TokenDaoImpl() {
-        jdbcTemplate = new JdbcTemplates<AccountToken>(new TokenResultSetHandler());
+        jdbcTemplate = new JdbcTemplate<AccountToken>(new TokenResultSetHandler());
     }
 
     public static TokenDaoImpl getInstance() {

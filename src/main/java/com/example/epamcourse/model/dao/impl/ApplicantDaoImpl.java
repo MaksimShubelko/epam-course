@@ -19,7 +19,7 @@ public class ApplicantDaoImpl implements ApplicantDao {
     private static final Logger logger = LogManager.getLogger();
     private static ApplicantDao instance = new ApplicantDaoImpl();
 
-    private JdbcTemplates<Applicant> jdbcTemplate;
+    private JdbcTemplate<Applicant> jdbcTemplate;
 
     private static final String FIND_APPLICANTS_BY_SURNAME = """
             SELECT applicant_id, firstname, lastname, surname, account_id, beneficiary
@@ -74,7 +74,7 @@ public class ApplicantDaoImpl implements ApplicantDao {
             """;
 
     private ApplicantDaoImpl() {
-        this.jdbcTemplate = new JdbcTemplates<>(new ApplicantResultSetHandler());
+        this.jdbcTemplate = new JdbcTemplate<>(new ApplicantResultSetHandler());
     }
 
 

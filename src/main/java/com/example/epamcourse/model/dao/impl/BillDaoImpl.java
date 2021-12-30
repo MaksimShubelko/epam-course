@@ -19,7 +19,7 @@ public class BillDaoImpl implements BillDao {
     private static final Logger logger = LogManager.getLogger();
     private static BillDao instance = new BillDaoImpl();
 
-    private JdbcTemplates<Bill> jdbcTemplate;
+    private JdbcTemplate<Bill> jdbcTemplate;
 
     private static final String FIND_ALL_BILLS = """
             SELECT bill_id, applicant_id, total_mark, faculty_id 
@@ -48,7 +48,7 @@ public class BillDaoImpl implements BillDao {
             """;
 
     private BillDaoImpl() {
-        this.jdbcTemplate = new JdbcTemplates<>(new BillResultSetHandler());
+        this.jdbcTemplate = new JdbcTemplate<>(new BillResultSetHandler());
     }
 
     @Override

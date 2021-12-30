@@ -19,7 +19,7 @@ public class FeedBackDaoImpl implements FeedBackDao {
     private static final Logger logger = LogManager.getLogger();
     private static FeedBackDao instance = new FeedBackDaoImpl();
 
-    private JdbcTemplates<FeedBack> jdbcTemplate;
+    private JdbcTemplate<FeedBack> jdbcTemplate;
 
     private static final String FIND_ALL_FEEDBACKS = """
             SELECT feedback_id, administrator_id, applicant_id, message
@@ -47,7 +47,7 @@ public class FeedBackDaoImpl implements FeedBackDao {
             """;
 
     private FeedBackDaoImpl() {
-        this.jdbcTemplate = new JdbcTemplates<>(new FeedBackResultSetHandler());
+        this.jdbcTemplate = new JdbcTemplate<>(new FeedBackResultSetHandler());
     }
 
     @Override

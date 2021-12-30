@@ -20,7 +20,7 @@ public class CertificateDaoImpl implements CertificateDao {
     private static final Logger logger = LogManager.getLogger();
     private static CertificateDao instance = new CertificateDaoImpl();
 
-    private JdbcTemplates<Certificate> jdbcTemplate;
+    private JdbcTemplate<Certificate> jdbcTemplate;
 
     private static final String FIND_ALL_CERTIFICATES = """
             SELECT certificate_id, total_mark
@@ -50,7 +50,7 @@ public class CertificateDaoImpl implements CertificateDao {
 
 
     private CertificateDaoImpl() {
-        this.jdbcTemplate = new JdbcTemplates<>(new CertificateResultSetHandler());
+        this.jdbcTemplate = new JdbcTemplate<>(new CertificateResultSetHandler());
     }
 
     @Override

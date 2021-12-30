@@ -23,7 +23,7 @@ public class AccountDaoImpl implements AccountDao {
     private static final Logger logger = LogManager.getLogger();
     private static AccountDao instance = new AccountDaoImpl();
 
-    private JdbcTemplates<Account> jdbcTemplate;
+    private JdbcTemplate<Account> jdbcTemplate;
 
     private static final String FIND_ACCOUNT_BY_ID = """
             SELECT account_id, login, password, role, email FROM accounts
@@ -72,7 +72,7 @@ public class AccountDaoImpl implements AccountDao {
             """;
 
     private AccountDaoImpl() {
-        this.jdbcTemplate = new JdbcTemplates<>(new AccountResultSetHandler());
+        this.jdbcTemplate = new JdbcTemplate<>(new AccountResultSetHandler());
     }
 
     @Override

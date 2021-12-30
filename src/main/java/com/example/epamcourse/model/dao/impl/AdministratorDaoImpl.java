@@ -19,7 +19,7 @@ public class AdministratorDaoImpl implements AdministratorDao {
     private static final Logger logger = LogManager.getLogger();
     private static AdministratorDao instance = new AdministratorDaoImpl();
 
-    private JdbcTemplates<Administrator> jdbcTemplate;
+    private JdbcTemplate<Administrator> jdbcTemplate;
 
     private static final String FIND_ALL_ADMINISTRATORS = """
             SELECT administrator_id, firstname, lastname, surname, account_id 
@@ -49,7 +49,7 @@ public class AdministratorDaoImpl implements AdministratorDao {
 
 
     private AdministratorDaoImpl() {
-        this.jdbcTemplate = new JdbcTemplates<>(new AdministratorResultSetHandler());
+        this.jdbcTemplate = new JdbcTemplate<>(new AdministratorResultSetHandler());
     }
 
     @Override
