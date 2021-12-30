@@ -13,7 +13,6 @@ import java.util.*;
 
 public class JdbcTemplates<T extends BaseEntity> {
     private static Logger logger = LogManager.getLogger();
-    private static final String COUNT_LINES_PARAMETER = "line";
     private static final String GENERATED_KEY = "GENERATED_KEY";
     private ResultSetHandler<T> resultSetHandler;
     private TransactionManager transactionManager;
