@@ -13,7 +13,6 @@ public class ApplicantResultSetHandler implements ResultSetHandler<Applicant> {
     public Applicant resultToObject(ResultSet resultSet) throws SQLException {
         Applicant applicant = new Applicant.ApplicantBuilder()
                 .setApplicantId(resultSet.getLong(APPLICANT_ID))
-                //.setTotalMarkSubject(resultSet.getInt(APPLICANT_SUBJECT_ID))
                 .setAccountId(resultSet.getLong(APPLICANT_ACCOUNT_ID))
                 .setBeneficiary(resultSet.getBoolean(IS_BENEFICIARY))
                 .setFirstname(resultSet.getString(APPLICANT_FIRST_NAME))

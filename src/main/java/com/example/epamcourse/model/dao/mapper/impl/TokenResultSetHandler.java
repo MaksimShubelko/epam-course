@@ -15,6 +15,7 @@ public class TokenResultSetHandler implements ResultSetHandler<AccountToken> {
         long accountId = resultSet.getLong(TOKEN_ACCOUNT_ID);
         String token = resultSet.getString(TOKEN);
         Timestamp creationDate = resultSet.getTimestamp(TOKEN_ID);
+
         return new AccountToken(accountId, token, creationDate.toLocalDateTime());
     }
 }
