@@ -10,7 +10,7 @@ import static com.example.epamcourse.model.entity.Account.Role.APPLICANT;
 
 
 public enum CommandType {
-    LOGIN(new LoginCommand(), APPLICANT),
+    LOGIN(new LoginCommand()),
     CREATE_ACCOUNT(new CreateAccountCommand());
 
     private Set<Account.Role> roles;
