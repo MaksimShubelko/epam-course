@@ -4,6 +4,7 @@ import com.example.epamcourse.model.dao.SubjectDao;
 import com.example.epamcourse.model.dao.mapper.impl.SubjectResultSetHandler;
 import com.example.epamcourse.model.entity.Subject;
 import com.example.epamcourse.model.exception.DaoException;
+import com.example.epamcourse.model.exception.TransactionException;
 import com.example.epamcourse.model.pool.ConnectionPool;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -52,14 +53,26 @@ public class SubjectDaoImpl implements SubjectDao {
 
     @Override
     public List<Subject> findAll() throws DaoException {
-        List<Subject> subjects = jdbcTemplate.executeSelectQuery(FIND_ALL_SUBJECTS);
+        List<Subject> subjects = null;
+        try {
+            subjects = jdbcTemplate.executeSelectQuery(FIND_ALL_SUBJECTS);
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when finding all subjects {}", e.getMessage());
+            throw new DaoException("Error when finding all subjects", e);
+        }
 
         return subjects;
     }
 
     @Override
     public Optional<Subject> findEntityById(Long id) throws DaoException {
-        Optional<Subject> subject = jdbcTemplate.executeSelectQueryForObject(FIND_SUBJECT_BY_ID, id);
+        Optional<Subject> subject = null;
+        try {
+            subject = jdbcTemplate.executeSelectQueryForObject(FIND_SUBJECT_BY_ID, id);
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when finding subject by id {} {}", id, e.getMessage());
+            throw new DaoException("Error when finding subject by id " + id, e);
+        }
 
         return subject;
     }
@@ -80,23 +93,34 @@ public class SubjectDaoImpl implements SubjectDao {
 
     @Override
     public Long add(Subject subject) throws DaoException {
-        long certificateId = jdbcTemplate.executeInsertQuery(ADD_SUBJECT,
-                subject.getSubjectType(),
-                subject.getMark(),
-                subject.getApplicantId());
+        long certificateId = 0;
+        try {
+            certificateId = jdbcTemplate.executeInsertQuery(ADD_SUBJECT,
+                    subject.getSubjectType(),
+                    subject.getMark(),
+                    subject.getApplicantId());
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when adding subject {}", e.getMessage());
+            throw new DaoException("Error when adding subject", e);
+        }
 
         return certificateId;
     }
 
     @Override
-    public boolean update(Subject subject, String hashPassword) throws DaoException {
-        jdbcTemplate.executeInsertQuery(UPDATE_SUBJECT,
-                subject.getSubjectType(),
-                subject.getApplicantId(),
-                subject.getMark(),
-                subject.getSubjectId());
+    public boolean update(Subject subject) throws DaoException {
+        try {
+            jdbcTemplate.executeInsertQuery(UPDATE_SUBJECT,
+                    subject.getSubjectType(),
+                    subject.getApplicantId(),
+                    subject.getMark(),
+                    subject.getSubjectId());
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when updating subject {}", e.getMessage());
+            throw new DaoException("Error when updating subject ", e);
+        }
 
         return true;
-
     }
+
 }

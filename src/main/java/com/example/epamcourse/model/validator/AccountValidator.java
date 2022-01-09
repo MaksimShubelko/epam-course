@@ -1,9 +1,9 @@
 package com.example.epamcourse.model.validator;
 
 public class AccountValidator {
-    private final static String LOGIN_REGEX = "[\\d\\w-]{3,25}@\\w{2,10}\\.\\w{2,5}";
-    private final static String PASSWORD_REGEX = "(?=.*\\d)(?=.*\\p{Lower})(?=.*\\p{Upper})[\\d\\p{Alpha}]{8,30}";
-    private final static String EMAIL_REGEX = "^([a-z0-9_-]+\\.)*[a-z0-9_-]+@[a-z0-9_-]+(\\.[a-z0-9_-]+)*\\.[a-z]{2,6}$";
+    private final static String LOGIN_REGEX = "^[a-z]+([-_]?[a-z0-9]+){0,2}$";
+        private final static String PASSWORD_REGEX = "(?=.*\\d)(?=.*\\p{Lower})(?=.*\\p{Upper})[\\d\\p{Alpha}]{8,30}";
+        private final static String EMAIL_REGEX = "^([a-z0-9_-]+\\.)*[a-z0-9_-]+@[a-z0-9_-]+(\\.[a-z0-9_-]+)*\\.[a-z]{2,6}$";
     private static AccountValidator instance = new AccountValidator();
 
     private AccountValidator() {

@@ -4,6 +4,7 @@ import com.example.epamcourse.model.dao.CertificateDao;
 import com.example.epamcourse.model.dao.mapper.impl.CertificateResultSetHandler;
 import com.example.epamcourse.model.entity.Certificate;
 import com.example.epamcourse.model.exception.DaoException;
+import com.example.epamcourse.model.exception.TransactionException;
 import com.example.epamcourse.model.pool.ConnectionPool;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -55,14 +56,26 @@ public class CertificateDaoImpl implements CertificateDao {
 
     @Override
     public List<Certificate> findAll() throws DaoException {
-        List<Certificate>  certificates = jdbcTemplate.executeSelectQuery(FIND_ALL_CERTIFICATES);
+        List<Certificate>  certificates = null;
+        try {
+            certificates = jdbcTemplate.executeSelectQuery(FIND_ALL_CERTIFICATES);
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when finding all certificates {}", e.getMessage());
+            throw new DaoException("Error when finding all certificates", e);
+        }
 
         return certificates;
     }
 
     @Override
     public Optional<Certificate> findEntityById(Long id) throws DaoException {
-        Optional<Certificate> certificate = jdbcTemplate.executeSelectQueryForObject(FIND_CERTIFICATE_BY_ID, id);
+        Optional<Certificate> certificate = null;
+        try {
+            certificate = jdbcTemplate.executeSelectQueryForObject(FIND_CERTIFICATE_BY_ID, id);
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when finding certificate by id {} {}", id, e.getMessage());
+            throw new DaoException("Error when finding certificate by id " + id, e);
+        }
 
         return certificate;
     }
@@ -74,8 +87,8 @@ public class CertificateDaoImpl implements CertificateDao {
             statement.setLong(1, id);
             statement.executeUpdate();
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Error when deleting certificate with Id {}. {}", id, e.getMessage());
-            throw new DaoException("Error when deleting certificate with Id " + id, e);
+            logger.log(Level.ERROR, "Error when deleting certificate with id {}. {}", id, e.getMessage());
+            throw new DaoException("Error when deleting certificate with id " + id, e);
         }
 
         return true;
@@ -83,19 +96,30 @@ public class CertificateDaoImpl implements CertificateDao {
 
     @Override
     public Long add(Certificate certificate) throws DaoException {
-        long certificateId = jdbcTemplate.executeInsertQuery(ADD_CERTIFICATE,
-                certificate.getTotalMark());
+        long certificateId = 0;
+        try {
+            certificateId = jdbcTemplate.executeInsertQuery(ADD_CERTIFICATE,
+                    certificate.getTotalMark());
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when adding certificate {}", e.getMessage());
+            throw new DaoException("Error when adding certificate", e);
+        }
 
         return certificateId;
     }
 
     @Override
-    public boolean update(Certificate certificate, String hashPassword) throws DaoException {
-        jdbcTemplate.executeInsertQuery(UPDATE_CERTIFICATE,
-                certificate.getTotalMark(),
-                certificate.getCertificateId());
+    public boolean update(Certificate certificate) throws DaoException {
+        try {
+            jdbcTemplate.executeInsertQuery(UPDATE_CERTIFICATE,
+                    certificate.getTotalMark(),
+                    certificate.getCertificateId());
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when updating certificate {}", e.getMessage());
+            throw new DaoException("Error when updating certificate", e);
+        }
 
         return true;
-
     }
+
 }

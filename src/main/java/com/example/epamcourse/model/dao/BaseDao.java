@@ -15,7 +15,7 @@ import java.util.Optional;
 public interface BaseDao <T extends BaseEntity> {
     Logger LOGGER = LogManager.getLogger();
 
-    List<T> findAll() throws DaoException;
+    List<T> findAll() throws DaoException, SQLException;
 
     Optional<T> findEntityById(Long id) throws DaoException;
 
@@ -23,7 +23,7 @@ public interface BaseDao <T extends BaseEntity> {
 
     Long add(T t) throws DaoException;
 
-    boolean update(T t, String hashPassword) throws DaoException;
+    boolean update(T t) throws DaoException;
 
     default void close(Statement statement) {
         try {

@@ -8,7 +8,6 @@
         <title>Index Page</title>
     </head>
     <body>
-        <c:redirect url="pages/login.jsp?command=CREATE_ACCOUNT"/>
-    <h1>dd</h1>
+        <c:redirect url="/controller?command=go_to_login_page"/>
     </body>
 </html>

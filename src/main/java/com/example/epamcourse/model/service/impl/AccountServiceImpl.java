@@ -5,12 +5,16 @@ import com.example.epamcourse.controller.command.RequestParameter;
 import com.example.epamcourse.controller.command.SessionAttribute;
 import com.example.epamcourse.controller.command.SessionRequestContent;
 import com.example.epamcourse.model.dao.AccountDao;
+import com.example.epamcourse.model.dao.AdministratorDao;
+import com.example.epamcourse.model.dao.ApplicantDao;
 import com.example.epamcourse.model.dao.impl.AccountDaoImpl;
-import com.example.epamcourse.model.dao.impl.TokenDaoImpl;
+import com.example.epamcourse.model.dao.impl.AdministratorDaoImpl;
+import com.example.epamcourse.model.dao.impl.ApplicantDaoImpl;
 import com.example.epamcourse.model.dao.impl.TransactionManager;
 import com.example.epamcourse.model.entity.Account;
 import com.example.epamcourse.model.exception.DaoException;
 import com.example.epamcourse.model.exception.ServiceException;
+import com.example.epamcourse.model.exception.TransactionException;
 import com.example.epamcourse.model.service.AccountService;
 import com.example.epamcourse.model.validator.AccountValidator;
 import com.example.epamcourse.util.HashGenerator;
@@ -20,7 +24,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Optional;
 
-import static com.example.epamcourse.controller.command.RequestAttribute.ACCOUNT;
 import static com.example.epamcourse.controller.command.RequestParameter.*;
 
 public class AccountServiceImpl implements AccountService {
@@ -29,6 +32,8 @@ public class AccountServiceImpl implements AccountService {
     private final AccountValidator validator = AccountValidator.getInstance();
     private final TransactionManager transactionManager = TransactionManager.getInstance();
     private final AccountDao accountDao = AccountDaoImpl.getInstance();
+    private final ApplicantDao applicantDao = ApplicantDaoImpl.getInstance();
+    private final AdministratorDao administratorDao = AdministratorDaoImpl.getInstance();
 
     private AccountServiceImpl() {
     }
@@ -49,7 +54,7 @@ public class AccountServiceImpl implements AccountService {
                 transactionManager.initTransaction();
                 account = accountDao.findAccountByLoginAndPassword(login, hashPassword);
                 transactionManager.commit();
-            } catch (DaoException e) {
+            } catch (DaoException | TransactionException e) {
                 logger.log(Level.ERROR, "Error when authenticating account with login {} and password {}. {}", login, password, e.getMessage());
                 throw new ServiceException("Error when authenticating account with login " + login + " and password " + password, e);
             } finally {
@@ -70,7 +75,8 @@ public class AccountServiceImpl implements AccountService {
             transactionManager.initTransaction();
             account = accountDao.findAccountByLogin(login);
             transactionManager.commit();
-        } catch (DaoException e) {
+        } catch (DaoException | TransactionException e) {
+            transactionManager.rollback();
             logger.log(Level.ERROR, "Error when finding account with login {}. {}.", login, e);
             throw new ServiceException("Error when finding account with login {}. {}" + login, e);
         } finally {
@@ -88,13 +94,12 @@ public class AccountServiceImpl implements AccountService {
         String email = content.getRequestParameter(RequestParameter.EMAIL);
         String passwordChecker = content.getRequestParameter(PASSWORD_CHECK);
         AccountValidator validator = AccountValidator.getInstance();
-
         if (!(validator.isLoginValid(login) &&
                 validator.isPasswordValid(password)) || isAccountLoginExist(content)) {
-            content.addSessionAttribute(SessionAttribute.SESSION_MESSAGE_ERROR, LocaleMessageKey.ACCOUNT_CREATION_ERROR);
+            content.addSessionAttribute(SessionAttribute.SESSION_MESSAGE, LocaleMessageKey.ACCOUNT_CREATION_ERROR);
         } else {
             if (!validator.passwordCheck(password, passwordChecker)) {
-                content.addSessionAttribute(SessionAttribute.SESSION_MESSAGE_ERROR, LocaleMessageKey.PASSWORD_DOUBLE_CHECK_ERROR);
+                content.addSessionAttribute(SessionAttribute.SESSION_MESSAGE, LocaleMessageKey.PASSWORD_DOUBLE_CHECK_ERROR);
             } else {
                 Account account = new Account.AccountBuilder()
                         .setLogin(login)
@@ -105,11 +110,10 @@ public class AccountServiceImpl implements AccountService {
                 try {
                     transactionManager.initTransaction();
                     long accountId = accountDao.add(account, hashPassword);
-                    account.setAccountId(accountId);
+                    //account.setAccountId(accountId);
                     transactionManager.commit();
-
                     isAccountAdded = true;
-                } catch (DaoException e) {
+                } catch (DaoException | TransactionException e) {
                     transactionManager.rollback();
                     logger.log(Level.ERROR, "Error when adding account with login {} and password {}, {}", login, password, e.getMessage());
                     throw new ServiceException("Error when adding account with login " + login + " and password " + password, e);
@@ -134,7 +138,7 @@ public class AccountServiceImpl implements AccountService {
                 accountDao.updateRole(account, role);
                 transactionManager.commit();
                 isRoleUpdated = true;
-        } catch (DaoException e) {
+        } catch (DaoException | TransactionException e) {
             transactionManager.rollback();
             logger.log(Level.ERROR, "Error when updating role, {}", e.getMessage());
             throw new ServiceException("Error when updating role", e);
@@ -161,7 +165,7 @@ public class AccountServiceImpl implements AccountService {
                 transactionManager.commit();
                 isPasswordUpdated = true;
             }
-        } catch (DaoException e) {
+        } catch (DaoException | TransactionException e) {
             transactionManager.rollback();
             logger.log(Level.ERROR, "Error when updating password, {}", e.getMessage());
             throw new ServiceException("Error when updating password", e);
@@ -170,6 +174,49 @@ public class AccountServiceImpl implements AccountService {
         }
 
         return isPasswordUpdated;
+    }
+
+    @Override
+    public Long getAccountIdByLogin(SessionRequestContent content) throws ServiceException {
+        String login = content.getRequestParameter(LOGIN);
+        Optional<Account> account;
+        Long accountId;
+        try {
+            transactionManager.initTransaction();
+            account = accountDao.findAccountByLogin(login);
+            accountId = account.orElseThrow(IllegalArgumentException::new).getAccountId();
+            transactionManager.commit();
+        } catch (DaoException | TransactionException e) {
+            transactionManager.rollback();
+            logger.log(Level.ERROR, "Error when finding account with login {}. {}.", login, e);
+            throw new ServiceException("Error when finding account with login {}. {}" + login, e);
+        } finally {
+            transactionManager.endTransaction();
+        }
+
+        return accountId;
+    }
+
+    @Override
+    public Account.Role getAccountRoleByLogin(SessionRequestContent content) throws ServiceException {
+        String login = content.getRequestParameter(LOGIN);
+        Account.Role role = null;
+        try {
+            transactionManager.initTransaction();
+            Optional<Account> accountOptional = accountDao.findAccountByLogin(login);
+            System.out.println(login);
+            Account account = accountOptional.orElseThrow(IllegalArgumentException::new);
+            role = account.getRole();
+            transactionManager.commit();
+        } catch (DaoException | TransactionException e) {
+            transactionManager.rollback();
+            logger.log(Level.ERROR, "Error when finding account role by login, {}", e.getMessage());
+            throw new ServiceException("Error when finding account role by login", e);
+        } finally {
+            transactionManager.endTransaction();
+        }
+
+        return role;
     }
 
     @Override
@@ -183,7 +230,7 @@ public class AccountServiceImpl implements AccountService {
                 accountDao.delete(accountId);
                 transactionManager.commit();
                 isAccountDeleted = true;
-        } catch (DaoException e) {
+        } catch (DaoException | TransactionException e) {
             transactionManager.rollback();
             logger.log(Level.ERROR, "Error when deleting account, {}", e.getMessage());
             throw new ServiceException("Error when deleting account", e);
@@ -197,6 +244,36 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public boolean finishRegistration(SessionRequestContent content) throws ServiceException {
         return false;
+    }
+
+    public boolean isPersonalInformationExist(SessionRequestContent content) throws ServiceException {
+        boolean isPersonalInformationPresent;
+        try {
+            transactionManager.initTransaction();
+            Account account = accountDao.findAccountByLogin(content.getRequestParameter(LOGIN))
+                    .orElseThrow(IllegalArgumentException::new);
+            Account.Role role = account.getRole();
+            System.out.println(role);
+            long accountId = account.getAccountId();
+            switch (role) {
+                case APPLICANT -> isPersonalInformationPresent = applicantDao
+                        .getApplicantByAccountId(accountId)
+                        .isPresent();
+                case ADMIN -> isPersonalInformationPresent = administratorDao
+                        .getAdministratorByAccountId(accountId)
+                        .isPresent();
+                default -> throw new UnsupportedOperationException();
+            }
+            transactionManager.commit();
+        } catch (DaoException | TransactionException e) {
+            transactionManager.rollback();
+            logger.log(Level.ERROR, "Error when finding personal information, {}", e.getMessage());
+            throw new ServiceException("Error when finding personal information", e);
+        } finally {
+            transactionManager.endTransaction();
+        }
+
+        return isPersonalInformationPresent;
     }
 
 }

@@ -9,7 +9,7 @@ import javax.servlet.http.HttpSessionListener;
 
 @WebListener
 public class SessionListener implements HttpSessionListener {
-    private static final String DEFAULT_LOCALE = "en_EN";
+    private static final String DEFAULT_LOCALE = "en_US";
     private static final int ROW_AMOUNT = 5;
 
     @Override

@@ -12,7 +12,7 @@ public class FacultyResultSetHandler implements ResultSetHandler<Faculty> {
     @Override
     public Faculty resultToObject(ResultSet resultSet) throws SQLException {
         Faculty faculty = new Faculty.FacultyBuilder()
-                .setFacultyId(resultSet.getLong(FACULTY_PLAN_ID))
+                .setFacultyId(resultSet.getLong(FACULTY_ID))
                 .setMarkPass(resultSet.getInt(MARK_PASS))
                 .setFacultyName(resultSet.getString(FACULTY_NAME))
                 .setRecruitmentPlanFree(resultSet.getInt(RECRUITMENT_PLAN_FREE))

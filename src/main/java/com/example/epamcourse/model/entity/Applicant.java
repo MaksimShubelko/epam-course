@@ -4,7 +4,7 @@ package com.example.epamcourse.model.entity;
 public class Applicant extends BaseEntity {
     private Long applicantId;
     private Long accountId;
-    private Boolean isBeneficiary;
+    private Boolean isBeneficiary = false;
     //private Integer totalMarkSubjects;
     private String firstname;
     private String lastname;
@@ -20,6 +20,13 @@ public class Applicant extends BaseEntity {
         this.firstname = firstname;
         this.lastname = lastname;
         this.surname = surname;
+    }
+
+    public Applicant(String firstname, String lastname, String surname, Long accountId) {
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.surname = surname;
+        this.accountId = accountId;
     }
 
     public Long getApplicantId() {

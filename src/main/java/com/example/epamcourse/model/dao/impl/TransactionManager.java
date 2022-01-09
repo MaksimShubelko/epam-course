@@ -1,6 +1,7 @@
 package com.example.epamcourse.model.dao.impl;
 
 import com.example.epamcourse.model.exception.DaoException;
+import com.example.epamcourse.model.exception.TransactionException;
 import com.example.epamcourse.model.pool.ConnectionPool;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -21,28 +22,28 @@ public class TransactionManager {
         return instance;
     }
 
-    public void initTransaction() throws DaoException {
+    public void initTransaction() throws TransactionException {
         if (threadConnection.get() == null) {
             try {
                 Connection connection = ConnectionPool.getInstance().getConnection();
                 if (connection == null) {
-                    throw new DaoException("This thread was interrupted and connection is null");
+                    throw new TransactionException("This thread was interrupted and connection is null");
                 }
                 threadConnection.set(connection);
                 connection.setAutoCommit(false);
             } catch (SQLException e) {
                 logger.log(Level.ERROR, "Failed to change disable autocommit. A database access error occurs", e);
-                throw new DaoException("Failed to change disable autocommit. A database access error occurs", e);
+                throw new TransactionException("Failed to change disable autocommit. A database access error occurs", e);
             }
         }
     }
 
-    public Connection getConnection() throws DaoException {
+    public Connection getConnection() throws TransactionException {
         Connection connection = threadConnection.get();
         if (connection != null) {
             return connection;
         } else {
-            throw new DaoException("Failed to get connection. The transaction not started.");
+            throw new TransactionException("Failed to get connection. The transaction not started.");
         }
     }
 
@@ -62,14 +63,14 @@ public class TransactionManager {
     }
 
 
-    public void commit() throws DaoException {
+    public void commit() throws TransactionException {
         Connection connection = threadConnection.get();
         if (connection != null) {
             try {
                 connection.commit();
             } catch (SQLException e) {
                 logger.log(Level.ERROR, "Failed to commit. A database access error occurs: ", e);
-                throw new DaoException("Failed to commit. A database access error occurs: ", e);
+                throw new TransactionException("Failed to commit. A database access error occurs: ", e);
             }
         }
     }

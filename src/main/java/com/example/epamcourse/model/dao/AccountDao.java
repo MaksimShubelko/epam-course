@@ -14,7 +14,13 @@ public interface AccountDao extends BaseDao<Account> {
 
     List<Map<String, Object>> getAccountRoleById(Long accountId) throws DaoException;
 
+    boolean update(Account account, String password) throws DaoException;
+
     boolean updateRole(Account account, int role) throws DaoException;
+
+/*
+    Long getAccountIdByLogin(String login) throws DaoException;
+*/
 
     Long add(Account account, String password) throws DaoException;
 }

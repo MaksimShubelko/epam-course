@@ -93,8 +93,6 @@ public class Faculty extends BaseEntity {
                 .append(markPass)
                 .append(", facultyName='")
                 .append(facultyName)
-                .append(", facultyName='")
-                .append(facultyName)
                 .append(", recruitmentPlanFree=")
                 .append(recruitmentPlanFree)
                 .append(", recruitmentPlanCanvas=")

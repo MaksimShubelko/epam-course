@@ -4,6 +4,7 @@ import com.example.epamcourse.model.dao.ApplicantDao;
 import com.example.epamcourse.model.dao.mapper.impl.ApplicantResultSetHandler;
 import com.example.epamcourse.model.entity.Applicant;
 import com.example.epamcourse.model.exception.DaoException;
+import com.example.epamcourse.model.exception.TransactionException;
 import com.example.epamcourse.model.pool.ConnectionPool;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -64,7 +65,7 @@ public class ApplicantDaoImpl implements ApplicantDao {
             """;
 
     private static final String ADD_APPLICANT = """
-            INSERT INTO administrators (firstname, lastname, surname, account_id, beneficiary, total_mark)
+            INSERT INTO applicants (firstname, lastname, surname, account_id, beneficiary)
             VALUE (?, ?, ?, ?, ?)
             """;
 
@@ -79,50 +80,92 @@ public class ApplicantDaoImpl implements ApplicantDao {
 
 
     @Override
-    public List<Applicant> findApplicantsBySurname(String surname) throws DaoException {
-        List<Applicant>  applicants = jdbcTemplate.executeSelectQuery(FIND_ALL_APPLICANTS);
+    public List<Applicant> findApplicantsBySurname(String surname) {
+        List<Applicant> applicants = null;
+        try {
+            applicants = jdbcTemplate.executeSelectQuery(FIND_ALL_APPLICANTS);
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when finding data");
+        }
 
         return applicants;
     }
 
     @Override
     public List<Applicant> findApplicantsInOrderByMarkInFaculty(String facultyName) throws DaoException {
-        List<Applicant>  applicants = jdbcTemplate.executeSelectQuery(FIND_APPLICANTS_IN_ORDER_BY_MARK_IN_FACULTY);
+        List<Applicant> applicants = null;
+        try {
+            applicants = jdbcTemplate.executeSelectQuery(FIND_APPLICANTS_IN_ORDER_BY_MARK_IN_FACULTY);
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when finding applicants in order by mark {}", e.getMessage());
+            throw new DaoException("Error when finding applicants in order by mark", e);
+        }
 
         return applicants;
     }
 
     @Override
     public Optional<Applicant> getApplicantByLogin(String login) throws DaoException {
-        Optional<Applicant> applicant = jdbcTemplate.executeSelectQueryForObject(FIND_APPLICANT_BY_ACCOUNT_LOGIN, login);
+        Optional<Applicant> applicant = null;
+        try {
+            applicant = jdbcTemplate.executeSelectQueryForObject(FIND_APPLICANT_BY_ACCOUNT_LOGIN, login);
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when getting applicant by login {} {}", login, e.getMessage());
+            throw new DaoException("Error when getting applicant by login " + login, e);
+        }
 
         return applicant;
     }
 
     @Override
     public Optional<Applicant> getApplicantByAccountId(Long id) throws DaoException {
-        Optional<Applicant> applicant = jdbcTemplate.executeSelectQueryForObject(FIND_APPLICANT_BY_ACCOUNT_LOGIN, id);
+        Optional<Applicant> applicant = null;
+        try {
+            applicant = jdbcTemplate.executeSelectQueryForObject(FIND_APPLICANT_BY_ACCOUNT_ID, id);
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when getting applicant by id {} {}", id, e.getMessage());
+            throw new DaoException("Error when getting applicant by account id " + id, e);
+        }
 
         return applicant;
     }
 
     @Override
     public List<Applicant> findApplicantsIsBeneficiary(String facultyName) throws DaoException {
-        List<Applicant>  applicants = jdbcTemplate.executeSelectQuery(FIND_APPLICANTS_BENEFICIARY_IN_FACULTY, facultyName);
+        List<Applicant> applicants = null;
+        try {
+            applicants = jdbcTemplate.executeSelectQuery(FIND_APPLICANTS_BENEFICIARY_IN_FACULTY, facultyName);
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when finding beneficiary applicants {}", e.getMessage());
+            throw new DaoException("Error when finding beneficiary applicants", e);
+        }
 
         return applicants;
     }
 
     @Override
     public List<Applicant> findAll() throws DaoException {
-        List<Applicant>  applicants = jdbcTemplate.executeSelectQuery(FIND_ALL_APPLICANTS);
+        List<Applicant> applicants = null;
+        try {
+            applicants = jdbcTemplate.executeSelectQuery(FIND_ALL_APPLICANTS);
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when finding all applicants {}", e.getMessage());
+            throw new DaoException("Error when finding all applicants", e);
+
+        }
 
         return applicants;
     }
 
     @Override
     public Optional<Applicant> findEntityById(Long id) throws DaoException {
-        Optional<Applicant> applicant = jdbcTemplate.executeSelectQueryForObject(FIND_APPLICANT_BY_ID, id);
+        Optional<Applicant> applicant = null;
+        try {
+            applicant = jdbcTemplate.executeSelectQueryForObject(FIND_APPLICANT_BY_ID, id);
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when finding applicant by id {} {}", id, e.getMessage());
+            throw new DaoException("Error when finding applicant by id " + id, e);
+        }
 
         return applicant;
     }
@@ -143,26 +186,41 @@ public class ApplicantDaoImpl implements ApplicantDao {
 
     @Override
     public Long add(Applicant applicant) throws DaoException {
-        long applicantId = jdbcTemplate.executeInsertQuery(ADD_APPLICANT,
-                applicant.getFirstname(),
-                applicant.getLastname(),
-                applicant.getLastname(),
-                applicant.getBeneficiary(),
-                applicant.getAccountId());
+        long applicantId = 0;
+        try {
+            applicantId = jdbcTemplate.executeInsertQuery(ADD_APPLICANT,
+                    applicant.getFirstname(),
+                    applicant.getLastname(),
+                    applicant.getSurname(),
+                    applicant.getAccountId(),
+                    applicant.getBeneficiary()
+            );
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when adding applicant {}", e.getMessage());
+            throw new DaoException("Error when adding applicant", e);
+        }
 
         return applicantId;
     }
 
     @Override
-    public boolean update(Applicant applicant, String hashPassword) throws DaoException {
-        jdbcTemplate.executeInsertQuery(UPDATE_APPLICANT,
-                applicant.getFirstname(),
-                applicant.getLastname(),
-                applicant.getLastname(),
-                applicant.getBeneficiary(),
-                applicant.getAccountId(),
-                applicant.getAccountId());
+    public boolean update(Applicant applicant) throws DaoException {
+        try {
+            jdbcTemplate.executeInsertQuery(UPDATE_APPLICANT,
+                    applicant.getFirstname(),
+                    applicant.getLastname(),
+                    applicant.getLastname(),
+                    applicant.getBeneficiary(),
+                    applicant.getAccountId());
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when updating applicant {}", e.getMessage());
+            throw new DaoException("Error when updating applicant", e);
+        }
 
         return true;
+    }
+
+    public static ApplicantDao getInstance() {
+        return instance;
     }
 }

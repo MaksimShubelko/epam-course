@@ -4,6 +4,7 @@ import com.example.epamcourse.model.dao.BillDao;
 import com.example.epamcourse.model.dao.mapper.impl.BillResultSetHandler;
 import com.example.epamcourse.model.entity.Bill;
 import com.example.epamcourse.model.exception.DaoException;
+import com.example.epamcourse.model.exception.TransactionException;
 import com.example.epamcourse.model.pool.ConnectionPool;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -53,14 +54,26 @@ public class BillDaoImpl implements BillDao {
 
     @Override
     public List<Bill> findAll() throws DaoException {
-        List<Bill>  bills = jdbcTemplate.executeSelectQuery(FIND_ALL_BILLS);
+        List<Bill> bills = null;
+        try {
+            bills = jdbcTemplate.executeSelectQuery(FIND_ALL_BILLS);
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when finding all bills {}", e.getMessage());
+            throw new DaoException("Error when finding all bills", e);
+        }
 
         return bills;
     }
 
     @Override
     public Optional<Bill> findEntityById(Long id) throws DaoException {
-        Optional<Bill> bill = jdbcTemplate.executeSelectQueryForObject(FIND_BILL_BY_ID, id);
+        Optional<Bill> bill = null;
+        try {
+            bill = jdbcTemplate.executeSelectQueryForObject(FIND_BILL_BY_ID, id);
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when finding bill by id {} {}", id, e.getMessage());
+            throw new DaoException("Error when finding bill by id " + id, e);
+        }
 
         return bill;
     }
@@ -72,29 +85,40 @@ public class BillDaoImpl implements BillDao {
             statement.setLong(1, id);
             statement.executeUpdate();
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Error when deleting bill with Id {}. {}", id, e.getMessage());
-            throw new DaoException("Error when deleting bill with Id " + id, e);
+            logger.log(Level.ERROR, "Error when deleting bill with id {} {}", id, e.getMessage());
+            throw new DaoException("Error when deleting bill with id " + id, e);
         }
         return false;
     }
 
     @Override
     public Long add(Bill bill) throws DaoException {
-        long billId = jdbcTemplate.executeInsertQuery(ADD_BILL,
-                bill.getApplicantId(),
-                bill.getFacultyId(),
-                bill.getTotalMark());
+        long billId = 0;
+        try {
+            billId = jdbcTemplate.executeInsertQuery(ADD_BILL,
+                    bill.getApplicantId(),
+                    bill.getFacultyId(),
+                    bill.getTotalMark());
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when adding all bills {}", e.getMessage());
+            throw new DaoException("Error when adding all bills", e);
+        }
 
         return billId;
     }
 
     @Override
-    public boolean update(Bill bill, String hashPassword) throws DaoException {
-        jdbcTemplate.executeInsertQuery(UPDATE_BILL,
-                bill.getApplicantId(),
-                bill.getFacultyId(),
-                bill.getTotalMark(),
-                bill.getBillId());
+    public boolean update(Bill bill) throws DaoException {
+        try {
+            jdbcTemplate.executeInsertQuery(UPDATE_BILL,
+                    bill.getApplicantId(),
+                    bill.getFacultyId(),
+                    bill.getTotalMark(),
+                    bill.getBillId());
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when updating all bills {}", e.getMessage());
+            throw new DaoException("Error when updating all bills", e);
+        }
 
         return true;
     }

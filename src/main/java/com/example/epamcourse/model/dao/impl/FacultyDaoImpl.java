@@ -1,8 +1,11 @@
 package com.example.epamcourse.model.dao.impl;
 
 import com.example.epamcourse.model.dao.FacultyDao;
+import com.example.epamcourse.model.dao.mapper.impl.CertificateResultSetHandler;
+import com.example.epamcourse.model.dao.mapper.impl.FacultyResultSetHandler;
 import com.example.epamcourse.model.entity.Faculty;
 import com.example.epamcourse.model.exception.DaoException;
+import com.example.epamcourse.model.exception.TransactionException;
 import com.example.epamcourse.model.pool.ConnectionPool;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -23,7 +26,7 @@ public class FacultyDaoImpl implements FacultyDao {
     private static final String FIND_ALL_FACULTIES = """
             SELECT faculty_id, mark_pass, faculty_name, 
             recruitment_plan_free, recruitment_plan_canvas
-            FROM certificates
+            FROM faculties
             """;
 
     private static final String FIND_FACULTY_BY_ID = """
@@ -55,23 +58,46 @@ public class FacultyDaoImpl implements FacultyDao {
             WHERE faculty_id = ?
             """;
 
+    private FacultyDaoImpl() {
+        this.jdbcTemplate = new JdbcTemplate<>(new FacultyResultSetHandler());
+    }
+
+
     @Override
     public List<Faculty> findAll() throws DaoException {
-        List<Faculty> faculties = jdbcTemplate.executeSelectQuery(FIND_ALL_FACULTIES);
+        List<Faculty> faculties = null;
+        try {
+            faculties = jdbcTemplate.executeSelectQuery(FIND_ALL_FACULTIES);
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when finding all faculties {}", e.getMessage());
+            throw new DaoException("Error when finding all faculties", e);
+        }
 
         return faculties;
     }
 
     @Override
     public Optional<Faculty> findFacultyByName(String name) throws DaoException {
-        Optional<Faculty> faculty = jdbcTemplate.executeSelectQueryForObject(FIND_FACULTY_BY_NAME, name);
+        Optional<Faculty> faculty = null;
+        try {
+            faculty = jdbcTemplate.executeSelectQueryForObject(FIND_FACULTY_BY_NAME, name);
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when finding faculty by name {} {}", name, e.getMessage());
+            throw new DaoException("Error when finding certificate by name " + name, e);
+        }
 
         return faculty;
     }
 
     @Override
     public Optional<Faculty> findEntityById(Long id) throws DaoException {
-        Optional<Faculty> faculty = jdbcTemplate.executeSelectQueryForObject(FIND_FACULTY_BY_ID, id);
+        Optional<Faculty> faculty = null;
+        try {
+            faculty = jdbcTemplate.executeSelectQueryForObject(FIND_FACULTY_BY_ID, id);
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when finding faculty by id {} {}", id, e.getMessage());
+            throw new DaoException("Error when finding faculty by id " + id, e);
+        }
 
         return faculty;
     }
@@ -92,23 +118,38 @@ public class FacultyDaoImpl implements FacultyDao {
 
     @Override
     public Long add(Faculty faculty) throws DaoException {
-        long facultyId = jdbcTemplate.executeInsertQuery(ADD_FACULTY,
-                faculty.getMarkPass(),
-                faculty.getFacultyName(),
-                faculty.getRecruitmentPlanFree(),
-                faculty.getRecruitmentPlanCanvas());
+        long facultyId = 0;
+        try {
+            facultyId = jdbcTemplate.executeInsertQuery(ADD_FACULTY,
+                    faculty.getMarkPass(),
+                    faculty.getFacultyName(),
+                    faculty.getRecruitmentPlanFree(),
+                    faculty.getRecruitmentPlanCanvas());
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when adding faculty {}", e.getMessage());
+            throw new DaoException("Error when adding faculty", e);
+        }
 
         return facultyId;
     }
 
     @Override
-    public boolean update(Faculty faculty, String hashPassword) throws DaoException {
-        jdbcTemplate.executeInsertQuery(UPDATE_FACULTY,
-                faculty.getMarkPass(),
-                faculty.getFacultyName(),
-                faculty.getRecruitmentPlanFree(),
-                faculty.getRecruitmentPlanCanvas());
+    public boolean update(Faculty faculty) throws DaoException {
+        try {
+            jdbcTemplate.executeInsertQuery(UPDATE_FACULTY,
+                    faculty.getMarkPass(),
+                    faculty.getFacultyName(),
+                    faculty.getRecruitmentPlanFree(),
+                    faculty.getRecruitmentPlanCanvas());
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when updating faculty {}", e.getMessage());
+            throw new DaoException("Error when updating faculty", e);
+        }
 
         return true;
+    }
+
+    public static FacultyDao getInstance() {
+        return instance;
     }
 }

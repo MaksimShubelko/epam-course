@@ -5,16 +5,22 @@
          version="5.0">
 
     <welcome-file-list>
-        <welcome-file>login.jsp</welcome-file>
+        <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
 
     <error-page>
         <exception-type>java.lang.Throwable</exception-type>
-        <location>/errors/exception_error.jsp</location>
+        <location>/error/exception_error.jsp</location>
     </error-page>
 
     <error-page>
         <error-code>404</error-code>
-        <location>/errors/error_404.jsp</location>
+        <location>/error/error_404.jsp</location>
     </error-page>
+
+    <context-param>
+        <param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
+        <param-value>com.example.epamcourse.resources.pagecontent</param-value>
+    </context-param>
+
 </web-app>

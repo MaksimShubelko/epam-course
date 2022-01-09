@@ -15,6 +15,13 @@ public class Administrator extends BaseEntity {
         this.account_id = account_id;
     }
 
+    public Administrator(String firstname, String lastname, String surname, Long account_id) {
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.surname = surname;
+        this.account_id = account_id;
+    }
+
     public Long getAdministratorId() {
         return administratorId;
     }

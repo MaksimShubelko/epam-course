@@ -1,3 +1,4 @@
+/*
 package com.example.epamcourse.model.dao.impl;
 
 import com.example.epamcourse.model.dao.mapper.impl.TokenResultSetHandler;
@@ -47,3 +48,4 @@ public class TokenDaoImpl {
         return tokenId;
     }
 }
+*/

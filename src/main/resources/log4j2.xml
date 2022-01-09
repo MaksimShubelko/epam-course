@@ -1,32 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status = "info">
+<Configuration status="warn" name="Introduction" packages="">
     <Properties>
-        <property name="LOG_DIR">logs</property>
-        <property name="ARCHIVE_LOG_DIR">${LOG_DIR}/archive</property>
-        <property name ="pattern_console">
-            %d{HH:mm:ss.SSS} %-5level %logger{5} - %msg%n</property>
-        <property name="pattern_file">%d{yy-MM-dd HH:mm.SSS} [%t] %-5level %logger{5} - %msg%n</property>
+        <property name="pattern_console">%d{yyyy-MM-dd HH:mm:ss.SSS} [%-5p] - %m%n</property>
+        <property name="pattern_file">%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] [%-5level] %logger{5}- %msg%n</property>
     </Properties>
-
     <Appenders>
-        <Console name = "Console" target = "SYSTEM_OUT">
-            <PatternLayout pattern = "${pattern_console}"/>
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <PatternLayout pattern="${pattern_console}"/>
         </Console>
-        <RollingFile name="FileRolling" fileName="${LOG_DIR}/log_roll.txt"
-                     filePattern = "${ARCHIVE_LOG_DIR}/${date:yyyy-MM-dd}/%d{yyyy-MM-dd}_%i.txt">
-            <PatternLayout pattern ="${pattern_file}"/>
+        <RollingFile name="RollingFile" fileName="C:\Program Files\Apache Software Foundation\Tomcat 7.0\logs\log.log"
+                     filePattern="logs/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i.log.gz">
+            <PatternLayout>
+                <Pattern>${pattern_file}</Pattern>
+            </PatternLayout>
             <Policies>
-                <TimeBasedTriggeringPolicy modulate = "true"/>
-                <SizeBasedTriggeringPolicy size="50 KB"/>
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="100 KB"/>
             </Policies>
-            <DefaultRolloverStrategy max = "10"/>
+            <DefaultRolloverStrategy max="10"/>
         </RollingFile>
     </Appenders>
-
     <Loggers>
-        <Root level = "debug">
-            <AppenderRef ref="FileRolling"/>
-            <AppenderRef ref="Console" level = "trace"/>
+        <Root level="debug">
+            <AppenderRef ref="RollingFile"/>
+            <AppenderRef ref="STDOUT"/>
         </Root>
     </Loggers>
 </Configuration>

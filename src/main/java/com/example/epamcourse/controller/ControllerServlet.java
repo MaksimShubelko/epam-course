@@ -1,9 +1,7 @@
 package com.example.epamcourse.controller;
 
 import com.example.epamcourse.controller.command.*;
-import com.example.epamcourse.controller.command.impl.LoginCommand;
 import com.example.epamcourse.model.exception.ControllerException;
-import com.example.epamcourse.model.exception.DaoException;
 import com.example.epamcourse.model.exception.ServiceException;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -18,22 +16,23 @@ import java.io.IOException;
 
 import static com.example.epamcourse.controller.command.SessionAttribute.EXCEPTION;
 
-@WebServlet(name = "ControllerServlet", value = "/controller")
+@WebServlet(urlPatterns = {"/controller"})
 public class ControllerServlet extends HttpServlet {
-    private static Logger logger = LogManager.getLogger();
+    private static final Logger logger = LogManager.getLogger();
 
-
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         processRequest(request, response);
     }
 
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         processRequest(request, response);
     }
 
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String stringCommand = request.getParameter(RequestParameter.COMMAND);
-        Command command = CommandProvider.defineCommand(stringCommand).get();
+        Command command = CommandProvider.defineCommand(stringCommand).orElseThrow(IllegalArgumentException::new);
         try {
             Router router = command.execute(request);
             switch (router.getType()) {
@@ -44,7 +43,7 @@ public class ControllerServlet extends HttpServlet {
                     response.sendRedirect(request.getContextPath() + PagePath.ERROR_404);
                 }
             }
-        } catch (IOException | DaoException | ServletException | ControllerException | ServiceException e) {
+        } catch (ServletException | IOException | ServiceException e) {
             logger.log(Level.ERROR, "Error when executing command {} ", stringCommand);
             request.getSession().setAttribute(EXCEPTION, e);
             response.sendRedirect(request.getContextPath() + PagePath.EXCEPTION_ERROR_REDIRECT);

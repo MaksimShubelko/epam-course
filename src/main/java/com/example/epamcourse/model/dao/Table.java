@@ -52,7 +52,7 @@ public final class Table {
     //table faculties
     public static final String FACULTY = "faculty";
     //columns
-    public static final String FACULTY_PLAN_ID = "plan_id";
+    public static final String FACULTY_ID = "faculty_id";
     public static final String FACULTY_NAME = "faculty_name";
     public static final String MARK_PASS = "mark_pass";
     public static final String RECRUITMENT_PLAN_FREE = "recruitment_plan_free";

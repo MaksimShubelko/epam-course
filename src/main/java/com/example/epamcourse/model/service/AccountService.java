@@ -17,7 +17,11 @@ public interface AccountService {
 
     boolean updatePassword(SessionRequestContent content) throws ServiceException;
 
+    Long getAccountIdByLogin(SessionRequestContent content) throws ServiceException;
 
+    Account.Role getAccountRoleByLogin(SessionRequestContent content) throws ServiceException;
+
+    boolean isPersonalInformationExist(SessionRequestContent content) throws ServiceException;
 
     boolean deleteAccount(SessionRequestContent content) throws ServiceException;
 

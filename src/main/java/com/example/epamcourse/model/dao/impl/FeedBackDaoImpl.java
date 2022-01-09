@@ -4,6 +4,7 @@ import com.example.epamcourse.model.dao.FeedBackDao;
 import com.example.epamcourse.model.dao.mapper.impl.FeedBackResultSetHandler;
 import com.example.epamcourse.model.entity.FeedBack;
 import com.example.epamcourse.model.exception.DaoException;
+import com.example.epamcourse.model.exception.TransactionException;
 import com.example.epamcourse.model.pool.ConnectionPool;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -52,14 +53,25 @@ public class FeedBackDaoImpl implements FeedBackDao {
 
     @Override
     public List<FeedBack> findAll() throws DaoException {
-        List<FeedBack>  feedBacks = jdbcTemplate.executeSelectQuery(FIND_ALL_FEEDBACKS);
+        List<FeedBack> feedBacks = null;
+        try {
+            feedBacks = jdbcTemplate.executeSelectQuery(FIND_ALL_FEEDBACKS);
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when finding all feedbacks {}", e.getMessage());
+            throw new DaoException("Error when finding all feedbacks {}", e);
+        }
 
         return feedBacks;
     }
 
     @Override
     public Optional<FeedBack> findEntityById(Long id) throws DaoException {
-        Optional<FeedBack> feedBack = jdbcTemplate.executeSelectQueryForObject(FIND_FEEDBACK_BY_ID, id);
+        Optional<FeedBack> feedBack = null;
+        try {
+            feedBack = jdbcTemplate.executeSelectQueryForObject(FIND_FEEDBACK_BY_ID, id);
+        } catch (TransactionException e) {
+            e.printStackTrace();
+        }
 
         return feedBack;
     }
@@ -80,22 +92,33 @@ public class FeedBackDaoImpl implements FeedBackDao {
 
     @Override
     public Long add(FeedBack feedBack) throws DaoException {
-        long certificateId = jdbcTemplate.executeInsertQuery(ADD_FEEDBACK,
-                feedBack.getAdministratorId(),
-                feedBack.getApplicantId(),
-                feedBack.getMessage());
+        long certificateId = 0;
+        try {
+            certificateId = jdbcTemplate.executeInsertQuery(ADD_FEEDBACK,
+                    feedBack.getAdministratorId(),
+                    feedBack.getApplicantId(),
+                    feedBack.getMessage());
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when adding feedback {}", e.getMessage());
+            throw new DaoException("Error when adding feedback ", e);
+        }
 
         return certificateId;
     }
 
     @Override
-    public boolean update(FeedBack feedBack, String hashPassword) throws DaoException {
-        jdbcTemplate.executeInsertQuery(UPDATE_FEEDBACK,
-                feedBack.getAdministratorId(),
-                feedBack.getApplicantId(),
-                feedBack.getMessage());
+    public boolean update(FeedBack feedBack) throws DaoException {
+        try {
+            jdbcTemplate.executeInsertQuery(UPDATE_FEEDBACK,
+                    feedBack.getAdministratorId(),
+                    feedBack.getApplicantId(),
+                    feedBack.getMessage());
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when updating feedback {}", e.getMessage());
+            throw new DaoException("Error when updating feedback ", e);
+        }
 
         return true;
-
     }
+
 }
