@@ -16,8 +16,30 @@ public enum CommandType {
     LOCALE_COMMAND(new LocaleCommand()),
     APPLICANT_ADD_SECURE_INFORMATION(new AddApplicantSecureInformationCommand()),
     ADMINISTRATOR_ADD_SECURE_INFORMATION(new AddAdministratorSecureInformationCommand()),
-    GO_TO_MAIN_PAGE_ADMINISTRATOR(new GoToMainPageAdministratorCommand()),
-    GO_TO_MAIN_PAGE_APPLICANT(new GoToMainPageApplicantCommand());
+    GO_TO_MAIN_PAGE_APPLICANT(new GoToMainPageApplicantCommand()),
+    GO_TO_ADD_REQUEST_PAGE(new GoToAddRequestPageCommand()),
+    ADD_REQUEST_COMMAND(new AddRequestCommand()),
+    SHOW_REQUESTS_COMMAND(new ShowRequestsCommand()),
+    GO_TO_EDIT_APPLICANT_DATA(new GoToEditApplicantDataCommand()),
+    LOGOUT(new LogoutCommand()),
+    UPDATE_APPLICANT_DATA(new UpdateApplicantDataCommand()),
+    GO_TO_EDIT_FACULTY(new GoToEditFacultyPageCommand()),
+    EDIT_FACULTY(new EditFacultyCommand()),
+    DELETE_FACULTY(new DeleteFacultyCommand()),
+    GO_TO_ADD_FACULTY_PAGE(new GoToAddFacultyPageCommand()),
+    ADD_FACULTY(new AddFacultyCommand()),
+    SHOW_ACCOUNTS(new ShowAccountsCommand()),
+    CHANGE_ACCOUNT_STATUS(new ChangeAccountStatusCommand()),
+    DELETE_ACCOUNT(new DeleteAccountCommand()),
+    GO_TO_ADD_ADMIN_ACCOUNT(new GoToAddingAdminAccountPageCommand()),
+    ADD_ADMIN_ACCOUNT(new AddAdminAccountCommand()),
+    SHOW_FACULTIES(new ShowFacultiesCommand()),
+    CONFIRM_EMAIL(new SendEmailCodeCommand()),
+    GO_TO_SHOW_APPLICANTS_PAGE(new GoToShowApplicantsPageCommand()),
+    GO_TO_SENDER_PAGE(new GoToSenderPageCommand()),
+    SEND_MESSAGE(new SendMessageCommand()),
+    GO_TO_CONFIRM_EMAIL_PAGE(new SendMessageCommand()),
+    SHOW_APPLICANTS(new ShowApplicantsCommand());
 
     private Set<Account.Role> roles;
     private Command command;

@@ -13,7 +13,7 @@ public class CertificateResultSetHandler implements ResultSetHandler<Certificate
     @Override
     public Certificate resultToObject(ResultSet resultSet) throws SQLException {
         Certificate certificate = new Certificate(resultSet.getLong(CERTIFICATE_ID),
-                resultSet.getInt(CERTIFICATE_TOTAL_MARK));
+                resultSet.getDouble(CERTIFICATE_TOTAL_MARK));
 
         return certificate;
     }

@@ -57,7 +57,7 @@ public class FeedBackDaoImpl implements FeedBackDao {
         try {
             feedBacks = jdbcTemplate.executeSelectQuery(FIND_ALL_FEEDBACKS);
         } catch (TransactionException e) {
-            logger.log(Level.ERROR, "Error when finding all feedbacks {}", e.getMessage());
+            logger.log(Level.ERROR, "Error when finding all feedbacks", e);
             throw new DaoException("Error when finding all feedbacks {}", e);
         }
 
@@ -83,7 +83,7 @@ public class FeedBackDaoImpl implements FeedBackDao {
             statement.setLong(1, id);
             statement.executeUpdate();
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Error when deleting feedback with Id {}. {}", id, e.getMessage());
+            logger.log(Level.ERROR, "Error when deleting feedback with Id {}. {}", id, e);
             throw new DaoException("Error when deleting feedback with Id " + id, e);
         }
 
@@ -99,7 +99,7 @@ public class FeedBackDaoImpl implements FeedBackDao {
                     feedBack.getApplicantId(),
                     feedBack.getMessage());
         } catch (TransactionException e) {
-            logger.log(Level.ERROR, "Error when adding feedback {}", e.getMessage());
+            logger.log(Level.ERROR, "Error when adding feedback", e);
             throw new DaoException("Error when adding feedback ", e);
         }
 
@@ -114,7 +114,7 @@ public class FeedBackDaoImpl implements FeedBackDao {
                     feedBack.getApplicantId(),
                     feedBack.getMessage());
         } catch (TransactionException e) {
-            logger.log(Level.ERROR, "Error when updating feedback {}", e.getMessage());
+            logger.log(Level.ERROR, "Error when updating feedback", e);
             throw new DaoException("Error when updating feedback ", e);
         }
 

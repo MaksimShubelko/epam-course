@@ -35,7 +35,7 @@ public class JdbcTemplate<T extends BaseEntity> {
                 list.add(entity);
             }
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Error when finding all elements. {}", e.getMessage());
+            logger.log(Level.ERROR, "Error when finding all elements.");
         }
 
         return list;
@@ -74,7 +74,7 @@ public class JdbcTemplate<T extends BaseEntity> {
             }
 
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Database error. Elements wasn't extracted. {}", e.getMessage());
+            logger.log(Level.ERROR, "Database error. Elements wasn't extracted.");
         }
         return extractedValues;
     }
@@ -96,7 +96,7 @@ public class JdbcTemplate<T extends BaseEntity> {
                 extractedValues.add(rowValues);
             }
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Database error. Elements wasn't extracted. {}", e.getMessage());
+            logger.log(Level.ERROR, "Database error. Elements wasn't extracted.");
         }
         return extractedValues;
     }
@@ -109,7 +109,7 @@ public class JdbcTemplate<T extends BaseEntity> {
             setParametersInPreparedStatement(statement, parameters);
             statement.executeUpdate();
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Element isn't updated or deleted. {}", e.getMessage());
+            logger.log(Level.ERROR, "Element isn't updated or deleted.");
         }
 
         return true;
@@ -129,30 +129,26 @@ public class JdbcTemplate<T extends BaseEntity> {
                 logger.log(Level.DEBUG, "Generated id is {}", generatedId);
             }
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Error when insert element. {}", e.getMessage());
+            logger.log(Level.ERROR, "Error when insert element.");
         }
 
         return generatedId;
     }
 
-    public long executeSelectCalculation(String sqlQuery, Object... parameters) throws
-            DaoException, TransactionException {
-        long totalValue = 0;
+    public long executeSelectCalculation(String sqlQuery, Object... parameters) throws TransactionException {
+        long length = 0;
 
         Connection connection = transactionManager.getConnection();
         try (PreparedStatement statement = connection.prepareStatement(sqlQuery)) {
             setParametersInPreparedStatement(statement, parameters);
-
             ResultSet resultSet = statement.executeQuery();
+            length = resultSet.getFetchSize();
 
-            if (resultSet.next()) {
-                totalValue = resultSet.getLong(Table.CURRENT_VALUE);
-            }
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Error when finding value. {}", e.getMessage());
+            logger.log(Level.ERROR, "Error when finding value.");
         }
 
-        return totalValue;
+        return length;
     }
 
     public void insertBatch(String sql, List<Object[]> batchArguments) throws
@@ -165,7 +161,7 @@ public class JdbcTemplate<T extends BaseEntity> {
             }
             statement.executeBatch();
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Failed to insert batch data. A database access error occurs {}", e.getMessage());
+            logger.log(Level.ERROR, "Failed to insert batch data. A database access error occurs", e);
         }
     }
 

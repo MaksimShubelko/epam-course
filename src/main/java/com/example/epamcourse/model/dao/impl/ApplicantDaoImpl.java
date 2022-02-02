@@ -28,25 +28,50 @@ public class ApplicantDaoImpl implements ApplicantDao {
             """;
 
     private static final String FIND_APPLICANTS_IN_ORDER_BY_MARK_IN_FACULTY = """
-            SELECT applicants.applicant_id, surname, firstname, lastname, account_id, beneficiary FROM applicants 
+            SELECT applicants.applicant_id, surname, firstname, lastname, account_id, beneficiary, certificate_id,
+            (SELECT SUM(mark) FROM subjects WHERE applicant_id = applicants.applicant_id) as subjects_mark,
+            (SELECT middle_mark FROM certificates WHERE certificate_id = applicants.certificate_id) as certificate_mark
+            FROM applicants
             INNER JOIN bills b on applicants.applicant_id = b.applicant_id
-            INNER JOIN faculties f on f.faculty_id = b.faculty_id AND f.faculty_name = ? ORDER BY b.total_mark DESC
+            INNER JOIN faculties f on f.faculty_id = b.faculty_id AND f.faculty_id = ?
+            ORDER BY beneficiary DESC, subjects_mark + certificate_mark * 10 DESC
+            LIMIT ?, ?
+            """;
+
+    private static final String FIND_APPLICANTS_BY_SURNAME_IN_ORDER_BY_MARK_IN_FACULTY = """
+            SELECT applicants.applicant_id, surname, firstname, lastname, account_id, beneficiary, certificate_id,
+            (SELECT SUM(mark) FROM subjects WHERE applicant_id = applicants.applicant_id)           as subjects_mark,
+            (SELECT middle_mark FROM certificates WHERE certificate_id = applicants.certificate_id) as certificate_mark
+            FROM ( SELECT applicants.applicant_id, surname, firstname, lastname, account_id, beneficiary, certificate_id,
+                   ROW_NUMBER() OVER (ORDER BY beneficiary DESC,
+                   (SELECT SUM(mark) FROM subjects WHERE applicant_id = applicants.applicant_id) +
+                   (SELECT middle_mark FROM certificates WHERE certificate_id = applicants.certificate_id) *
+                   10 DESC) as row_num
+                   FROM applicants) as applicants
+                   INNER JOIN bills b on applicants.applicant_id = b.applicant_id
+                   INNER JOIN faculties f on f.faculty_id = b.faculty_id AND f.faculty_id = ?
+            where applicants.row_num > ? AND applicants.row_num <= ?
+            ORDER BY beneficiary DESC, subjects_mark + certificate_mark * 10 DESC
+            LIMIT ?, ?
             """;
 
     private static final String FIND_APPLICANT_BY_ACCOUNT_LOGIN = """
-            SELECT applicants.applicant_id, surname, firstname, lastname, applicants.account_id, beneficiary FROM applicants
+            SELECT applicants.applicant_id, surname, firstname, lastname, applicants.account_id, beneficiary
+            FROM applicants
             INNER JOIN accounts ac on applicants.account_id = ac.account_id AND ac.login = ?       
             """;
 
     private static final String FIND_APPLICANT_BY_ACCOUNT_ID = """
-            SELECT applicants.applicant_id, surname, firstname, lastname, applicants.account_id, beneficiary FROM applicants
+            SELECT applicant_id, surname, firstname, lastname, account_id, beneficiary, certificate_id
+            FROM applicants
             WHERE account_id = ?       
             """;
 
     private static final String FIND_APPLICANTS_BENEFICIARY_IN_FACULTY = """
-            SELECT applicants.applicant_id, surname, firstname, lastname, account_id, beneficiary FROM applicants 
+            SELECT applicants.applicant_id, surname, firstname, lastname, account_id, beneficiary 
+            FROM applicants 
             INNER JOIN bills b on applicants.applicant_id = b.applicant_id
-            INNER JOIN faculties f on f.faculty_id = b.faculty_id AND f.faculty_name = ? AND applicants.beneficiary = true;
+            INNER JOIN faculties f on f.faculty_id = b.faculty_id AND f.faculty_name = ? AND applicants.beneficiary = true
             """;
 
     private static final String FIND_ALL_APPLICANTS = """
@@ -55,7 +80,8 @@ public class ApplicantDaoImpl implements ApplicantDao {
             """;
 
     private static final String FIND_APPLICANT_BY_ID = """
-            SELECT applicant_id, firstname, lastname, surname, account_id, beneficiary
+            SELECT applicant_id, firstname, lastname, surname, account_id, beneficiary, certificate_id
+            FROM applicants
             WHERE applicant_id = ?
             """;
 
@@ -70,7 +96,7 @@ public class ApplicantDaoImpl implements ApplicantDao {
             """;
 
     private static final String UPDATE_APPLICANT = """
-            UPDATE account SET firstname = ?, lastname = ?, surname = ?, beneficiary = ?
+            UPDATE applicants SET firstname = ?, lastname = ?, surname = ?, certificate_id = ?, beneficiary = ?
             WHERE applicant_id = ?
             """;
 
@@ -92,13 +118,27 @@ public class ApplicantDaoImpl implements ApplicantDao {
     }
 
     @Override
-    public List<Applicant> findApplicantsInOrderByMarkInFaculty(String facultyName) throws DaoException {
-        List<Applicant> applicants = null;
+    public List<Applicant> findApplicantsInOrderByMarkInFaculty(Long facultyId, long rowSkip, int rowNext) throws DaoException {
+        List<Applicant> applicants;
         try {
-            applicants = jdbcTemplate.executeSelectQuery(FIND_APPLICANTS_IN_ORDER_BY_MARK_IN_FACULTY);
+            applicants = jdbcTemplate.executeSelectQuery(FIND_APPLICANTS_IN_ORDER_BY_MARK_IN_FACULTY, facultyId, rowSkip, rowNext);
         } catch (TransactionException e) {
-            logger.log(Level.ERROR, "Error when finding applicants in order by mark {}", e.getMessage());
+            logger.log(Level.ERROR, "Error when finding applicants in order by mark", e);
             throw new DaoException("Error when finding applicants in order by mark", e);
+        }
+
+        return applicants;
+    }
+
+    @Override
+    public List<Applicant> findApplicantsInOrderByMarkInFacultyAndSurname(Long facultyId, int applicantsSkip, int applicantsTake, long rowSkip, int rowNext) throws DaoException {
+
+        List<Applicant> applicants;
+        try {
+            applicants = jdbcTemplate.executeSelectQuery(FIND_APPLICANTS_BY_SURNAME_IN_ORDER_BY_MARK_IN_FACULTY, facultyId, applicantsSkip, applicantsTake, rowSkip, rowNext);
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when finding applicants in faculty in order by mark and surname", e);
+            throw new DaoException("Error when finding applicants in faculty in order by mark and surname", e);
         }
 
         return applicants;
@@ -110,7 +150,7 @@ public class ApplicantDaoImpl implements ApplicantDao {
         try {
             applicant = jdbcTemplate.executeSelectQueryForObject(FIND_APPLICANT_BY_ACCOUNT_LOGIN, login);
         } catch (TransactionException e) {
-            logger.log(Level.ERROR, "Error when getting applicant by login {} {}", login, e.getMessage());
+            logger.log(Level.ERROR, "Error when getting applicant by login {} {}", login, e);
             throw new DaoException("Error when getting applicant by login " + login, e);
         }
 
@@ -123,7 +163,7 @@ public class ApplicantDaoImpl implements ApplicantDao {
         try {
             applicant = jdbcTemplate.executeSelectQueryForObject(FIND_APPLICANT_BY_ACCOUNT_ID, id);
         } catch (TransactionException e) {
-            logger.log(Level.ERROR, "Error when getting applicant by id {} {}", id, e.getMessage());
+            logger.log(Level.ERROR, "Error when getting applicant by id {} {}", id, e);
             throw new DaoException("Error when getting applicant by account id " + id, e);
         }
 
@@ -136,7 +176,7 @@ public class ApplicantDaoImpl implements ApplicantDao {
         try {
             applicants = jdbcTemplate.executeSelectQuery(FIND_APPLICANTS_BENEFICIARY_IN_FACULTY, facultyName);
         } catch (TransactionException e) {
-            logger.log(Level.ERROR, "Error when finding beneficiary applicants {}", e.getMessage());
+            logger.log(Level.ERROR, "Error when finding beneficiary applicants", e);
             throw new DaoException("Error when finding beneficiary applicants", e);
         }
 
@@ -149,7 +189,7 @@ public class ApplicantDaoImpl implements ApplicantDao {
         try {
             applicants = jdbcTemplate.executeSelectQuery(FIND_ALL_APPLICANTS);
         } catch (TransactionException e) {
-            logger.log(Level.ERROR, "Error when finding all applicants {}", e.getMessage());
+            logger.log(Level.ERROR, "Error when finding all applicants", e);
             throw new DaoException("Error when finding all applicants", e);
 
         }
@@ -163,7 +203,7 @@ public class ApplicantDaoImpl implements ApplicantDao {
         try {
             applicant = jdbcTemplate.executeSelectQueryForObject(FIND_APPLICANT_BY_ID, id);
         } catch (TransactionException e) {
-            logger.log(Level.ERROR, "Error when finding applicant by id {} {}", id, e.getMessage());
+            logger.log(Level.ERROR, "Error when finding applicant by id {} {}", id, e);
             throw new DaoException("Error when finding applicant by id " + id, e);
         }
 
@@ -177,7 +217,7 @@ public class ApplicantDaoImpl implements ApplicantDao {
             statement.setLong(1, id);
             statement.executeUpdate();
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Error when deleting applicant with Id {}. {}", id, e.getMessage());
+            logger.log(Level.ERROR, "Error when deleting applicant with Id {}. {}", id, e);
             throw new DaoException("Error when applicant with Id " + id, e);
         }
 
@@ -193,10 +233,9 @@ public class ApplicantDaoImpl implements ApplicantDao {
                     applicant.getLastname(),
                     applicant.getSurname(),
                     applicant.getAccountId(),
-                    applicant.getBeneficiary()
-            );
+                    applicant.getBeneficiary());
         } catch (TransactionException e) {
-            logger.log(Level.ERROR, "Error when adding applicant {}", e.getMessage());
+            logger.log(Level.ERROR, "Error when adding applicant", e);
             throw new DaoException("Error when adding applicant", e);
         }
 
@@ -209,11 +248,12 @@ public class ApplicantDaoImpl implements ApplicantDao {
             jdbcTemplate.executeInsertQuery(UPDATE_APPLICANT,
                     applicant.getFirstname(),
                     applicant.getLastname(),
-                    applicant.getLastname(),
+                    applicant.getSurname(),
+                    applicant.getCertificateId(),
                     applicant.getBeneficiary(),
-                    applicant.getAccountId());
+                    applicant.getApplicantId());
         } catch (TransactionException e) {
-            logger.log(Level.ERROR, "Error when updating applicant {}", e.getMessage());
+            logger.log(Level.ERROR, "Error when updating applicant", e);
             throw new DaoException("Error when updating applicant", e);
         }
 

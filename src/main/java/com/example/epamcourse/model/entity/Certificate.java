@@ -2,10 +2,17 @@ package com.example.epamcourse.model.entity;
 
 public class Certificate extends BaseEntity {
     private Long certificateId;
-    private Integer totalMark;
+    private Double totalMark;
 
-    public Certificate(Long certificateId, Integer totalMark) {
+    public Certificate(Long certificateId, Double totalMark) {
         this.certificateId = certificateId;
+        this.totalMark = totalMark;
+    }
+
+    public Certificate() {
+    }
+
+    public Certificate(Double totalMark) {
         this.totalMark = totalMark;
     }
 
@@ -17,11 +24,11 @@ public class Certificate extends BaseEntity {
         this.certificateId = certificateId;
     }
 
-    public Integer getTotalMark() {
+    public Double getTotalMark() {
         return totalMark;
     }
 
-    public void setTotalMark(Integer totalMark) {
+    public void setTotalMark(Double totalMark) {
         this.totalMark = totalMark;
     }
 

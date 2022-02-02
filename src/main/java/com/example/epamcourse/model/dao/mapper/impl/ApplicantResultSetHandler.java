@@ -12,6 +12,7 @@ public class ApplicantResultSetHandler implements ResultSetHandler<Applicant> {
     @Override
     public Applicant resultToObject(ResultSet resultSet) throws SQLException {
         Applicant applicant = new Applicant.ApplicantBuilder()
+                .setCertificateId(resultSet.getLong(CERTIFICATE_ID))
                 .setApplicantId(resultSet.getLong(APPLICANT_ID))
                 .setAccountId(resultSet.getLong(APPLICANT_ACCOUNT_ID))
                 .setBeneficiary(resultSet.getBoolean(IS_BENEFICIARY))

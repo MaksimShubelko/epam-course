@@ -4,13 +4,15 @@ public class Bill extends BaseEntity {
     private Long billId;
     private Long facultyId;
     private Long applicantId;
-    private Integer totalMark;
 
-    public Bill(Long billId, Long facultyId, Long applicantId, Integer totalMark) {
+    public Bill(Long billId, Long facultyId, Long applicantId) {
         this.billId = billId;
         this.applicantId = applicantId;
-        this.totalMark = totalMark;
         this.facultyId = facultyId;
+    }
+
+    public Bill(Long applicantId) {
+        this.applicantId = applicantId;
     }
 
     public Long getBillId() {
@@ -29,13 +31,13 @@ public class Bill extends BaseEntity {
         this.applicantId = applicantId;
     }
 
-    public Integer getTotalMark() {
+    /*public Integer getTotalMark() {
         return totalMark;
     }
 
     public void setTotalMark(Integer totalMark) {
         this.totalMark = totalMark;
-    }
+    }*/
 
     public Long getFacultyId() {
         return facultyId;
@@ -51,8 +53,8 @@ public class Bill extends BaseEntity {
         if (!(o instanceof Bill)) return false;
         Bill bill = (Bill) o;
         if (facultyId != null ? !facultyId.equals(bill.facultyId) : bill.facultyId != null) return false;
-        if (applicantId != null ? !applicantId.equals(bill.applicantId) : bill.applicantId != null) return false;
-        return totalMark != null ? totalMark.equals(bill.totalMark) : bill.totalMark == null;
+        return (applicantId != null ? !applicantId.equals(bill.applicantId) : bill.applicantId != null);
+        /*totalMark != null ? totalMark.equals(bill.totalMark) : bill.totalMark == null;*/
     }
 
     @Override
@@ -61,7 +63,9 @@ public class Bill extends BaseEntity {
         int result = 1;
         result = prime * result + Long.hashCode(billId);
         result = prime * result + ((applicantId == null) ? 0 : applicantId.hashCode());
+/*
         result = prime * result + ((totalMark == null) ? 0 : totalMark.hashCode());
+*/
         result = prime * result + ((facultyId == null) ? 0 : facultyId.hashCode());
 
         return result;
@@ -77,8 +81,6 @@ public class Bill extends BaseEntity {
                 .append(applicantId)
                 .append(", facultyId=")
                 .append(facultyId)
-                .append(", totalMark=")
-                .append(totalMark)
                 .append('}');
 
         return stringData.toString();

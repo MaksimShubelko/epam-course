@@ -6,19 +6,27 @@ public class Account extends BaseEntity {
     private String password;
     private String email;
     private Role role;
-
+    private Status status;
+    private String ip;
 
     public enum Role {
         ADMIN,
         APPLICANT;
     }
 
-    public Account(Long accountId, String login, String password, String email, Role role) {
+    public enum Status {
+        ACTIVE,
+        BLOCKED;
+    }
+
+    public Account(Long accountId, String login, String password, String email, Role role, Status status, String ip) {
         this.accountId = accountId;
         this.login = login;
         this.password = password;
         this.email = email;
         this.role = role;
+        this.status = status;
+        this.ip = ip;
     }
 
     public Long getAccountId() {
@@ -61,6 +69,22 @@ public class Account extends BaseEntity {
         this.role = role;
     }
 
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -69,6 +93,7 @@ public class Account extends BaseEntity {
         if (login != null ? !login.equals(account.login) : account.login != null) return false;
         if (password != null ? !password.equals(account.password) : account.password != null) return false;
         if (role != null ? !role.equals(account.role) : account.role != null) return false;
+        if (status != null ? role.equals(account.status) : account.status != null) return false;
         return email != null ? email.equals(account.email) : account.email == null;
     }
 
@@ -80,6 +105,7 @@ public class Account extends BaseEntity {
         result = prime * result + ((login == null) ? 0 : login.hashCode());
         result = prime * result + ((password == null) ? 0 : password.hashCode());
         result = prime * result + ((email == null) ? 0 : email.hashCode());
+        result = prime * result + ((status == null) ? 0 : status.hashCode());
         return result;
     }
 
@@ -97,6 +123,10 @@ public class Account extends BaseEntity {
                 .append(email)
                 .append(", role=")
                 .append(role)
+                .append(", status=")
+                .append(status)
+                .append(", ip=")
+                .append(ip)
                 .append('}');
         return stringData.toString();
     }
@@ -108,6 +138,8 @@ public class Account extends BaseEntity {
         private String password;
         private String email;
         private Role role;
+        private Status status;
+        private String ip;
 
         public AccountBuilder setAccountId(Long accountId) {
             this.accountId = accountId;
@@ -134,9 +166,18 @@ public class Account extends BaseEntity {
             return this;
         }
 
+        public AccountBuilder setStatus(Status status) {
+            this.status = status;
+            return this;
+        }
+
+        public AccountBuilder setIp(String ip) {
+            this.ip = ip;
+            return this;
+        }
 
         public Account createAccount() {
-            return new Account(accountId, login, password, email, role);
+            return new Account(accountId, login, password, email, role, status, ip);
         }
     }
 }

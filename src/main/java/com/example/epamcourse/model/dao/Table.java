@@ -9,6 +9,8 @@ public final class Table {
     public static final String PASSWORD = "password";
     public static final String EMAIL = "email";
     public static final String ROLE = "role";
+    public static final String STATUS = "status";
+    public static final String IP = "ip";
 
     //table administrators
     public static final String ADMINISTRATORS = "administrators";
@@ -47,7 +49,7 @@ public final class Table {
     public static final String CERTIFICATES = "certificates";
     //columns
     public static final String CERTIFICATE_ID = "certificate_id";
-    public static final String CERTIFICATE_TOTAL_MARK = "total_mark";
+    public static final String CERTIFICATE_TOTAL_MARK = "middle_mark";
 
     //table faculties
     public static final String FACULTY = "faculty";

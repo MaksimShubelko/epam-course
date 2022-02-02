@@ -5,28 +5,25 @@ public class Applicant extends BaseEntity {
     private Long applicantId;
     private Long accountId;
     private Boolean isBeneficiary = false;
-    //private Integer totalMarkSubjects;
+    private Long certificateId;
     private String firstname;
     private String lastname;
     private String surname;
 
     public Applicant(Long applicantId, Long accountId,
                      Boolean isBeneficiary,
-                     String firstname, String lastname, String surname) {
+                     String firstname, String lastname, String surname, Long certificateId) {
         this.applicantId = applicantId;
         this.accountId = accountId;
         this.isBeneficiary = isBeneficiary;
-        //this.totalMarkSubjects = totalMarkSubjects;
         this.firstname = firstname;
         this.lastname = lastname;
         this.surname = surname;
+        this.certificateId = certificateId;
     }
 
-    public Applicant(String firstname, String lastname, String surname, Long accountId) {
-        this.firstname = firstname;
-        this.lastname = lastname;
-        this.surname = surname;
-        this.accountId = accountId;
+    public Applicant() {
+
     }
 
     public Long getApplicantId() {
@@ -53,14 +50,6 @@ public class Applicant extends BaseEntity {
         isBeneficiary = beneficiary;
     }
 
-    //public Integer getTotalMarkSubjects() {
-        //return totalMarkSubjects;
-    //}
-
-    //public void setTotalMarkSubjects(Integer totalMarkSubjects) {
-        //this.totalMarkSubjects = totalMarkSubjects;
-    //}
-
     public String getFirstname() {
         return firstname;
     }
@@ -83,6 +72,14 @@ public class Applicant extends BaseEntity {
 
     public void setSurname(String surname) {
         this.surname = surname;
+    }
+
+    public Long getCertificateId() {
+        return certificateId;
+    }
+
+    public void setCertificateId(Long certificateId) {
+        this.certificateId = certificateId;
     }
 
     @Override
@@ -123,15 +120,16 @@ public class Applicant extends BaseEntity {
                 .append(applicantId)
                 .append(", account_id=")
                 .append(accountId)
-                .append(", totalMarkSubjects=")
+                .append(", isBeneficiary=")
                 .append(isBeneficiary)
-                .append(", totalMarkSubjects=")
-                //.append(totalMarkSubjects)
+                .append(", firstname=")
                 .append(firstname)
-                .append(", lastname='")
-                .append(lastname)
                 .append(", surname='")
                 .append(surname)
+                .append(", lastname='")
+                .append(lastname)
+                .append(", certificateId='")
+                .append(certificateId)
                 .append('}');
         return stringData.toString();
     }
@@ -139,9 +137,9 @@ public class Applicant extends BaseEntity {
     public static class ApplicantBuilder {
 
         private Long applicantId;
-        private Long account_id;
+        private Long accountId;
         private Boolean isBeneficiary;
-        //private Integer totalMarkSubjects;
+        private Long certificateId;
         private String firstname;
         private String lastname;
         private String surname;
@@ -166,8 +164,8 @@ public class Applicant extends BaseEntity {
             return this;
         }
 
-        public Applicant.ApplicantBuilder setAccountId(Long account_id) {
-            this.account_id = account_id;
+        public Applicant.ApplicantBuilder setAccountId(Long accountId) {
+            this.accountId = accountId;
             return this;
         }
 
@@ -176,13 +174,14 @@ public class Applicant extends BaseEntity {
             return this;
         }
 
-       /* public Applicant.ApplicantBuilder setTotalMarkSubject(Integer totalMarkSubjects) {
-            this.totalMarkSubjects = totalMarkSubjects;
+        public Applicant.ApplicantBuilder setCertificateId(Long certificateId) {
+            this.certificateId = certificateId;
             return this;
-        }*/
+        }
 
         public Applicant createApplicant() {
-            return new Applicant(applicantId, account_id, isBeneficiary, firstname, lastname, surname);
+            return new Applicant(applicantId, accountId, isBeneficiary,
+                    firstname, lastname, surname, certificateId);
         }
     }
 }

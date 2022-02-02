@@ -34,7 +34,7 @@ public class ConnectionPool {
                 boolean isAdded = freeConnections.add(new ProxyConnection(connection));
                 logger.log(Level.DEBUG, "Is connection added: {}", isAdded);
             } catch (SQLException e) {
-                logger.log(Level.ERROR, "Connection wasn't created because database access error {}", e.getMessage());
+                logger.log(Level.ERROR, "Connection wasn't created because database access error", e);
             }
         }
 
@@ -49,7 +49,7 @@ public class ConnectionPool {
                         connection = ConnectionFactory.createConnection();
                         freeConnections.add(new ProxyConnection(connection));
                     } catch (SQLException e) {
-                        logger.log(Level.FATAL, "Connection wasn't added. {}", e.getMessage());
+                        logger.log(Level.FATAL, "Connection wasn't added.", e);
                         throw new RuntimeException("Connection pool can't be full", e);
                     }
                 }
@@ -80,7 +80,7 @@ public class ConnectionPool {
             connection = freeConnections.take();
             busyConnection.put(connection);
         } catch (InterruptedException e) {
-            logger.log(Level.ERROR, "Current thread was interrupted {}", e.getMessage(), e);
+            logger.log(Level.ERROR, "Current thread was interrupted", e);
             Thread.currentThread().interrupt();
         }
         return connection;
@@ -92,7 +92,7 @@ public class ConnectionPool {
             try {
                 freeConnections.put((ProxyConnection) connection);
             } catch (InterruptedException e) {
-                logger.log(Level.ERROR, "Current thread was interrupted {}", e.getMessage(), e);
+                logger.log(Level.ERROR, "Current thread was interrupted", e);
                 Thread.currentThread().interrupt();
             }
             result = true;
@@ -108,10 +108,10 @@ public class ConnectionPool {
             try {
                 freeConnections.take().close();
             } catch (InterruptedException e) {
-                logger.log(Level.INFO, "Try to destroy connection into pool was failed {}", e.getMessage(), e);
+                logger.log(Level.INFO, "Try to destroy connection into pool was failed", e);
                 Thread.currentThread().interrupt();
             } catch (SQLException e) {
-                logger.log(Level.ERROR, "Try to destroy connection into pool was failed {}", e.getMessage(), e);
+                logger.log(Level.ERROR, "Try to destroy connection into pool was failed", e);
             }
         }
         deregisterDriver();
@@ -122,9 +122,9 @@ public class ConnectionPool {
             try {
                 connections.take().reallyClose();
             } catch (SQLException e) {
-                logger.log(Level.ERROR, "Connection isn't close due to database access error. {}", e.getMessage(), e);
+                logger.log(Level.ERROR, "Connection isn't close due to database access error.", e);
             } catch (InterruptedException e) {
-                logger.log(Level.ERROR, "Connection isn't close due to current thread was interrupted {}", e.getMessage(), e);
+                logger.log(Level.ERROR, "Connection isn't close due to current thread was interrupted", e);
                 Thread.currentThread().interrupt();
             }
         }
@@ -135,7 +135,7 @@ public class ConnectionPool {
             try {
                 DriverManager.deregisterDriver(driver);
             } catch (SQLException e) {
-                logger.log(Level.ERROR, "Driver isn't deregistered due to database access error. {}", e.getMessage(), e);
+                logger.log(Level.ERROR, "Driver isn't deregistered due to database access error.", e);
             }
         });
     }

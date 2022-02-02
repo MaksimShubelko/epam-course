@@ -19,6 +19,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import static com.example.epamcourse.model.dao.Table.ROLE;
+import static com.example.epamcourse.model.dao.Table.STATUS;
 
 public class AccountDaoImpl implements AccountDao {
     private static final Logger logger = LogManager.getLogger();
@@ -26,31 +27,49 @@ public class AccountDaoImpl implements AccountDao {
 
     private JdbcTemplate<Account> jdbcTemplate;
 
+    private static final String FIND_ACCOUNT_STATUS_BY_LOGIN = """
+            SELECT status
+            FROM accounts
+            WHERE login = ?
+            """;
+
+    public static final String FIND_ACCOUNT_BY_IP = """
+            SELECT account_id, login, password, role, email, status, ip
+            FROM accounts
+            WHERE ip = ?
+            """;
+
     private static final String FIND_ACCOUNT_BY_ID = """
-            SELECT account_id, login, password, role, email 
+            SELECT account_id, login, password, role, email, status, ip 
             FROM accounts
             WHERE account_id = ?
             """;
+    private static final String FIND_ACCOUNTS_FOR_PAGE = """
+            SELECT account_id, login, password, role, email, status, ip 
+            FROM accounts
+            LIMIT ?, ?
+            """;
+
     private static final String FIND_ACCOUNT_BY_LOGIN = """
-            SELECT account_id, login, password, role, email 
+            SELECT account_id, login, password, role, email, status, ip 
             FROM accounts
             WHERE login = ?
             """;
 
     private static final String FIND_ACCOUNT_BY_LOGIN_AND_PASSWORD = """
-            SELECT account_id, login, password, role, email
+            SELECT account_id, login, password, role, email, status, ip
             FROM accounts
             WHERE login = ? and password = ?
             """;
 
-    private static final String GET_ACCOUNT_ROLE_BY_ID = """
+    private static final String FIND_ACCOUNT_ROLE_BY_ID = """
             SELECT role 
             FROM accounts
-            WERE account_id = ?        
+            WHERE account_id = ?        
             """;
 
     private static final String FIND_ALL_ACCOUNTS = """
-            SELECT account_id, login, password, role, email
+            SELECT account_id, login, password, role, email, status, ip
             FROM accounts       
             """;
 
@@ -60,21 +79,26 @@ public class AccountDaoImpl implements AccountDao {
             """;
 
     private static final String ADD_ACCOUNT = """
-            INSERT INTO accounts (login, password, email)
-            VALUE (?, ?, ?)
+            INSERT INTO accounts (login, password, role, ip, email)
+            VALUE (?, ?, ?, ?, ?)
             """;
 
     private static final String UPDATE_PASSWORD = """
             UPDATE accounts SET password = ?
             WHERE account_id = ?
             """;
-
-    private static final String UPDATE_ROLE = """
-            UPDATE accounts SET role = ?
+    private static final String UPDATE_STATUS = """
+            UPDATE accounts SET status = ?
             WHERE account_id = ?
             """;
 
-    private static final String GET_ACCOUNT_ID_BY_LOGIN = """
+    private static final String UPDATE_ROLE = """
+            UPDATE accounts SET role = ?
+            
+            WHERE account_id = ?
+            """;
+
+    private static final String FIND_ACCOUNT_ID_BY_LOGIN = """
             SELECT account_id
             FROM accounts
             WHERE login = ? 
@@ -90,7 +114,7 @@ public class AccountDaoImpl implements AccountDao {
         try {
             account = jdbcTemplate.executeSelectQueryForObject(FIND_ACCOUNT_BY_ID, id);
         } catch (TransactionException e) {
-            logger.log(Level.ERROR, "Error when finding account with id {}. {}", id, e.getMessage());
+            logger.log(Level.ERROR, "Error when finding account with id {}.", id);
             throw new DaoException("Error when finding account with id ".concat(id.toString()), e);
         }
 
@@ -103,8 +127,21 @@ public class AccountDaoImpl implements AccountDao {
         try {
             account = jdbcTemplate.executeSelectQueryForObject(FIND_ACCOUNT_BY_LOGIN, login);
         } catch (TransactionException e) {
-            logger.log(Level.ERROR, "Error when finding account with login {}. {}", login, e.getMessage());
+            logger.log(Level.ERROR, "Error when finding account with login {}.", login);
             throw new DaoException("Error when finding account with login " + login, e);
+        }
+
+        return account;
+    }
+
+    @Override
+    public Optional<Account> findAccountByIp(String ip) throws DaoException {
+        Optional<Account> account;
+        try {
+            account = jdbcTemplate.executeSelectQueryForObject(FIND_ACCOUNT_BY_IP, ip);
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when finding account with ip {}. {}", ip, e);
+            throw new DaoException("Error when finding account with ip " + ip, e);
         }
 
         return account;
@@ -117,8 +154,8 @@ public class AccountDaoImpl implements AccountDao {
             account = jdbcTemplate
                     .executeSelectQueryForObject(FIND_ACCOUNT_BY_LOGIN_AND_PASSWORD, login, password);
         } catch (TransactionException e) {
-            logger.log(Level.ERROR, "Error when finding account with login {} and password {}. {}",
-                    login, password, e.getMessage());
+            logger.log(Level.ERROR, "Error when finding account with login {} and password {}.",
+                    login, password);
             throw new DaoException("Error when finding account with login and password: " + login + " " + password, e);
         }
 
@@ -129,9 +166,9 @@ public class AccountDaoImpl implements AccountDao {
     public List<Map<String, Object>> getAccountRoleById(Long accountId) throws DaoException {
         List<Map<String, Object>> role = null;
         try {
-            role = jdbcTemplate.executeSelectSomeFields(GET_ACCOUNT_ROLE_BY_ID, Set.of(ROLE), accountId);
+            role = jdbcTemplate.executeSelectSomeFields(FIND_ACCOUNT_ROLE_BY_ID, Set.of(ROLE), accountId);
         } catch (TransactionException e) {
-            logger.log(Level.ERROR, "Error when getting account id = {} role. {}", accountId, e.getMessage());
+            logger.log(Level.ERROR, "Error when getting account id = {} role. {}", accountId, e);
             throw new DaoException("Error when getting account id = " + accountId + " role", e);
         }
 
@@ -149,6 +186,31 @@ public class AccountDaoImpl implements AccountDao {
         }
 
         return true;
+    }
+
+    @Override
+    public List<Account> findAccountsPage(int accountsSkip, int accountsGet) throws DaoException {
+        List<Account> accounts = null;
+        try {
+            accounts = jdbcTemplate.executeSelectQuery(FIND_ACCOUNTS_FOR_PAGE, accountsSkip, accountsGet);
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when finding accounts", e);
+            throw new DaoException("Error when finding all accounts", e);
+        }
+        return accounts;
+    }
+
+    @Override
+    public String getAccountStatusByLogin(String login) throws DaoException {
+        List<Map<String, Object>> fields;
+        try {
+            fields = jdbcTemplate.executeSelectSomeFields(FIND_ACCOUNT_STATUS_BY_LOGIN, Set.of(STATUS), login);
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when finding account status with login {}.", login, e);
+            throw new DaoException("Error when finding account status with login " + login, e);
+        }
+
+        return fields.get(0).get(STATUS).toString();
     }
 
     /*@Override
@@ -169,7 +231,7 @@ public class AccountDaoImpl implements AccountDao {
         try {
             accounts = jdbcTemplate.executeSelectQuery(FIND_ALL_ACCOUNTS);
         } catch (TransactionException e) {
-            logger.log(Level.ERROR, "Error when finding all accounts {}", e.getMessage());
+            logger.log(Level.ERROR, "Error when finding all accounts", e);
             throw new DaoException("Error when finding all accounts", e);
         }
 
@@ -183,7 +245,7 @@ public class AccountDaoImpl implements AccountDao {
             statement.setLong(1, id);
             statement.executeUpdate();
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Error when deleting account with Id {}. {}", id, e.getMessage());
+            logger.log(Level.ERROR, "Error when deleting account with Id {}. {}", id, e);
             throw new DaoException("Error when account with Id " + id, e);
         }
 
@@ -197,7 +259,16 @@ public class AccountDaoImpl implements AccountDao {
 
     @Override
     public boolean update(Account account) throws DaoException {
-        throw new UnsupportedOperationException();
+        try {
+            jdbcTemplate.executeInsertQuery(UPDATE_STATUS,
+                    account.getStatus().toString(),
+                    account.getAccountId());
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when updating password.", e);
+            throw new DaoException("Error when updating password", e);
+        }
+
+        return true;
     }
 
     @Override
@@ -207,9 +278,11 @@ public class AccountDaoImpl implements AccountDao {
             accountId = jdbcTemplate.executeInsertQuery(ADD_ACCOUNT,
                     account.getLogin(),
                     password,
+                    account.getRole().toString(),
+                    account.getIp(),
                     account.getEmail());
         } catch (TransactionException e) {
-            logger.log(Level.ERROR, "Error when adding account. {}", e.getMessage());
+            logger.log(Level.ERROR, "Error when adding account.", e);
             throw new DaoException("Error when adding account.", e);
         }
 
@@ -223,7 +296,7 @@ public class AccountDaoImpl implements AccountDao {
                     hashPassword,
                     account.getAccountId());
         } catch (TransactionException e) {
-            logger.log(Level.ERROR, "Error when updating password. {}", e.getMessage());
+            logger.log(Level.ERROR, "Error when updating password.", e);
             throw new DaoException("Error when updating password", e);
         }
 

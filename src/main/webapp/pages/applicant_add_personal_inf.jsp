@@ -8,72 +8,70 @@
 <html>
 <head>
     <jsp:include page="header.jsp"/>
-    <link href="css/bootstrap.min.css" type="text/css" rel="stylesheet">
-    <link href="css/button.css" type="text/css" rel="stylesheet">
-    <jsp:include page="header.jsp"/>
+    <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" type="text/css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/css/button.css" type="text/css" rel="stylesheet">
     <title>Insert title here</title>
 </head>
 <body>
 <div>
-    <form class="container needs-validation height-350" novalidate name="loginForm" action="../controller" method="get">
+    <form class="container needs-validation h-75" novalidate
+          action="${pageContext.request.contextPath}/controller" method="get">
         <input type="hidden" name="command" value="applicant_add_secure_information"/>
-        <label class="form-label">
-            <fmt:message key="secure.information.title" bundle="${content}"/>
-        </label>
 
-        <div class="form-group row w-50">
-            <label class="col-sm-2 col-form-label">
-                <fmt:message key="secure.information.name" bundle="${content}"/>
+        <div class="offset-4 p-5 w-75">
+            <label class="form-label">
+                <h6>
+                    <fmt:message key="secure.information.title" bundle="${content}"/>
+                </h6>
             </label>
-            <div class="col-sm-10">
-                <input type="text" name="name" pattern="^[А-ЯЁ][а-яё]*$" required>
-                <div class="invalid-feedback">
-                    <fmt:message key="name.secure.information.format.error" bundle="${content}"/>
+
+            <div class="row">
+                <label class="col-3 col-form-label">
+                    <h6><fmt:message key="secure.information.name" bundle="${content}"/></h6>
+                </label>
+                <div class="col-6">
+                    <input type="text" name="name" pattern="[А-ЯЁ][а-яё]+" value="${applicant.getFirstname()}"
+                           required/>
+                    <div class="invalid-feedback">
+                        <h6><fmt:message key="name.secure.information.format.error" bundle="${content}"/></h6>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <label class="col-3 col-form-label">
+                    <h6><fmt:message key="secure.information.surname" bundle="${content}"/></h6>
+                </label>
+                <div class="col-6">
+                    <input type="text" name="surname"
+                           pattern="[А-ЯЁ][а-яё]+([-][А-ЯЁ][а-яё]+)?" value="${applicant.getSurname()}" required>
+                    <div class="invalid-feedback">
+                        <h6><fmt:message key="surname.secure.information.format.error" bundle="${content}"/></h6>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <label class="col-3 col-form-label">
+                    <h6><fmt:message key="secure.information.lastname" bundle="${content}"/></h6>
+                </label>
+                <div class="col-6">
+                    <input type="text" name="lastname" pattern="[А-ЯЁ][а-яё]+" value="${applicant.getLastname()}"
+                           required>
+                    <div class="invalid-feedback">
+                        <h6><fmt:message key="lastname.secure.information.format.error" bundle="${content}"/></h6>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-10 offset-4 p-1">
+                    <input type="submit"
+                           value="<fmt:message key="add.secure.information" bundle="${content}" />"
+                           class="blubtn align-middle"/>
                 </div>
             </div>
         </div>
-
-        <div class="w-100"></div>
-
-        <div class="form-group row w-50">
-            <label class="col-sm-2 col-form-label">
-                <fmt:message key="secure.information.surname" bundle="${content}"/>
-            </label>
-            <div class="col-sm-10">
-                <input type="text" name="surname"
-                       pattern="^[А-ЯЁ][а-яё]*([-][А-ЯЁ][а-яё]*)?$" required>
-                <div class="invalid-feedback">
-                    <fmt:message key="surname.secure.information.format.error" bundle="${content}"/>
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group row w-50">
-            <label class="col-sm-2 col-form-label">
-                <fmt:message key="secure.information.lastname" bundle="${content}"/>
-            </label>
-            <div class="col-sm-10">
-                <input type="text" name="lastname" pattern="^[А-ЯЁ][а-яё]*$" required>
-                <div class="invalid-feedback">
-                    <fmt:message key="lastname.secure.information.format.error" bundle="${content}"/>
-                </div>
-            </div>
-        </div>
-        <div class="w-100"></div>
-
-        <div class="w-100"></div>
-
-        <div class="form-group row w-50">
-            <label class="col-sm-10 offset-sm-2">
-                <input type="submit" value="<fmt:message key="sing.in" bundle="${content}" />"
-                       class="blubtn align-middle">
-                <a href="${pageContext.request.contextPath}/controller?command=go_to_registration_page" class="hr">
-                    <fmt:message key="no.account" bundle="${content}"/>
-                </a>
-            </label>
-        </div>
-
-        <h1>${session_message}</h1>
     </form>
 </div>
 <script src="js/validation.js"></script>

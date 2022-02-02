@@ -1,5 +1,6 @@
 package com.example.epamcourse.controller.command.impl;
 
+import com.example.epamcourse.controller.command.Command;
 import com.example.epamcourse.controller.command.RequestParameter;
 import com.example.epamcourse.controller.command.Router;
 import com.example.epamcourse.controller.command.SessionAttribute;
@@ -10,7 +11,7 @@ import org.apache.logging.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-public class LocaleCommand extends AbstractCommand {
+public class  LocaleCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
 
     @Override
@@ -19,15 +20,12 @@ public class LocaleCommand extends AbstractCommand {
         String currentPage = (String) session.getAttribute(SessionAttribute.CURRENT_PAGE);
         logger.log(Level.DEBUG, "Current page is " + currentPage);
         Router router = new Router(currentPage);
-        router.setType(Router.RouterType.REDIRECT);
         String currentLocale = (String) session.getAttribute(SessionAttribute.SESSION_LOCALE);
         String newLocale = request.getParameter(RequestParameter.LOCALE);
-
         if (!newLocale.equals(currentLocale)) {
-            session.setAttribute(SessionAttribute.SESSION_LOCALE, newLocale);
             logger.log(Level.DEBUG, "Language changes to {} ", newLocale);
+            session.setAttribute(SessionAttribute.SESSION_LOCALE, newLocale);
         }
-
         return router;
     }
 }

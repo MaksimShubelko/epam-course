@@ -43,7 +43,8 @@ public class AdministratorDaoImpl implements AdministratorDao {
             """;
 
     private static final String FIND_ADMINISTRATOR_BY_ACCOUNT_ID = """
-            SELECT administrator_id, firstname, lastname, surname, account_id 
+            SELECT administrator_id, firstname, lastname, surname, account_id
+            FROM administrators 
             WHERE account_id = ?
             """;
 
@@ -63,7 +64,7 @@ public class AdministratorDaoImpl implements AdministratorDao {
         try {
             administrators = jdbcTemplate.executeSelectQuery(FIND_ALL_ADMINISTRATORS);
         } catch (TransactionException e) {
-            logger.log(Level.ERROR, "Error when finding all administrators {}", e.getMessage());
+            logger.log(Level.ERROR, "Error when finding all administrators {}", e);
             throw new DaoException("Error when finding all administrators", e);
         }
 
@@ -76,7 +77,7 @@ public class AdministratorDaoImpl implements AdministratorDao {
         try {
             administrator = jdbcTemplate.executeSelectQueryForObject(FIND_ADMINISTRATOR_BY_ID, id);
         } catch (TransactionException e) {
-            logger.log(Level.ERROR, "Error when finding administrator by id = {}  {}", id, e.getMessage());
+            logger.log(Level.ERROR, "Error when finding administrator by id = {}  {}", id, e);
             throw new DaoException("Error when finding administrator by id = " + id, e);
         }
 
@@ -90,7 +91,7 @@ public class AdministratorDaoImpl implements AdministratorDao {
             statement.setLong(1, id);
             statement.executeUpdate();
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Error when deleting administrator with Id {}. {}", id, e.getMessage());
+            logger.log(Level.ERROR, "Error when deleting administrator with Id {}. {}", id, e);
             throw new DaoException("Error when deleting administrator with Id " + id, e);
         }
 
@@ -102,13 +103,12 @@ public class AdministratorDaoImpl implements AdministratorDao {
         long administratorId = 0;
         try {
             administratorId = jdbcTemplate.executeInsertQuery(ADD_ADMINISTRATOR,
-                    administrator.getAdministratorId(),
                     administrator.getFirstname(),
                     administrator.getLastname(),
                     administrator.getSurname(),
-                    administrator.getAccount_id());
+                    administrator.getAccountId());
         } catch (TransactionException e) {
-            logger.log(Level.ERROR, "Error when adding administrator. {}", e.getMessage());
+            logger.log(Level.ERROR, "Error when adding administrator.", e);
             throw new DaoException("Error when adding administrator", e);
         }
 
@@ -122,9 +122,9 @@ public class AdministratorDaoImpl implements AdministratorDao {
                     administrator.getFirstname(),
                     administrator.getLastname(),
                     administrator.getSurname(),
-                    administrator.getAccount_id());
+                    administrator.getAccountId());
         } catch (TransactionException e) {
-            logger.log(Level.ERROR, "Error when up administrator. {}", e.getMessage());
+            logger.log(Level.ERROR, "Error when up administrator.", e);
             throw new DaoException("Error when adding administrator", e);
         }
 
@@ -142,7 +142,7 @@ public class AdministratorDaoImpl implements AdministratorDao {
         try {
             administrator = jdbcTemplate.executeSelectQueryForObject(FIND_ADMINISTRATOR_BY_ACCOUNT_ID, id);
         } catch (TransactionException e) {
-            logger.log(Level.ERROR, "Error when finding administrator by account id = {}  {}", id, e.getMessage());
+            logger.log(Level.ERROR, "Error when finding administrator by account id = {}  {}", id, e);
             throw new DaoException("Error when finding administrator by account id = " + id, e);
         }
 

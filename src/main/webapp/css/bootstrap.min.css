@@ -11660,5 +11660,13 @@ textarea.form-control-lg {
         display: none !important
     }
 }
-
+@font-face {
+font-family: "Oswald-VariableFont_wght";
+src: url(/fonts/Oswald-VariableFont_wght.ttf) format("truetype");
+    font-style: normal;
+    font-weight: normal;
+}
+h6{
+    font-family: "Oswald-VariableFont_wght";
+}
 /*# sourceMappingURL=bootstrap.min.css.map */

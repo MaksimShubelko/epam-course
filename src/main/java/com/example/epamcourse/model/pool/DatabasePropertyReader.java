@@ -28,7 +28,7 @@ class DatabasePropertyReader {
             DATABASE_URL = resourceBundle.getString(DATABASE_URL_KEY);
         } catch (MissingResourceException e) {
             logger.log(Level.FATAL, "File {} or key {} is not found. {}",
-                    DATABASE_PROPERTY_FILE, e.getKey(), e.getMessage());
+                    DATABASE_PROPERTY_FILE, e.getKey(), e);
             throw new RuntimeException("File or key is not found", e);
         }
     }

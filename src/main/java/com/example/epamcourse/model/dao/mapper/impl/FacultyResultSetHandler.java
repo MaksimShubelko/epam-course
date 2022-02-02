@@ -13,7 +13,6 @@ public class FacultyResultSetHandler implements ResultSetHandler<Faculty> {
     public Faculty resultToObject(ResultSet resultSet) throws SQLException {
         Faculty faculty = new Faculty.FacultyBuilder()
                 .setFacultyId(resultSet.getLong(FACULTY_ID))
-                .setMarkPass(resultSet.getInt(MARK_PASS))
                 .setFacultyName(resultSet.getString(FACULTY_NAME))
                 .setRecruitmentPlanFree(resultSet.getInt(RECRUITMENT_PLAN_FREE))
                 .setRecruitmentPlanCanvas(resultSet.getInt(RECRUITMENT_PLAN_CANVAS))

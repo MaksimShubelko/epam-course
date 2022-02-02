@@ -10,7 +10,10 @@ import java.util.Optional;
 public interface ApplicantDao extends BaseDao<Applicant> {
     List<Applicant> findApplicantsBySurname(String surname) throws DaoException, SQLException;
 
-    List<Applicant> findApplicantsInOrderByMarkInFaculty(String facultyName) throws DaoException, SQLException;
+    List<Applicant> findApplicantsInOrderByMarkInFaculty(Long facultyId, long rowSkip, int rowNext)
+            throws DaoException;
+
+    List<Applicant> findApplicantsInOrderByMarkInFacultyAndSurname(Long facultyId, int applicantsSkip, int applicantsTake, long rowSkip, int rowNext) throws DaoException;
 
     Optional<Applicant> getApplicantByLogin(String login) throws DaoException;
 

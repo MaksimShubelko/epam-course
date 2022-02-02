@@ -17,7 +17,7 @@ public class ConnectionFactory {
         try {
             Class.forName(DATABASE_DRIVER);
         } catch (ClassNotFoundException e) {
-            logger.log(Level.FATAL, "Driver class isn't found, it can't be registered {}", e.getMessage());
+            logger.log(Level.FATAL, "Driver class isn't found, it can't be registered", e);
             throw new RuntimeException("Driver class isn't found", e);
         }
     }

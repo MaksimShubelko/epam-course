@@ -10,6 +10,8 @@ import java.util.Optional;
 public interface AccountDao extends BaseDao<Account> {
     Optional<Account> findAccountByLogin(String login) throws DaoException;
 
+    Optional<Account> findAccountByIp(String ip) throws DaoException;
+
     Optional<Account> findAccountByLoginAndPassword(String login, String password) throws DaoException;
 
     List<Map<String, Object>> getAccountRoleById(Long accountId) throws DaoException;
@@ -18,6 +20,9 @@ public interface AccountDao extends BaseDao<Account> {
 
     boolean updateRole(Account account, int role) throws DaoException;
 
+    List<Account> findAccountsPage(int accountsSkip, int accountsGet) throws DaoException;
+
+    String getAccountStatusByLogin(String login) throws DaoException;
 /*
     Long getAccountIdByLogin(String login) throws DaoException;
 */

@@ -24,12 +24,13 @@ public class CertificateDaoImpl implements CertificateDao {
     private JdbcTemplate<Certificate> jdbcTemplate;
 
     private static final String FIND_ALL_CERTIFICATES = """
-            SELECT certificate_id, total_mark
+            SELECT certificate_id, middle_mark
             FROM certificates
             """;
 
     private static final String FIND_CERTIFICATE_BY_ID = """
-            SELECT certificate_id, total_mark
+            SELECT certificate_id, middle_mark
+            FROM certificates
             WHERE certificate_id = ?
             """;
 
@@ -39,12 +40,12 @@ public class CertificateDaoImpl implements CertificateDao {
             """;
 
     private static final String ADD_CERTIFICATE = """
-            INSERT INTO certificates (certificate_id, total_mark)
-            VALUE (?, ?, ?, ?)
+            INSERT INTO certificates (middle_mark)
+            VALUE (?)
             """;
 
     private static final String UPDATE_CERTIFICATE = """
-            UPDATE certificates SET total_mark = ?
+            UPDATE certificates SET middle_mark = ?
             WHERE certificate_id = ?
             """;
 
@@ -60,7 +61,7 @@ public class CertificateDaoImpl implements CertificateDao {
         try {
             certificates = jdbcTemplate.executeSelectQuery(FIND_ALL_CERTIFICATES);
         } catch (TransactionException e) {
-            logger.log(Level.ERROR, "Error when finding all certificates {}", e.getMessage());
+            logger.log(Level.ERROR, "Error when finding all certificates {}", e);
             throw new DaoException("Error when finding all certificates", e);
         }
 
@@ -69,11 +70,11 @@ public class CertificateDaoImpl implements CertificateDao {
 
     @Override
     public Optional<Certificate> findEntityById(Long id) throws DaoException {
-        Optional<Certificate> certificate = null;
+        Optional<Certificate> certificate;
         try {
             certificate = jdbcTemplate.executeSelectQueryForObject(FIND_CERTIFICATE_BY_ID, id);
         } catch (TransactionException e) {
-            logger.log(Level.ERROR, "Error when finding certificate by id {} {}", id, e.getMessage());
+            logger.log(Level.ERROR, "Error when finding certificate by id {} {}", id, e);
             throw new DaoException("Error when finding certificate by id " + id, e);
         }
 
@@ -87,7 +88,7 @@ public class CertificateDaoImpl implements CertificateDao {
             statement.setLong(1, id);
             statement.executeUpdate();
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Error when deleting certificate with id {}. {}", id, e.getMessage());
+            logger.log(Level.ERROR, "Error when deleting certificate with id {}. {}", id, e);
             throw new DaoException("Error when deleting certificate with id " + id, e);
         }
 
@@ -101,7 +102,7 @@ public class CertificateDaoImpl implements CertificateDao {
             certificateId = jdbcTemplate.executeInsertQuery(ADD_CERTIFICATE,
                     certificate.getTotalMark());
         } catch (TransactionException e) {
-            logger.log(Level.ERROR, "Error when adding certificate {}", e.getMessage());
+            logger.log(Level.ERROR, "Error when adding certificate", e);
             throw new DaoException("Error when adding certificate", e);
         }
 
@@ -115,11 +116,14 @@ public class CertificateDaoImpl implements CertificateDao {
                     certificate.getTotalMark(),
                     certificate.getCertificateId());
         } catch (TransactionException e) {
-            logger.log(Level.ERROR, "Error when updating certificate {}", e.getMessage());
+            logger.log(Level.ERROR, "Error when updating certificate", e);
             throw new DaoException("Error when updating certificate", e);
         }
 
         return true;
     }
 
+    public static CertificateDao getInstance() {
+        return instance;
+    }
 }

@@ -1,7 +1,7 @@
 package com.example.epamcourse.controller;
 
 import com.example.epamcourse.controller.command.*;
-import com.example.epamcourse.model.exception.ControllerException;
+import com.example.epamcourse.model.exception.CommandException;
 import com.example.epamcourse.model.exception.ServiceException;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -43,7 +43,7 @@ public class ControllerServlet extends HttpServlet {
                     response.sendRedirect(request.getContextPath() + PagePath.ERROR_404);
                 }
             }
-        } catch (ServletException | IOException | ServiceException e) {
+        } catch (IOException | CommandException | ServletException e) {
             logger.log(Level.ERROR, "Error when executing command {} ", stringCommand);
             request.getSession().setAttribute(EXCEPTION, e);
             response.sendRedirect(request.getContextPath() + PagePath.EXCEPTION_ERROR_REDIRECT);

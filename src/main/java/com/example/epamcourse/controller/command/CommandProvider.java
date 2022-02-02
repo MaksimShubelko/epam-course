@@ -16,7 +16,6 @@ public class CommandProvider {
         }
         try {
             CommandType type = CommandType.valueOf(commandName.toUpperCase());
-            System.out.println(type);
             current = Optional.of(type.getCommand());
         } catch (IllegalArgumentException e) {
             logger.log(Level.ERROR, "Command {} is not found. {}", commandName, e);

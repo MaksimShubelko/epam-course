@@ -17,6 +17,10 @@ public class Faculty extends BaseEntity {
         this.recruitmentPlanCanvas = recruitmentPlanCanvas;
     }
 
+    public Faculty() {
+
+    }
+
     public Long getFacultyId() {
         return facultyId;
     }

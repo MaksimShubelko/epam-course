@@ -6,17 +6,14 @@ public class Subject extends BaseEntity {
     private Type subjectType;
     private Integer mark;
 
+    public Subject() {
+
+    }
+
     public enum Type {
-        RUSS_LANG,
         MATH,
         PHYSIC,
-        BIOLOGY,
-        FOREIGN_LANG,
-        BEL_HISTORY,
-        WORLD_WIDE_HISTORY,
-        CHEMISTRY,
-        GEOGRAPHY,
-        SOCIAL_SCIENCE;
+        ENGLISH;
     }
 
     public Subject(Long subjectId, Long applicantId, Type subjectType, Integer mark) {

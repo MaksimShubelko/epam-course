@@ -21,7 +21,7 @@ public class HashGenerator {
             BigInteger bigInt = new BigInteger(1, bytesEncoded);
             return bigInt.toString(16);
         } catch (NoSuchAlgorithmException e) {
-            logger.log(Level.ERROR, "Encoding password isn't successful. {}", e.getMessage(), e);
+            logger.log(Level.ERROR, "Encoding password isn't successful.", e);
         }
         return password;
     }

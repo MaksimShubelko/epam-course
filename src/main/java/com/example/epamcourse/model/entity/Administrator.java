@@ -5,21 +5,17 @@ public class Administrator extends BaseEntity {
     private String firstname;
     private String lastname;
     private String surname;
-    private Long account_id;
+    private Long accountId;
 
-    public Administrator(Long administratorId, String firstname, String lastname, String surname, Long account_id) {
+    public Administrator(Long administratorId, String firstname, String lastname, String surname, Long accountId) {
         this.administratorId = administratorId;
         this.firstname = firstname;
         this.lastname = lastname;
         this.surname = surname;
-        this.account_id = account_id;
+        this.accountId = accountId;
     }
 
-    public Administrator(String firstname, String lastname, String surname, Long account_id) {
-        this.firstname = firstname;
-        this.lastname = lastname;
-        this.surname = surname;
-        this.account_id = account_id;
+    public Administrator() {
     }
 
     public Long getAdministratorId() {
@@ -54,12 +50,12 @@ public class Administrator extends BaseEntity {
         this.surname = surname;
     }
 
-    public Long getAccount_id() {
-        return account_id;
+    public Long getAccountId() {
+        return accountId;
     }
 
-    public void setAccount_id(Long account_id) {
-        this.account_id = account_id;
+    public void setAccountId(Long accountId) {
+        this.accountId = this.accountId;
     }
 
     @Override
@@ -70,7 +66,7 @@ public class Administrator extends BaseEntity {
         if (firstname != null ? !firstname.equals(administrator.firstname) : administrator.firstname != null) return false;
         if (lastname != null ? !lastname.equals(administrator.lastname) : administrator.lastname != null) return false;
         if (surname != null ? !surname.equals(administrator.surname) : administrator.surname != null) return false;
-        return account_id != null ? account_id.equals(administrator.account_id) : administrator.account_id == null;
+        return accountId != null ? accountId.equals(administrator.accountId) : administrator.accountId == null;
     }
 
     @Override
@@ -81,7 +77,7 @@ public class Administrator extends BaseEntity {
         result = prime * result + ((surname == null) ? 0 : surname.hashCode());
         result = prime * result + ((lastname == null) ? 0 : lastname.hashCode());
         result = prime * result + ((firstname == null) ? 0 : firstname.hashCode());
-        result = prime * result + ((account_id == null) ? 0 : account_id.hashCode());
+        result = prime * result + ((accountId == null) ? 0 : accountId.hashCode());
         return result;
     }
 
@@ -98,7 +94,7 @@ public class Administrator extends BaseEntity {
                 .append(", surname='")
                 .append(surname)
                 .append(", account_id=")
-                .append(account_id)
+                .append(accountId)
                 .append('}');
         return stringData.toString();
     }

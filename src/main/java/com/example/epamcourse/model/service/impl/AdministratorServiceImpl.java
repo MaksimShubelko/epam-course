@@ -1,8 +1,5 @@
 package com.example.epamcourse.model.service.impl;
 
-import com.example.epamcourse.controller.command.RequestParameter;
-import com.example.epamcourse.controller.command.SessionAttribute;
-import com.example.epamcourse.controller.command.SessionRequestContent;
 import com.example.epamcourse.model.dao.AdministratorDao;
 import com.example.epamcourse.model.dao.impl.AdministratorDaoImpl;
 import com.example.epamcourse.model.dao.impl.TransactionManager;
@@ -12,6 +9,7 @@ import com.example.epamcourse.model.exception.ServiceException;
 import com.example.epamcourse.model.exception.TransactionException;
 import com.example.epamcourse.model.service.AdministratorService;
 import com.example.epamcourse.model.validator.SecureInformationValidator;
+import com.example.epamcourse.model.validator.impl.SecureInformationValidatorImpl;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,7 +17,6 @@ import org.apache.logging.log4j.Logger;
 public class AdministratorServiceImpl implements AdministratorService {
     private static final Logger logger = LogManager.getLogger();
     private static final AdministratorServiceImpl instance = new AdministratorServiceImpl();
-    private final SecureInformationValidator validator = SecureInformationValidator.getInstance();
     private final TransactionManager transactionManager = TransactionManager.getInstance();
     private final AdministratorDao administratorDao = AdministratorDaoImpl.getInstance();
 
@@ -31,15 +28,16 @@ public class AdministratorServiceImpl implements AdministratorService {
     }
 
     @Override
-    public boolean addPersonalInformation(SessionRequestContent content) throws ServiceException {
+    public boolean addPersonalInformation(String name, String surname, String lastname, Long accountId) throws ServiceException {
         boolean isAdministratorSecureInformationAdded = false;
-        String name = content.getRequestParameter(RequestParameter.NAME);
-        String surname = content.getRequestParameter(RequestParameter.SURNAME);
-        String lastname = content.getRequestParameter(RequestParameter.LASTNAME);
-        Long account_id = (Long) content.getSessionAttribute(SessionAttribute.ACCOUNT_ID);
+        SecureInformationValidator validator = SecureInformationValidatorImpl.getInstance();
         try {
             if (validator.isNameValid(name) && validator.isLastnameValid(lastname) && validator.isSurnameValid(surname)) {
-                Administrator administrator = new Administrator(name, surname, lastname, account_id);
+                Administrator administrator = new Administrator();
+                administrator.setFirstname(name);
+                administrator.setSurname(surname);
+                administrator.setLastname(lastname);
+                administrator.setAccountId(accountId);
                 transactionManager.initTransaction();
                 administratorDao.add(administrator);
                 transactionManager.commit();
@@ -47,7 +45,7 @@ public class AdministratorServiceImpl implements AdministratorService {
             }
         } catch(DaoException | TransactionException e){
             transactionManager.rollback();
-            logger.log(Level.ERROR, "Error when adding secure information for administrator {}", e.getMessage());
+            logger.log(Level.ERROR, "Error when adding secure information for administrator", e);
             throw new ServiceException("Error when adding secure information for administrator", e);
         } finally{
             transactionManager.endTransaction();

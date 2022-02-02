@@ -23,14 +23,26 @@ public class BillDaoImpl implements BillDao {
     private JdbcTemplate<Bill> jdbcTemplate;
 
     private static final String FIND_ALL_BILLS = """
-            SELECT bill_id, applicant_id, total_mark, faculty_id 
+            SELECT bill_id, applicant_id, faculty_id 
             FROM bills
             """;
 
+    private static final String FIND_ALL_BILLS_BY_FACULTY_ID = """
+            SELECT bill_id, applicant_id, faculty_id 
+            FROM bills
+            WHERE faculty_id = ?
+            """;
+
     private static final String FIND_BILL_BY_ID = """
-            SELECT bill_id, applicant_id, total_mark, faculty_id 
+            SELECT bill_id, applicant_id, faculty_id 
             FROM bills 
             WHERE bill_id = ?
+            """;
+
+    private static final String FIND_BILL_BY_APPLICANT_ID = """
+            SELECT bill_id, applicant_id, faculty_id 
+            FROM bills 
+            WHERE applicant_id = ?
             """;
 
     private static final String DELETE_BILL = """
@@ -38,9 +50,15 @@ public class BillDaoImpl implements BillDao {
               WHERE bill_id = ?
             """;
 
+    private static final String FIND_NUMBER_OF_BILLS_IN_FACULTY = """
+            SELECT COUNT(bill_id)
+            FROM bills
+            WHERE faculty_id = 10
+                    """;
+
     private static final String ADD_BILL = """
-            INSERT INTO bills (bill_id, applicant_id, total_mark, faculty_id )
-            VALUE (?, ?, ?, ?)
+            INSERT INTO bills (bill_id, applicant_id, faculty_id)
+            VALUE (?, ?, ?)
             """;
 
     private static final String UPDATE_BILL = """
@@ -58,7 +76,7 @@ public class BillDaoImpl implements BillDao {
         try {
             bills = jdbcTemplate.executeSelectQuery(FIND_ALL_BILLS);
         } catch (TransactionException e) {
-            logger.log(Level.ERROR, "Error when finding all bills {}", e.getMessage());
+            logger.log(Level.ERROR, "Error when finding all bills", e);
             throw new DaoException("Error when finding all bills", e);
         }
 
@@ -71,7 +89,7 @@ public class BillDaoImpl implements BillDao {
         try {
             bill = jdbcTemplate.executeSelectQueryForObject(FIND_BILL_BY_ID, id);
         } catch (TransactionException e) {
-            logger.log(Level.ERROR, "Error when finding bill by id {} {}", id, e.getMessage());
+            logger.log(Level.ERROR, "Error when finding bill by id {} {}", id, e);
             throw new DaoException("Error when finding bill by id " + id, e);
         }
 
@@ -85,7 +103,7 @@ public class BillDaoImpl implements BillDao {
             statement.setLong(1, id);
             statement.executeUpdate();
         } catch (SQLException e) {
-            logger.log(Level.ERROR, "Error when deleting bill with id {} {}", id, e.getMessage());
+            logger.log(Level.ERROR, "Error when deleting bill with id {} {}", id, e);
             throw new DaoException("Error when deleting bill with id " + id, e);
         }
         return false;
@@ -96,11 +114,11 @@ public class BillDaoImpl implements BillDao {
         long billId = 0;
         try {
             billId = jdbcTemplate.executeInsertQuery(ADD_BILL,
+                    bill.getBillId(),
                     bill.getApplicantId(),
-                    bill.getFacultyId(),
-                    bill.getTotalMark());
+                    bill.getFacultyId());
         } catch (TransactionException e) {
-            logger.log(Level.ERROR, "Error when adding all bills {}", e.getMessage());
+            logger.log(Level.ERROR, "Error when adding all bills", e);
             throw new DaoException("Error when adding all bills", e);
         }
 
@@ -111,15 +129,54 @@ public class BillDaoImpl implements BillDao {
     public boolean update(Bill bill) throws DaoException {
         try {
             jdbcTemplate.executeInsertQuery(UPDATE_BILL,
-                    bill.getApplicantId(),
                     bill.getFacultyId(),
-                    bill.getTotalMark(),
                     bill.getBillId());
         } catch (TransactionException e) {
-            logger.log(Level.ERROR, "Error when updating all bills {}", e.getMessage());
+            logger.log(Level.ERROR, "Error when updating all bills", e);
             throw new DaoException("Error when updating all bills", e);
         }
 
         return true;
+    }
+
+    public static BillDao getInstance() {
+        return instance;
+    }
+
+    @Override
+    public Optional<Bill> findBillByApplicantId(Long applicantId) throws DaoException {
+        Optional<Bill> bill = null;
+        try {
+            bill = jdbcTemplate.executeSelectQueryForObject(FIND_BILL_BY_APPLICANT_ID, applicantId);
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when finding bill by applicant id {} {}", applicantId, e);
+            throw new DaoException("Error when finding bill by applicant id " + applicantId, e);
+        }
+
+        return bill;
+    }
+
+    @Override
+    public List<Bill> findAllBillsByFacultyId(Long facultyId) throws DaoException {
+        List<Bill> bills;
+        try {
+            bills = jdbcTemplate.executeSelectQuery(FIND_ALL_BILLS_BY_FACULTY_ID, facultyId);
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when finding bill by faculty id {} {}", facultyId, e);
+            throw new DaoException("Error when finding bill by faculty id " + facultyId, e);
+        }
+        return bills;
+    }
+
+    @Override
+    public long getCountOfBillsInFaculty(Long facultyId) throws DaoException {
+        long countOfBillsInFaculty;
+        try {
+            countOfBillsInFaculty = jdbcTemplate.executeSelectCalculation(FIND_NUMBER_OF_BILLS_IN_FACULTY, facultyId);
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when calculating count of bills in faculty {}", e);
+            throw new DaoException("Error when calculating count of bills in faculty", e);
+        }
+        return countOfBillsInFaculty;
     }
 }
