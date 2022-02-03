@@ -22,7 +22,6 @@ public final class PagePath {
     public static final String EXCEPTION_ERROR_PAGE = "/error/exception_error.jsp";
     public static final String EDIT_FACULTY_PAGE = "/pages/edit_faculty_page.jsp";
     public static final String EDIT_FACULTY_REDIRECT = "/controller?command=go_to_edit_faculty&faculty_id=";
-
     public static final String ADD_FACULTY_PAGE = "/pages/add_faculty.jsp";
     public static final String ADD_FACULTY_PAGE_REDIRECT = "/controller?command=go_to_add_faculty_page";
     public static final String SHOW_ACCOUNTS_PAGE = "/pages/show_accounts.jsp";
@@ -34,6 +33,8 @@ public final class PagePath {
     public static final String SHOW_APPLICANTS_PAGE = "/pages/show_applicants.jsp";
     public static final String SENDER_EMAIL_PAGE = "/pages/show_applicants_and_sender.jsp";
     public static final String BLOCKED_ACCOUNT_PAGE = "/pages/blocked_account_page.jsp";
+    public static final String EDIT_RECRUITMENT = "/pages/edit_recruitment.jsp";
+    public static final String EDIT_ADMINISTRATOR_DATA = "/pages/administrator_edit_data.jsp";
 
     private PagePath() {
     }

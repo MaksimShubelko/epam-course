@@ -111,7 +111,7 @@ public class FacultyDaoImpl implements FacultyDao {
 
     @Override
     public Optional<Faculty> findEntityById(Long id) throws DaoException {
-        Optional<Faculty> faculty = null;
+        Optional<Faculty> faculty;
         try {
             faculty = jdbcTemplate.executeSelectQueryForObject(FIND_FACULTY_BY_ID, id);
         } catch (TransactionException e) {
@@ -124,8 +124,7 @@ public class FacultyDaoImpl implements FacultyDao {
 
     @Override
     public boolean delete(Long id) throws DaoException {
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(DELETE_FACULTY)) {
+        try (Connection connection = ConnectionPool.getInstance().getConnection(); PreparedStatement statement = connection.prepareStatement(DELETE_FACULTY)) {
             statement.setLong(1, id);
             statement.executeUpdate();
         } catch (SQLException e) {

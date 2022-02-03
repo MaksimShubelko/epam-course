@@ -23,6 +23,9 @@ public final class SessionAttribute {
     public static final String SUBJECTS = "subjects";
     public static final String CERTIFICATE = "certificate";
     public static final String FACULTY = "faculty";
+    public static final String RECRUITMENT = "recruitment";
+    public static final String ADMINISTRATOR = "administrator";
+    public static final String ADMINISTRATOR_ID = "administrator_id";
 
     private SessionAttribute() {
     }

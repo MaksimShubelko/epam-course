@@ -39,6 +39,10 @@ public enum CommandType {
     GO_TO_SENDER_PAGE(new GoToSenderPageCommand()),
     SEND_MESSAGE(new SendMessageCommand()),
     GO_TO_CONFIRM_EMAIL_PAGE(new SendMessageCommand()),
+    GO_TO_EDIT_RECRUITMENT_PAGE(new GoToEditRecruitmentPageCommand()),
+    EDIT_RECRUITMENT(new UpdateRecruitmentCommand()),
+    GO_TO_EDIT_ADMINISTRATOR_DATA(new GoToEditAdministratorDataCommand()),
+    UPDATE_ADMINISTRATOR_DATA(new UpdateAdministratorDataCommand()),
     SHOW_APPLICANTS(new ShowApplicantsCommand());
 
     private Set<Account.Role> roles;

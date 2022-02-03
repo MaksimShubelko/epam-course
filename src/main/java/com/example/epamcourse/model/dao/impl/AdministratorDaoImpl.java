@@ -28,7 +28,8 @@ public class AdministratorDaoImpl implements AdministratorDao {
             """;
 
     private static final String FIND_ADMINISTRATOR_BY_ID = """
-            SELECT administrator_id, firstname, lastname, surname, account_id 
+            SELECT administrator_id, firstname, lastname, surname, account_id
+            FROM administrators 
             WHERE administrator_id = ?
             """;
 
@@ -118,14 +119,13 @@ public class AdministratorDaoImpl implements AdministratorDao {
     public boolean update(Administrator administrator) throws DaoException {
         try {
             jdbcTemplate.executeInsertQuery(UPDATE_ADMINISTRATOR,
-                    administrator.getAdministratorId(),
                     administrator.getFirstname(),
                     administrator.getLastname(),
                     administrator.getSurname(),
-                    administrator.getAccountId());
+                    administrator.getAdministratorId());
         } catch (TransactionException e) {
-            logger.log(Level.ERROR, "Error when up administrator.", e);
-            throw new DaoException("Error when adding administrator", e);
+            logger.log(Level.ERROR, "Error when updating administrator.", e);
+            throw new DaoException("Error when updating administrator", e);
         }
 
         return true;

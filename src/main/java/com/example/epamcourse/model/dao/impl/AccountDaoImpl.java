@@ -18,8 +18,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import static com.example.epamcourse.model.dao.Table.ROLE;
-import static com.example.epamcourse.model.dao.Table.STATUS;
+import static com.example.epamcourse.model.dao.TableColumn.ROLE;
+import static com.example.epamcourse.model.dao.TableColumn.STATUS;
 
 public class AccountDaoImpl implements AccountDao {
     private static final Logger logger = LogManager.getLogger();

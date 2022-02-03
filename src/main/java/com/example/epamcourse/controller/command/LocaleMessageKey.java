@@ -17,5 +17,6 @@ public final class LocaleMessageKey {
 
 
     public static final String INCORRECT_CODE = "confirm.email.code.error";
+    public static final String INVALID_DATE = "invalid.date.error";
 }
 

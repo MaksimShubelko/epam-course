@@ -13,9 +13,7 @@ public interface ApplicantService {
 
     List<Applicant> findApplicantsInFaculty(Long facultyId, int currentPageNumber) throws ServiceException;
 
-    List<Applicant> findApplicantsInFacultyBySurname(Long facultyId, int currentPageNumber, String surname, String recruitmentStatus) throws ServiceException;
-
-    long findCountOfApplicantsDependsOnRecruitmentStatus(Long facultyId, String recruitmentStatus) throws ServiceException;
+    List<Applicant> findApplicantsInFacultyBySurname(Long facultyId, int currentPageNumber, String recruitmentStatus) throws ServiceException;
 
     Optional<Applicant> getApplicantById(Long accountId) throws ServiceException;
 

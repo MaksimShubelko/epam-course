@@ -5,9 +5,8 @@ import com.example.epamcourse.model.entity.Account;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Locale;
 
-import static com.example.epamcourse.model.dao.Table.*;
+import static com.example.epamcourse.model.dao.TableColumn.*;
 
 public class AccountResultSetHandler implements ResultSetHandler<Account> {
 

@@ -4,6 +4,7 @@ import com.example.epamcourse.model.dao.AdministratorDao;
 import com.example.epamcourse.model.dao.impl.AdministratorDaoImpl;
 import com.example.epamcourse.model.dao.impl.TransactionManager;
 import com.example.epamcourse.model.entity.Administrator;
+import com.example.epamcourse.model.entity.Applicant;
 import com.example.epamcourse.model.exception.DaoException;
 import com.example.epamcourse.model.exception.ServiceException;
 import com.example.epamcourse.model.exception.TransactionException;
@@ -13,6 +14,8 @@ import com.example.epamcourse.model.validator.impl.SecureInformationValidatorImp
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.Optional;
 
 public class AdministratorServiceImpl implements AdministratorService {
     private static final Logger logger = LogManager.getLogger();
@@ -51,5 +54,71 @@ public class AdministratorServiceImpl implements AdministratorService {
             transactionManager.endTransaction();
         }
         return isAdministratorSecureInformationAdded;
+    }
+
+    @Override
+    public Optional<Administrator> getAdministratorById(Long administratorId) throws ServiceException {
+        Optional<Administrator> administratorOptional = Optional.empty();
+        Administrator administrator;
+        try {
+            transactionManager.initTransaction();
+            administratorOptional = administratorDao.findEntityById(administratorId);
+            transactionManager.commit();
+        } catch (DaoException | TransactionException e) {
+            transactionManager.rollback();
+            logger.log(Level.ERROR, "Error when getting applicant id{}", e);
+            throw new ServiceException("Error when getting applicant id", e);
+        } finally {
+            transactionManager.endTransaction();
+        }
+        return administratorOptional;
+    }
+
+    @Override
+    public Long getAdministratorIdByAccountId(Long accountId) throws ServiceException {
+        Optional<Administrator> administratorOptional;
+        Long administratorId = 0L;
+        try {
+            transactionManager.initTransaction();
+            administratorOptional = administratorDao.getAdministratorByAccountId(accountId);
+            if (administratorOptional.isPresent()) {
+                administratorId = administratorOptional.get().getAdministratorId();
+            }
+            transactionManager.commit();
+        } catch (DaoException | TransactionException e) {
+            transactionManager.rollback();
+            logger.log(Level.ERROR, "Error when getting applicant id", e);
+            throw new ServiceException("Error when getting applicant id", e);
+        } finally {
+            transactionManager.endTransaction();
+        }
+        return administratorId;
+    }
+
+    @Override
+    public boolean editAdministratorPersonalInformation(String name, String surname, String lastname, Long administratorId) throws ServiceException {
+        boolean isAdministratorUpdated = false;
+        Administrator administrator;
+        try {
+            transactionManager.initTransaction();
+            Optional<Administrator> administratorOptional = administratorDao.findEntityById(administratorId);
+            if (administratorOptional.isPresent()) {
+                administrator = administratorOptional.get();
+                administrator.setFirstname(name);
+                administrator.setLastname(lastname);
+                administrator.setSurname(surname);
+                administratorDao.update(administrator);
+                isAdministratorUpdated = true;
+            }
+            transactionManager.commit();
+        } catch (DaoException | TransactionException e) {
+            transactionManager.rollback();
+            logger.log(Level.ERROR, "Error when updating administrator data", e);
+            throw new ServiceException("Error when updating administrator data", e);
+        } finally {
+            transactionManager.endTransaction();
+        }
+
+        return isAdministratorUpdated;
     }
 }

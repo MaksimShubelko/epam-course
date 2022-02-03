@@ -4,8 +4,9 @@ import java.util.Map;
 
 public interface ApplicantFindingService {
 
-    Map<String, Integer> getCountOfApplicantsToSkip(String recruitmentStatus);
+    int getCountOfApplicantsToSkip(String recruitmentStatus, int recruitmentPlanCanvas, int recruitmentPlanFree, int countApplicants);
 
-    Map<String, Integer> getCountOfApplicantsToTake(String recruitmentStatus);
+    int getCountOfApplicantsToTake(String recruitmentStatus, int recruitmentPlanCanvas, int recruitmentPlanFree, int countApplicants);
 
-    int findTotalCountOfApplicants(String recruitmentStatus, int recruitmentPlanCanvas, int recruitmentPlanFree);
+    int findTotalCountOfApplicants(String recruitmentStatus, int recruitmentPlanCanvas, int recruitmentPlanFree, int countApplicants);
+}

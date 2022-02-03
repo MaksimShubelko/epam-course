@@ -1,6 +1,5 @@
 package com.example.epamcourse.model.dao.impl;
 
-import com.example.epamcourse.model.dao.Table;
 import com.example.epamcourse.model.dao.mapper.ResultSetHandler;
 import com.example.epamcourse.model.entity.BaseEntity;
 import com.example.epamcourse.model.exception.DaoException;
@@ -54,8 +53,7 @@ public class JdbcTemplate<T extends BaseEntity> {
         return result;
     }
 
-    public List<Map<String, Object>> executeSelectForList(String sql, Set<String> columnNames, Object... parameters)
-            throws DaoException, TransactionException { // todo
+    public List<Map<String, Object>> executeSelectForList(String sql, Set<String> columnNames, Object... parameters) throws TransactionException { // todo
         Connection connection = transactionManager.getConnection();
         List<Map<String, Object>> extractedValues = new ArrayList<>();
         try (PreparedStatement statement = connection.prepareStatement(sql)) {

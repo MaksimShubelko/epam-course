@@ -26,11 +26,7 @@
                     <fmt:message key="${message}" bundle="${content}"/>
                 </h6>
             </c:if>
-            <input type="hidden" name="login" value="${login}">
-            <input type="hidden" name="email" value="${email}">
-            <input type="hidden" name="password" value="${password}">
-            <input type="hidden" name="password_check" value="${password_check}">
-            <input type="hidden" name="ip" value="${ip}">
+
             <div class="row">
                 <div class="col-sm-4 offset-1">
                     <input type="hidden" id="p1" name="email_code_expected" value="${email_code_expected}">

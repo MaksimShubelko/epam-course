@@ -1,6 +1,6 @@
 package com.example.epamcourse.model.dao;
 
-public final class Table {
+public final class TableColumn {
     //table accounts
     public static final String ACCOUNTS = "account";
     //columns
@@ -76,17 +76,11 @@ public final class Table {
     public static final String SUBJECT_TYPE = "subject_type";
     public static final String MARK = "mark";
 
+    //table recruitment
+    public static final String RECRUITMENT_ID = "recruitment_id";
+    public static final String RECRUITMENT_STATUS = "status";
+    public static final String RECRUITMENT_FINISHING_DATE = "finish_recruitment";
 
-    //table accounts_tokens
-    public static final String ACCOUNTS_TOKENS = "accounts_tokens";
-    //columns
-    public static final String TOKEN_ID = "token_id";
-    public static final String TOKEN_ACCOUNT_ID = "account_id";
-    public static final String CREATION_DATE = "creation_date";
-    public static final String TOKEN = "token";
-
-    public static final String CURRENT_VALUE = "current_value";
-
-    private Table() {
+    private TableColumn() {
     }
 }

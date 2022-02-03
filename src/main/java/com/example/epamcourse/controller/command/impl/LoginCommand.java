@@ -50,13 +50,13 @@ public class LoginCommand implements Command {
                     List<Faculty> faculties = facultyService.findAllFaculties();
                     session.setAttribute(FACULTIES, faculties);
                     Long accountId = accountService.getAccountIdByLogin(login);
-                    request.getSession().setAttribute(SessionAttribute.ACCOUNT_ID, accountId);
+                    session.setAttribute(SessionAttribute.ACCOUNT_ID, accountId);
                     if (accountService.getAccountRoleByLogin(login) == Account.Role.APPLICANT) {
                         if (!accountService.isPersonalInformationExist(login)) {
                             router.setPage(APPLICANT_ADD_PERSONAL_INF);
                         } else {
                             Long applicantId = applicantService.getApplicantIdByAccountId(accountId);
-                            request.getSession().setAttribute(SessionAttribute.APPLICANT_ID, applicantId);
+                            session.setAttribute(SessionAttribute.APPLICANT_ID, applicantId);
                             router.setPage(MAIN_PAGE_APPLICANT);
                         }
                     } else {
@@ -64,6 +64,8 @@ public class LoginCommand implements Command {
                             if (!accountService.isPersonalInformationExist(login)) {
                                 router.setPage(ADMIN_ADD_PERSONAL_INF);
                             } else {
+                                Long administratorId = administratorService.getAdministratorIdByAccountId(accountId);
+                                session.setAttribute(SessionAttribute.ADMINISTRATOR_ID, administratorId);
                                 router.setPage(MAIN_PAGE_ADMINISTRATOR);
                             }
                         }

@@ -25,6 +25,9 @@ public final class RequestAttribute {
     public static final String IP = "ip";
     public static final String MESSAGE = "message";
     public static final String TITLE = "title";
+    public static final String FINISH_RECRUITMENT = "finish_recruitment";
+    public static final String RECRUITMENT = "recruitment";
+    public static final String DATE_NOW = "date_now";
 
     private RequestAttribute() {
     }

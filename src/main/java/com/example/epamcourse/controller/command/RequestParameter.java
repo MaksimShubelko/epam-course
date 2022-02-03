@@ -45,6 +45,7 @@ public final class RequestParameter {
     public static final String TITLE = "title";
     public static final String MESSAGE = "message";
     public static final String FACULTY = "faculty";
+    public static final String FINISH_RECRUITMENT = "finish_recruitment";
 
 
     private RequestParameter() {

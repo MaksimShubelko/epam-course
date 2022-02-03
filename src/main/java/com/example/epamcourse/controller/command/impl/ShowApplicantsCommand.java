@@ -18,9 +18,9 @@ import java.util.Objects;
 import static com.example.epamcourse.controller.command.PagePath.*;
 
 public class ShowApplicantsCommand implements Command {
+    private static final Logger logger = LogManager.getLogger();
     private Long facultyId = 0L;
     private String recruitmentStatus;
-    private static final Logger logger = LogManager.getLogger();
 
 
     @Override
@@ -35,6 +35,7 @@ public class ShowApplicantsCommand implements Command {
         CertificateService certificateService = CertificateServiceImpl.getInstance();
         ApplicantService applicantService = ApplicantServiceImpl.getInstance();
         FacultyService facultyService = FacultyServiceImpl.getInstance();
+        ApplicantFindingService applicantFindingService = ApplicantFindingServiceImpl.getInstance();
         try {
             List<Faculty> faculties = facultyService.findAllFaculties();
             request.setAttribute(RequestAttribute.FACULTIES, faculties);
@@ -44,12 +45,12 @@ public class ShowApplicantsCommand implements Command {
             if (!Objects.equals(request.getParameter(RequestParameter.RECRUITMENT_STATUS), null)) {
                 recruitmentStatus = request.getParameter(RequestParameter.RECRUITMENT_STATUS);
             }
-            String surname = request.getParameter(RequestParameter.SURNAME);
             if (request.getParameter(RequestParameter.PAGE) != null) {
                 page = Integer.parseInt(request.getParameter(RequestParameter.PAGE));
             }
-            List<Applicant> applicants = applicantService.findApplicantsInFacultyBySurname(facultyId, page, surname, recruitmentStatus);
-            long countOfApplicants = applicantService.findCountOfApplicantsDependsOnRecruitmentStatus(facultyId, recruitmentStatus);
+            int countApplicants = (int) billService.getCountOfBillsInFaculty(facultyId);
+            List<Applicant> applicants = applicantService.findApplicantsInFacultyBySurname(facultyId, page, recruitmentStatus);
+            long countOfApplicants = applicants.size();
             long noOfPages = (long) Math.ceil(countOfApplicants * 1.0 / recordsPerPage);
             List<List<Subject>> subjects = new ArrayList<>();
             List<Account> accounts = new ArrayList<>();

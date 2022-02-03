@@ -9,7 +9,9 @@ import com.example.epamcourse.model.entity.Subject;
 import com.example.epamcourse.model.exception.DaoException;
 import com.example.epamcourse.model.exception.ServiceException;
 import com.example.epamcourse.model.exception.TransactionException;
+import com.example.epamcourse.model.service.ApplicantFindingService;
 import com.example.epamcourse.model.service.ApplicantService;
+import com.example.epamcourse.model.validator.SecureInformationValidator;
 import com.example.epamcourse.model.validator.impl.SecureInformationValidatorImpl;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -39,7 +41,7 @@ public class ApplicantServiceImpl implements ApplicantService {
     @Override
     public boolean addPersonalInformation(String name, String surname, String lastname, Long accountId) throws ServiceException {
         boolean isApplicantSecureInformationAdded = false;
-        SecureInformationValidatorImpl validator = SecureInformationValidatorImpl.getInstance();
+        SecureInformationValidator validator = SecureInformationValidatorImpl.getInstance();
         try {
             if (validator.isNameValid(name) && validator.isLastnameValid(lastname) && validator.isSurnameValid(surname)) {
                 Applicant applicant = new Applicant();
@@ -108,45 +110,24 @@ public class ApplicantServiceImpl implements ApplicantService {
 
     @Override
     public List<Applicant> findApplicantsInFacultyBySurname(Long facultyId,
-                                                            int currentPageNumber, String surname,
+                                                            int currentPageNumber,
                                                             String recruitmentStatus) throws ServiceException {
+        ApplicantFindingService applicantFindingService = ApplicantFindingServiceImpl.getInstance();
         List<Applicant> applicants = Collections.emptyList();
         Long applicantId = 0L;
         try {
             transactionManager.initTransaction();
             int recordsPerPage = 5;
-            int applicantsSkipDepOnRecruitStatus = 0;
-            int applicantsTakeDepOnRecruitStatus = 0;
-            long countApplicants = billDao.findAllBillsByFacultyId(facultyId).size();
             Optional<Faculty> facultyOptional = facultyDao.findEntityById(facultyId);
             if (facultyOptional.isPresent()) {
                 Faculty faculty = facultyOptional.get();
                 int recruitmentPlanFree = faculty.getRecruitmentPlanFree();
                 int recruitmentPlanCanvas = faculty.getRecruitmentPlanCanvas();
-                switch (recruitmentStatus) { // todo move to ApplicantFindingService
-                    case "all":
-                        applicantsTakeDepOnRecruitStatus = (int) countApplicants;
-                        break;
-                    case "free":
-                        countApplicants = recruitmentPlanFree > countApplicants
-                                ? countApplicants : recruitmentPlanFree;
-                        applicantsTakeDepOnRecruitStatus = recruitmentPlanFree;
-                        break;
-                    case "canvas":
-                        countApplicants = recruitmentPlanFree + recruitmentPlanCanvas > countApplicants
-                                ? countApplicants - recruitmentPlanFree : recruitmentPlanCanvas;
-                        applicantsSkipDepOnRecruitStatus = recruitmentPlanFree;
-                        applicantsTakeDepOnRecruitStatus = recruitmentPlanFree + recruitmentPlanCanvas;
-                        break;
-                    case "not_received":
-                        applicantsSkipDepOnRecruitStatus = recruitmentPlanFree + recruitmentPlanCanvas;
-                        applicantsTakeDepOnRecruitStatus = (int) countApplicants;
-                        countApplicants = recruitmentPlanFree + recruitmentPlanCanvas > countApplicants ?
-                                0 : countApplicants - recruitmentPlanFree - recruitmentPlanCanvas;
-                        break;
-                    default:
-                        throw new UnsupportedOperationException();
-                }
+                int countApplicants = billDao.findAllBillsByFacultyId(facultyId).size();
+                int applicantsSkipDepOnRecruitStatus = applicantFindingService.getCountOfApplicantsToSkip(recruitmentStatus,
+                        recruitmentPlanFree, recruitmentPlanCanvas, countApplicants);
+                int applicantsTakeDepOnRecruitStatus = applicantFindingService.getCountOfApplicantsToTake(recruitmentStatus,
+                        recruitmentPlanFree, recruitmentPlanCanvas, countApplicants);
                 applicants = applicantDao.findApplicantsInOrderByMarkInFacultyAndSurname(facultyId,
                         applicantsSkipDepOnRecruitStatus, applicantsTakeDepOnRecruitStatus,
                         (currentPageNumber - 1) * recordsPerPage,
@@ -161,51 +142,6 @@ public class ApplicantServiceImpl implements ApplicantService {
             transactionManager.endTransaction();
         }
         return applicants;
-    }
-
-    @Override
-    public long findCountOfApplicantsDependsOnRecruitmentStatus(Long facultyId, String recruitmentStatus) throws ServiceException {
-        List<Applicant> applicants;
-        Long applicantId = 0L;
-        long countApplicants;
-        try {
-            transactionManager.initTransaction();
-            int recordsPerPage = 5;
-            countApplicants = billDao.findAllBillsByFacultyId(facultyId).size();
-            Optional<Faculty> facultyOptional = facultyDao.findEntityById(facultyId);
-            if (facultyOptional.isPresent()) {
-                Faculty faculty = facultyOptional.get();
-                int recruitmentPlanFree = faculty.getRecruitmentPlanFree();
-                int recruitmentPlanCanvas = faculty.getRecruitmentPlanCanvas();
-                switch (recruitmentStatus) { // todo move to ApplicantFindingService
-                    case "all":
-                        break;
-                    case "free":
-                        countApplicants = recruitmentPlanFree > countApplicants
-                                ? countApplicants : recruitmentPlanFree;
-                        break;
-                    case "canvas":
-                        countApplicants = recruitmentPlanFree + recruitmentPlanCanvas > countApplicants
-                                ? countApplicants - recruitmentPlanFree : recruitmentPlanCanvas;
-
-                        break;
-                    case "not_received":
-                        countApplicants = recruitmentPlanFree + recruitmentPlanCanvas > countApplicants ?
-                                0 : countApplicants - recruitmentPlanFree - recruitmentPlanCanvas;
-                        break;
-                    default:
-                        throw new UnsupportedOperationException();
-                }
-            }
-            transactionManager.commit();
-        } catch (DaoException | TransactionException e) {
-            transactionManager.rollback();
-            logger.log(Level.ERROR, "Error when getting applicant id", e);
-            throw new ServiceException("Error when getting applicant id", e);
-        } finally {
-            transactionManager.endTransaction();
-        }
-        return countApplicants;
     }
 
     @Override

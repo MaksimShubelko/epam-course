@@ -6,7 +6,7 @@ import com.example.epamcourse.model.entity.Faculty;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static com.example.epamcourse.model.dao.Table.*;
+import static com.example.epamcourse.model.dao.TableColumn.*;
 
 public class FacultyResultSetHandler implements ResultSetHandler<Faculty> {
     @Override

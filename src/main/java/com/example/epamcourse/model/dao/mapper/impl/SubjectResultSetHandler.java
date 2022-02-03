@@ -6,7 +6,7 @@ import com.example.epamcourse.model.entity.Subject;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static com.example.epamcourse.model.dao.Table.*;
+import static com.example.epamcourse.model.dao.TableColumn.*;
 
 public class SubjectResultSetHandler implements ResultSetHandler<Subject> {
 
