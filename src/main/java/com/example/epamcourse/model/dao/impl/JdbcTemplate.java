@@ -99,8 +99,7 @@ public class JdbcTemplate<T extends BaseEntity> {
         return extractedValues;
     }
 
-    public boolean executeUpdateDeleteFields(String sqlQuery, Object... parameters) throws
-            DaoException, TransactionException {
+    public boolean executeUpdateDeleteFields(String sqlQuery, Object... parameters) throws TransactionException {
         Connection connection = transactionManager.getConnection();
 
         try (PreparedStatement statement = connection.prepareStatement(sqlQuery)) {

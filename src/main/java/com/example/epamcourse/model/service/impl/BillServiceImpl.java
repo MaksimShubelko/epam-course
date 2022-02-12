@@ -38,9 +38,9 @@ public class BillServiceImpl implements BillService {
             Optional<Bill> billOptional = billDao.findBillByApplicantId(applicantId);
             if (billOptional.isEmpty()) {
                 Bill bill = new Bill(applicantId);
-                    billDao.add(bill);
-                    transactionManager.commit();
-                    isBillAdded = true;
+                billDao.add(bill);
+                transactionManager.commit();
+                isBillAdded = true;
             }
         } catch (DaoException | TransactionException e) {
             transactionManager.rollback();
@@ -78,7 +78,20 @@ public class BillServiceImpl implements BillService {
 
     @Override
     public boolean deleteBill(Long applicantId) throws ServiceException {
-        return false; //todo
+        boolean isBillUpdated = false;
+        Applicant applicant;
+        try {
+            transactionManager.initTransaction();
+            billDao.deleteBillByApplicantId(applicantId);
+            transactionManager.commit();
+        } catch (DaoException | TransactionException e) {
+            transactionManager.rollback();
+            logger.log(Level.ERROR, "Error when updating bill for applicant", e);
+            throw new ServiceException("Error when updating bill for applicant", e);
+        } finally {
+            transactionManager.endTransaction();
+        }
+        return isBillUpdated;
     }
 
 

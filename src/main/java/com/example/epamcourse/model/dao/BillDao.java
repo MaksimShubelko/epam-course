@@ -8,6 +8,8 @@ import java.util.Optional;
 
 public interface BillDao extends BaseDao<Bill> {
 
+    boolean deleteBillByApplicantId(Long applicantId) throws DaoException;
+
     Optional<Bill> findBillByApplicantId(Long applicantId) throws DaoException;
 
     List<Bill> findAllBillsByFacultyId(Long facultyId) throws DaoException;

@@ -13,8 +13,8 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import java.util.Optional;
 
 public class GoToEditApplicantDataCommand implements Command {
@@ -34,6 +34,10 @@ public class GoToEditApplicantDataCommand implements Command {
             Optional<Account> accountOptional = accountService.findAccountById(accountId);
             Applicant applicant = applicantOptional.orElseThrow(IllegalArgumentException::new);
             Account account = accountOptional.orElseThrow(IllegalArgumentException::new);
+            String image = accountService.loadImage(account.getLogin());
+            System.out.println(image + " image");
+            session.setAttribute(SessionAttribute.ACCOUNT, account);
+            session.setAttribute(SessionAttribute.IMAGE, image);
             session.setAttribute(SessionAttribute.APPLICANT, applicant);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, "Go to edition applicant's data failed.", e);

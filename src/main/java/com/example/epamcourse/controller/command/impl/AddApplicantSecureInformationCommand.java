@@ -12,8 +12,8 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
 
 public class AddApplicantSecureInformationCommand implements Command {
@@ -28,12 +28,12 @@ public class AddApplicantSecureInformationCommand implements Command {
         Long accountId = (Long) request.getSession().getAttribute(SessionAttribute.ACCOUNT_ID);
         ApplicantService applicantService = ApplicantServiceImpl.getInstance();
         FacultyService facultyService = FacultyServiceImpl.getInstance();
-        Router router = new Router(PagePath.APPLICANT_ADD_PERSONAL_INF);
+        Router router = new Router(PagePath.MAIN_PAGE_APPLICANT_REDIRECT);
         router.setType(Router.RouterType.REDIRECT);
         try {
             if (applicantService.addPersonalInformation(name, surname, lastname, accountId)) {
                 List<Faculty> faculties = facultyService.findAllFaculties();
-                request.setAttribute(RequestAttribute.FACULTIES, faculties);
+                session.setAttribute(RequestAttribute.FACULTIES, faculties);
                 Long applicantId = applicantService.getApplicantIdByAccountId(accountId);
                 session.setAttribute(SessionAttribute.APPLICANT_ID, applicantId);
                 router.setPage(PagePath.MAIN_PAGE_APPLICANT);

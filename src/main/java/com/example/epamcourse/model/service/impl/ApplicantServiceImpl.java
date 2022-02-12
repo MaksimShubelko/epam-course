@@ -166,6 +166,23 @@ public class ApplicantServiceImpl implements ApplicantService {
     }
 
     @Override
+    public Optional<Applicant> getApplicantByAccountId(Long accountId) throws ServiceException {
+        Optional<Applicant> applicantOptional = Optional.empty();
+        try {
+            transactionManager.initTransaction();
+            applicantOptional = applicantDao.getApplicantByAccountId(accountId);
+            transactionManager.commit();
+        } catch (DaoException | TransactionException e) {
+            transactionManager.rollback();
+            logger.log(Level.ERROR, "Error when getting applicant", e);
+            throw new ServiceException("Error when getting applicant", e);
+        } finally {
+            transactionManager.endTransaction();
+        }
+        return applicantOptional;
+    }
+
+    @Override
     public boolean updateApplicantPrivileges(Long applicantId, boolean privilege) throws ServiceException {
         boolean isApplicantUpdated = false;
         Applicant applicant;

@@ -15,12 +15,13 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Optional;
 
 import static com.example.epamcourse.controller.command.PagePath.MAIN_PAGE_APPLICANT;
+import static com.example.epamcourse.controller.command.PagePath.MAIN_PAGE_APPLICANT_REDIRECT;
 
 public class ShowRequestsCommand implements Command {
     private static Long facultyId = 0L;
@@ -31,7 +32,7 @@ public class ShowRequestsCommand implements Command {
         final int recordsPerPage = 5;
         int page = 1;
         HttpSession session = request.getSession();
-        Router router = new Router(MAIN_PAGE_APPLICANT);
+        Router router = new Router(MAIN_PAGE_APPLICANT_REDIRECT);
         ApplicantService applicantService = ApplicantServiceImpl.getInstance();
         FacultyService facultyService = FacultyServiceImpl.getInstance();
         try {
@@ -52,14 +53,13 @@ public class ShowRequestsCommand implements Command {
                 request.setAttribute(RequestAttribute.FACULTY, faculty);
             }
             request.setAttribute(RequestAttribute.APPLICANTS, applicants);
-            request.setAttribute(RequestAttribute.CURRENT_PAGE, page);
+            request.setAttribute(RequestAttribute.PAGE, page);
             request.setAttribute(RequestAttribute.COUNT_PAGES, noOfPages);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, "Finding applicants failed", e);
             throw new CommandException("Finding applicants failed", e);
         }
         session.setAttribute(SessionAttribute.CURRENT_PAGE, MAIN_PAGE_APPLICANT);
-
         return router;
     }
 }

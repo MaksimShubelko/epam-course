@@ -1,10 +1,10 @@
 package com.example.epamcourse.controller.listener;
 
 import com.example.epamcourse.model.pool.ConnectionPool;
+import jakarta.servlet.annotation.WebListener;
 
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import javax.servlet.annotation.WebListener;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
 
 @WebListener
 public class ServletListener implements ServletContextListener {

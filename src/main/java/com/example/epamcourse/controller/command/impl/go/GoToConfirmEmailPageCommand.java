@@ -6,8 +6,8 @@ import com.example.epamcourse.controller.command.Router;
 import com.example.epamcourse.controller.command.SessionAttribute;
 import com.example.epamcourse.model.exception.CommandException;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 public class GoToConfirmEmailPageCommand implements Command {
     @Override

@@ -13,8 +13,10 @@ public final class LocaleMessageKey {
     public static final String REGISTRATION_ERROR_INVALID_EMAIL_FORMAT = "login.error.registration";
     public static final String REGISTRATION_ERROR_INVALID_LOGIN_FORMAT = "email.error.registration";
     public static final String REGISTRATION_ERROR_INVALID_PASSWORD_FORMAT = "password.error.registration";
-    public static final String REGISTRATION_ERROR_INVALID_PASSWORD_MISMATCH = "password.error.mismatch";public static final String PASSWORD_DOUBLE_CHECK_ERROR = "sing_up.password.invalid_double_check_message";
-
+    public static final String REGISTRATION_ERROR_INVALID_PASSWORD_MISMATCH = "password.error.mismatch";
+    public static final String PASSWORD_DOUBLE_CHECK_ERROR = "sing_up.password.invalid_double_check_message";
+    public static final String ILLEGAL_ADDRESS = "illegal.address.error";
+    public static final String ILLEGAL_ROLE = "illegal.address.error";
 
     public static final String INCORRECT_CODE = "confirm.email.code.error";
     public static final String INVALID_DATE = "invalid.date.error";

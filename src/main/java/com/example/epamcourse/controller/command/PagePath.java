@@ -25,16 +25,23 @@ public final class PagePath {
     public static final String ADD_FACULTY_PAGE = "/pages/add_faculty.jsp";
     public static final String ADD_FACULTY_PAGE_REDIRECT = "/controller?command=go_to_add_faculty_page";
     public static final String SHOW_ACCOUNTS_PAGE = "/pages/show_accounts.jsp";
-    public static final String SHOW_ACCOUNTS_PAGE_REDIRECT = "/controller?command=show_accounts&page=";
+    public static final String SHOW_ACCOUNTS_PAGE_REDIRECT = "/controller?command=go_to_show_accounts&page=";
     public static final String ADD_ADMIN_ACCOUNT_PAGE = "/pages/adding_admin_account.jsp";
     public static final String ADD_ADMIN_ACCOUNT_PAGE_REDIRECT = "/controller?command=go_to_add_admin_account";
     public static final String CONFIRM_EMAIL_PAGE = "/pages/confirm_email_page.jsp";
     public static final String CONFIRM_EMAIL_PAGE_REDIRECT = "/controller?command=go_to_confirm_email_page";
     public static final String SHOW_APPLICANTS_PAGE = "/pages/show_applicants.jsp";
-    public static final String SENDER_EMAIL_PAGE = "/pages/show_applicants_and_sender.jsp";
+    public static final String SENDER_EMAIL_PAGE = "/pages/sender.jsp";
     public static final String BLOCKED_ACCOUNT_PAGE = "/pages/blocked_account_page.jsp";
     public static final String EDIT_RECRUITMENT = "/pages/edit_recruitment.jsp";
     public static final String EDIT_ADMINISTRATOR_DATA = "/pages/administrator_edit_data.jsp";
+    public static final String SHOW_FACULTIES_REDIRECT = "/controller?command=go_to_show_faculties";
+    public static final String GO_TO_SHOW_APPLICANTS_REDIRECT = "/controller?command=go_to_show_applicants";
+    public static final String GO_TO_SHOW_ACCOUNT_REDIRECT = "/controller?command=go_to_show_accounts";
+    public static final String MAIN_PAGE_APPLICANT_REDIRECT = "/controller?command=go_to_main_page_applicant";
+    public static final String UPLOAD_IMAGE = "/pages/upload_image.jsp";
+    public static final String EDIT_ADMINISTRATOR_DATA_REDIRECT = "/controller?command=go_to_edit_administrator_data";
+    public static final String PROFILE = "/pages/profile.jsp";
 
     private PagePath() {
     }

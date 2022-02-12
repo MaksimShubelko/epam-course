@@ -50,6 +50,11 @@ public class BillDaoImpl implements BillDao {
               WHERE bill_id = ?
             """;
 
+    private static final String DELETE_BILL_BY_APPLICANT_ID = """
+              DELETE FROM bills 
+              WHERE applicant_id = ?
+            """;
+
     private static final String FIND_NUMBER_OF_BILLS_IN_FACULTY = """
             SELECT COUNT(bill_id)
             FROM bills
@@ -141,6 +146,19 @@ public class BillDaoImpl implements BillDao {
 
     public static BillDao getInstance() {
         return instance;
+    }
+
+    @Override
+    public boolean deleteBillByApplicantId(Long applicantId) throws DaoException {
+        try {
+            jdbcTemplate.executeUpdateDeleteFields(DELETE_BILL_BY_APPLICANT_ID,
+                    applicantId);
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when updating all bills", e);
+            throw new DaoException("Error when updating all bills", e);
+        }
+
+        return true;
     }
 
     @Override

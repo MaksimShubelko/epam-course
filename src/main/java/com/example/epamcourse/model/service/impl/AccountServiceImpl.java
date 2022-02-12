@@ -18,13 +18,24 @@ import com.example.epamcourse.util.HashGenerator;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.tomcat.util.codec.binary.Base64;
+import org.apache.tomcat.util.codec.binary.StringUtils;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class AccountServiceImpl implements AccountService {
     private static final Logger logger = LogManager.getLogger();
+    private static final String UPLOAD_DIR = "C:\\images\\";
+    private static final String stringParams = "data:image/jpeg;base64,";
     private static final AccountServiceImpl instance = new AccountServiceImpl();
     private final TransactionManager transactionManager = TransactionManager.getInstance();
     private final AccountDao accountDao = AccountDaoImpl.getInstance();
@@ -99,38 +110,66 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    public String loadImage(String login) throws ServiceException {
+        Optional<Account> accountOptional;
+        String newImage = "";
+        try {
+            transactionManager.initTransaction();
+            accountOptional = accountDao.findAccountByLogin(login);
+            if (accountOptional.isPresent()) {
+                String imagePath = accountOptional.get().getImagePath();
+                File image = new File(imagePath);
+                byte[] byteContent = Files.readAllBytes(image.toPath());
+                StringBuilder stringBuilderParams = new StringBuilder(stringParams);
+                byte[] encodingImg = Base64.encodeBase64(byteContent, false);
+                String imageString = StringUtils.newStringUtf8(encodingImg);
+                stringBuilderParams.append(imageString);
+                newImage = stringBuilderParams.toString();
+            }
+            transactionManager.commit();
+        } catch (DaoException | TransactionException | IOException e) {
+            transactionManager.rollback();
+            logger.log(Level.ERROR, "Error when loading image", e);
+            throw new ServiceException("Error when loading image", e);
+        } finally {
+            transactionManager.endTransaction();
+        }
+
+        return newImage;
+    }
+
+    @Override
     public boolean addAccount(String login, String password, String passwordCheck, String email, String ip) throws ServiceException {
         boolean isAccountAdded = false;
         AccountValidator validator = AccountValidatorImpl.getInstance();
-        if (!(validator.isLoginValid(login) &&
-                validator.isPasswordValid(password)) || isAccountLoginExist(login)) {
-            // todo
-        } else {
-            if (!validator.passwordCheck(password, passwordCheck)) {
-            // todo
-            } else {
-                Account account = new Account.AccountBuilder()
-                        .setLogin(login)
-                        .setPassword(password)
-                        .setEmail(email)
-                        .setIp(ip)
-                        .setRole(Account.Role.APPLICANT)
-                        .createAccount();
-                String hashPassword = HashGenerator.hashPassword(password);
-                try {
-                    transactionManager.initTransaction();
-                    accountDao.add(account, hashPassword);
-                    transactionManager.commit();
-                    isAccountAdded = true;
-                } catch (DaoException | TransactionException e) {
-                    transactionManager.rollback();
-                    logger.log(Level.ERROR, "Error when adding account with login {} and password {}, {}", login, password, e);
-                    throw new ServiceException("Error when adding account with login " + login + " and password " + password, e);
-                } finally {
-                    transactionManager.endTransaction();
-                }
+        System.out.println("add account");
+        if ((validator.isLoginValid(login)
+                && validator.passwordCheck(password, passwordCheck)
+                && validator.isPasswordValid(password))
+                && !isAccountLoginExist(login)) {
+
+            Account account = new Account.AccountBuilder()
+                    .setLogin(login)
+                    .setPassword(password)
+                    .setEmail(email)
+                    .setIp(ip)
+                    .setRole(Account.Role.APPLICANT)
+                    .createAccount();
+            String hashPassword = HashGenerator.hashPassword(password);
+            try {
+                transactionManager.initTransaction();
+                accountDao.add(account, hashPassword);
+                transactionManager.commit();
+                isAccountAdded = true;
+            } catch (DaoException | TransactionException e) {
+                transactionManager.rollback();
+                logger.log(Level.ERROR, "Error when adding account with login {} and password {}, {}", login, password, e);
+                throw new ServiceException("Error when adding account with login " + login + " and password " + password, e);
+            } finally {
+                transactionManager.endTransaction();
             }
         }
+
         return isAccountAdded;
     }
 
@@ -298,6 +337,37 @@ public class AccountServiceImpl implements AccountService {
         return isAccountDeleted;
     }
 
+    @Override
+    public void uploadImage(InputStream content, String fileName, String login) throws ServiceException {
+        boolean isPersonalInformationPresent;
+        try (content) {
+            String imagePathString = UPLOAD_DIR + fileName;
+            Path imagePath = new File(imagePathString).toPath();
+            long bytes = Files.copy(
+                    content,
+                    imagePath,
+                    StandardCopyOption.REPLACE_EXISTING
+            );
+            transactionManager.initTransaction();
+            Optional<Account> accountOptional = accountDao.findAccountByLogin(login);
+            Account account;
+            if (accountOptional.isPresent()) {
+                System.out.println("PRESENT ACCOUNTS");
+                account = accountOptional.get();
+                account.setImagePath(imagePathString);
+                accountDao.update(account);
+            } else {
+                System.out.println("NO ACCOUNTS");
+            }
+            transactionManager.commit();
+        } catch (DaoException | TransactionException | IOException e) {
+            transactionManager.rollback();
+            logger.log(Level.ERROR, "Error when uploading image for account", e);
+            throw new ServiceException("Error when uploading image for account", e);
+        } finally {
+            transactionManager.endTransaction();
+        }
+    }
 
 
     @Override

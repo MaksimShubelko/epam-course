@@ -13,12 +13,23 @@
 </head>
 <body>
 <form class="needs-validation h-100" novalidate action="${pageContext.request.contextPath}/controller" method="get">
+    <div class="row">
+        <div class="col-2 offset-sm-9">
+            <a href="${pageContext.request.contextPath}/controller?command=go_to_edit_administrator_data">
+                <fmt:message key="administrator.edit.data" bundle="${content}"/>
+            </a>
+        </div>
+        <div class="col-1">
+            <a href="${pageContext.request.contextPath}/controller?command=logout">
+                <fmt:message key="logout" bundle="${content}"/>
+            </a>
+        </div>
+    </div>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <div class="d-flex justify-content-between">
@@ -30,7 +41,7 @@
                                 <fmt:message key="admin.main.page.faculties" bundle="${content}"/>
                             </button>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="${pageContext.request.contextPath}/controller?command=show_faculties&page=1">
+                                <a class="dropdown-item" href="${pageContext.request.contextPath}/controller?command=go_toshow_faculties&page=1">
                                     <fmt:message key="admin.main.page.faculties.show" bundle="${content}"/>
                                 </a>
                                 <a class="dropdown-item"
@@ -49,7 +60,7 @@
                             </button>
                             <div class="dropdown-menu">
                                 <a class="dropdown-item"
-                                   href="${pageContext.request.contextPath}/controller?command=show_accounts&page=1">
+                                   href="${pageContext.request.contextPath}/controller?command=go_to_show_accounts&page=1">
                                     <fmt:message key="admin.main.page.accounts" bundle="${content}"/>
                                 </a>
                                 <a class="dropdown-item"
@@ -67,8 +78,8 @@
                                 <fmt:message key="admin.main.page.applicants" bundle="${content}"/>
                             </button>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="${pageContext.request.contextPath}/controller?command=go_to_show_applicants_page&page=1">
-                                    <fmt:message key="admin.main.page.applicants.find" bundle="${content}"/>
+                                <a class="dropdown-item" href="${pageContext.request.contextPath}/controller?command=go_to_show_applicants&page=1">
+                                    <fmt:message key="admin.main.page.applicants.search" bundle="${content}"/>
                                 </a>
                             </div>
                         </div>
@@ -80,20 +91,9 @@
                                     aria-haspopup="true" aria-expanded="false">Dropdown
                             </button>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="#">Action</a>
-                                <a class="dropdown-item" href="#">Another action</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="input-group p-1">
-                        <div class="input-group-prepend">
-                            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"
-                                    aria-haspopup="true" aria-expanded="false">Dropdown
-                            </button>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item" href="#">Action</a>
-                                <a class="dropdown-item" href="#">Another action</a>
+                                <a class="dropdown-item" href="${pageContext.request.contextPath}/controller?command=go_to_edit_recruitment_page">
+                                    <fmt:message key="admin.main.page.recruitment.update" bundle="${content}"/>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -152,7 +152,7 @@
             <div class="col-3">
                 <c:if test="${currentPage != 1}">
                     <td>
-                        <a href="${pageContext.request.contextPath}/controller?command=show_faculties&page=${currentPage - 1}">
+                        <a href="${pageContext.request.contextPath}/controller?command=go_to_show_faculties&page=${currentPage - 1}">
                             <fmt:message key="pagination.previous.page" bundle="${content}"/>
                         </a>
                     </td>
@@ -169,7 +169,7 @@
                                 </c:when>
                                 <c:otherwise>
                                     <td>
-                                        <a href="${pageContext.request.contextPath}/controller?command=show_faculties&page=${i}">${i}</a>
+                                        <a href="${pageContext.request.contextPath}/controller?command=go_to_show_faculties&page=${i}">${i}</a>
                                     </td>
                                 </c:otherwise>
                             </c:choose>
@@ -180,7 +180,7 @@
             <div class="col-3">
                 <c:if test="${currentPage lt countPages}">
                     <td>
-                        <a href="${pageContext.request.contextPath}/controller?command=show_faculties&page=${currentPage + 1}">
+                        <a href="${pageContext.request.contextPath}/controller?command=go_to_show_faculties&page=${currentPage + 1}">
                             <fmt:message key="pagination.next.page" bundle="${content}"/></a>
                     </td>
                 </c:if>

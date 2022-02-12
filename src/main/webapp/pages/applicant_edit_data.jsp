@@ -14,13 +14,22 @@
 </head>
 <body>
 <div>
-    <form class="container needs-validation h-75" novalidate action="${pageContext.request.contextPath}/controller"
+    <form class="container needs-validation h-75" enctype="multipart/form-data" novalidate
+          action="${pageContext.request.contextPath}/controller"
           method="get">
         <input type="hidden" name="command" value="update_applicant_data"/>
+        <img class="h-50 offset-6 p-4" src="${img}">
+        <div class="row col-12">
+            <a class="offset-7" href="${pageContext.request.contextPath}/controller?command=go_to_upload_image">
+                <h6><fmt:message key="change.image" bundle="${content}"/></h6>
+            </a>
+        </div>
+
         <div class="offset-4 p-5 w-75">
-            <div class="offset-3">
+            <div class="offset-4">
                 <h6><fmt:message key="edit.applicant.data.welcome.message" bundle="${content}"/></h6>
             </div>
+
 
             <div class="row">
                 <label class="col-3 col-form-label">
@@ -60,6 +69,7 @@
                     </div>
                 </div>
             </div>
+
 
             <div class="row">
                 <div class="col-10 offset-4 p-1">

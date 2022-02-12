@@ -12,7 +12,8 @@
 </head>
 <body>
 <div>
-    <form name="loginForm" class="needs-validation w-75 h-100" novalidate action="${pageContext.request.contextPath}/controller" method="get">
+    <form name="loginForm" class="needs-validation w-75 h-100" novalidate
+          action="${pageContext.request.contextPath}/controller" method="get">
         <input type="hidden" name="command" value="add_request_command"/>
 
         <div class="row offset-sm-2">
@@ -27,9 +28,9 @@
                 </select>
             </div>
             <div class="col-2">
-               <h6>
-                   <fmt:message key="request.benefits" bundle="${content}"/>
-               </h6>
+                <h6>
+                    <fmt:message key="request.benefits" bundle="${content}"/>
+                </h6>
                 <select class="custom-select" name="privileges" required>
                     <option value="true">true</option>
                     <option value="false">false</option>
@@ -67,7 +68,8 @@
                                     <h6><fmt:message key="request.language" bundle="${content}"/></h6>
                                 </c:when>
                             </c:choose>
-                            <input class="form-control" type="number" min="10" max="100" name="${subject.getSubjectType()}"
+                            <input class="form-control" type="number" min="10" max="100"
+                                   name="${subject.getSubjectType()}"
                                    value="${subject.getMark()}"/>
                             <div class="invalid-feedback">
                                 <h6>
@@ -81,7 +83,8 @@
         </div>
         <div class="row">
             <div class="col-6 offset-5">
-                <input type="submit" value="submit">
+                <input type="submit"
+                       value="<fmt:message key="add.request.page.submit" bundle="${content}"/>">
             </div>
         </div>
     </form>

@@ -6,23 +6,18 @@ import com.example.epamcourse.controller.command.Router;
 import com.example.epamcourse.controller.command.SessionAttribute;
 import com.example.epamcourse.model.entity.Certificate;
 import com.example.epamcourse.model.entity.Faculty;
+import com.example.epamcourse.model.entity.Recruitment;
 import com.example.epamcourse.model.entity.Subject;
 import com.example.epamcourse.model.exception.CommandException;
 import com.example.epamcourse.model.exception.ServiceException;
-import com.example.epamcourse.model.service.BillService;
-import com.example.epamcourse.model.service.CertificateService;
-import com.example.epamcourse.model.service.FacultyService;
-import com.example.epamcourse.model.service.SubjectService;
-import com.example.epamcourse.model.service.impl.BillServiceImpl;
-import com.example.epamcourse.model.service.impl.CertificateServiceImpl;
-import com.example.epamcourse.model.service.impl.FacultyServiceImpl;
-import com.example.epamcourse.model.service.impl.SubjectServiceImpl;
+import com.example.epamcourse.model.service.*;
+import com.example.epamcourse.model.service.impl.*;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 import java.util.List;
 import java.util.Optional;
@@ -34,20 +29,22 @@ public class GoToAddRequestPageCommand implements Command {
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        request.getSession().setAttribute(SessionAttribute.CURRENT_PAGE, ADD_REQUEST_PAGE);
+        HttpSession session = request.getSession();
+        session.setAttribute(SessionAttribute.CURRENT_PAGE, ADD_REQUEST_PAGE_REDIRECT);
         Long applicantId = (Long) request.getSession().getAttribute(SessionAttribute.APPLICANT_ID);
+        RecruitmentService recruitmentService = RecruitmentServiceImpl.getInstance();
         SubjectService subjectService = SubjectServiceImpl.getInstance();
         CertificateService certificateService = CertificateServiceImpl.getInstance();
         FacultyService facultyService = FacultyServiceImpl.getInstance();
         BillService billService = BillServiceImpl.getInstance();
         try {
+            /*if (recruitmentService)*/
             subjectService.addSubject(applicantId);
             certificateService.addCertificate(applicantId);
             billService.addBill(applicantId);
             List<Subject> subjects = subjectService.findSubject(applicantId);
             Optional<Certificate> certificateOptional = certificateService.findCertificate(applicantId);
             List<Faculty> faculties = facultyService.findAllFaculties();
-            HttpSession session = request.getSession();
             session.setAttribute(SessionAttribute.FACULTIES, faculties);
             session.setAttribute(SessionAttribute.SUBJECTS, subjects);
             session.setAttribute(SessionAttribute.CERTIFICATE, certificateOptional.get());

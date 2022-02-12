@@ -150,8 +150,8 @@ public class FacultyServiceImpl implements FacultyService {
             transactionManager.commit();
         } catch (DaoException | TransactionException e) {
             transactionManager.rollback();
-            logger.log(Level.ERROR, "Error when getting applicant id", e);
-            throw new ServiceException("Error when getting applicant id", e);
+            logger.log(Level.ERROR, "Error when finding faculties", e);
+            throw new ServiceException("Error when finding faculties", e);
         } finally {
             transactionManager.endTransaction();
         }

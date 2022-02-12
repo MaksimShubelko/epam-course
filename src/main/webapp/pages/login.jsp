@@ -17,7 +17,7 @@
 </head>
 <body>
 <div>
-    <form name="loginForm" action="${pageContext.request.contextPath}/controller" method="get" class="container h-75">
+    <form name="loginForm" action="${pageContext.request.contextPath}/controller" method="post" class="container h-75">
         <input type="hidden" name="command" value="login"/>
         <div class="row col-6 offset-4 p-lg-5">
             <label class="form-label nav offset-2">

@@ -8,8 +8,10 @@ public class Account extends BaseEntity {
     private Role role;
     private Status status;
     private String ip;
+    private String imagePath;
 
     public enum Role {
+        NOT_AUTOMATED,
         ADMIN,
         APPLICANT;
     }
@@ -19,7 +21,10 @@ public class Account extends BaseEntity {
         BLOCKED;
     }
 
-    public Account(Long accountId, String login, String password, String email, Role role, Status status, String ip) {
+    public Account(Long accountId, String login,
+                   String password, String email,
+                   Role role, Status status,
+                   String ip, String imagePath) {
         this.accountId = accountId;
         this.login = login;
         this.password = password;
@@ -27,6 +32,7 @@ public class Account extends BaseEntity {
         this.role = role;
         this.status = status;
         this.ip = ip;
+        this.imagePath = imagePath;
     }
 
     public Long getAccountId() {
@@ -39,6 +45,14 @@ public class Account extends BaseEntity {
 
     public String getLogin() {
         return login;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     public void setLogin(String login) {
@@ -90,10 +104,11 @@ public class Account extends BaseEntity {
         if (this == o) return true;
         if (!(o instanceof Account)) return false;
         Account account = (Account) o;
+        if (imagePath != null ? !imagePath.equals(account.imagePath) : account.imagePath != null) return false;
         if (login != null ? !login.equals(account.login) : account.login != null) return false;
         if (password != null ? !password.equals(account.password) : account.password != null) return false;
         if (role != null ? !role.equals(account.role) : account.role != null) return false;
-        if (status != null ? role.equals(account.status) : account.status != null) return false;
+        if (status != null ? status.equals(account.status) : account.status != null) return false;
         return email != null ? email.equals(account.email) : account.email == null;
     }
 
@@ -103,6 +118,7 @@ public class Account extends BaseEntity {
         int result = 1;
         result = prime * result + Long.hashCode(accountId);
         result = prime * result + ((login == null) ? 0 : login.hashCode());
+        result = prime * result + ((imagePath == null) ? 0 : imagePath.hashCode());
         result = prime * result + ((password == null) ? 0 : password.hashCode());
         result = prime * result + ((email == null) ? 0 : email.hashCode());
         result = prime * result + ((status == null) ? 0 : status.hashCode());
@@ -125,6 +141,8 @@ public class Account extends BaseEntity {
                 .append(role)
                 .append(", status=")
                 .append(status)
+                .append(", imagePath=")
+                .append(imagePath)
                 .append(", ip=")
                 .append(ip)
                 .append('}');
@@ -140,6 +158,7 @@ public class Account extends BaseEntity {
         private Role role;
         private Status status;
         private String ip;
+        private String imagePath;
 
         public AccountBuilder setAccountId(Long accountId) {
             this.accountId = accountId;
@@ -175,9 +194,13 @@ public class Account extends BaseEntity {
             this.ip = ip;
             return this;
         }
+        public AccountBuilder setImagePath(String imagePath) {
+            this.imagePath = imagePath;
+            return this;
+        }
 
         public Account createAccount() {
-            return new Account(accountId, login, password, email, role, status, ip);
+            return new Account(accountId, login, password, email, role, status, ip, imagePath);
         }
     }
 }

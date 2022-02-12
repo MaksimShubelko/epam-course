@@ -17,6 +17,8 @@ public interface ApplicantService {
 
     Optional<Applicant> getApplicantById(Long accountId) throws ServiceException;
 
+    Optional<Applicant> getApplicantByAccountId(Long accountId) throws ServiceException;
+
     boolean updateApplicantPrivileges(Long applicantId, boolean privilege) throws ServiceException;
 
     boolean updateApplicantPersonalData(Long applicantId, String name, String surname, String lastname) throws ServiceException;

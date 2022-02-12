@@ -1,43 +1,73 @@
 package com.example.epamcourse.controller.command.impl.go;
 
-import com.example.epamcourse.controller.command.Command;
-import com.example.epamcourse.controller.command.Router;
-import com.example.epamcourse.controller.command.SessionAttribute;
-import com.example.epamcourse.model.entity.Faculty;
+import com.example.epamcourse.controller.command.*;
+import com.example.epamcourse.model.entity.*;
 import com.example.epamcourse.model.exception.CommandException;
 import com.example.epamcourse.model.exception.ServiceException;
-import com.example.epamcourse.model.service.ApplicantService;
-import com.example.epamcourse.model.service.FacultyService;
-import com.example.epamcourse.model.service.impl.ApplicantServiceImpl;
-import com.example.epamcourse.model.service.impl.FacultyServiceImpl;
+import com.example.epamcourse.model.service.*;
+import com.example.epamcourse.model.service.impl.*;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
-
-import static com.example.epamcourse.controller.command.PagePath.*;
-import static com.example.epamcourse.controller.command.PagePath.APPLICANT_ADD_PERSONAL_INF;
-import static com.example.epamcourse.controller.command.RequestAttribute.FACULTIES;
+import java.util.Objects;
 
 public class GoToShowApplicantsPageCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        FacultyService facultyService = FacultyServiceImpl.getInstance();
+        final int recordsPerPage = 5;
+        int page = 1;
+        Long facultyId = 0L;
+        String recruitmentStatus = null;
+        HttpSession session = request.getSession();
+        Router router = new Router(PagePath.SHOW_APPLICANTS_PAGE);
+        BillService billService = BillServiceImpl.getInstance();
+        AccountService accountService = AccountServiceImpl.getInstance();
+        SubjectService subjectService = SubjectServiceImpl.getInstance();
+        CertificateService certificateService = CertificateServiceImpl.getInstance();
         ApplicantService applicantService = ApplicantServiceImpl.getInstance();
-        Router router = new Router(SHOW_APPLICANTS_PAGE);
-        List<Faculty> faculties = null;
+        FacultyService facultyService = FacultyServiceImpl.getInstance();
         try {
-            faculties = facultyService.findAllFaculties();
+            List<Faculty> faculties = facultyService.findAllFaculties();
+            request.setAttribute(RequestAttribute.FACULTIES, faculties);
+            if (!Objects.equals(request.getParameter(RequestParameter.FACULTY_ID), null)) {
+                facultyId = Long.parseLong(request.getParameter(RequestParameter.FACULTY_ID));
+            }
+            if (!Objects.equals(request.getParameter(RequestParameter.RECRUITMENT_STATUS), null)) {
+                recruitmentStatus = request.getParameter(RequestParameter.RECRUITMENT_STATUS);
+            }
+            if (request.getParameter(RequestParameter.PAGE) != null) {
+                page = Integer.parseInt(request.getParameter(RequestParameter.PAGE));
+            }
+            List<Applicant> applicants = applicantService.findApplicantsInFacultyBySurname(facultyId, page, recruitmentStatus);
+            long countOfApplicants = applicants.size();
+            long noOfPages = (long) Math.ceil(countOfApplicants * 1.0 / recordsPerPage);
+            List<List<Subject>> subjects = new ArrayList<>();
+            List<Account> accounts = new ArrayList<>();
+            List<Certificate> certificates = new ArrayList<>();
+            for (Applicant applicant : applicants) {
+                subjects.add(subjectService.findSubject(applicant.getApplicantId()));
+                accounts.add(accountService.findAccountById(applicant.getAccountId()).orElseThrow(UnsupportedOperationException::new));
+                certificates.add(certificateService.findCertificate(applicant.getApplicantId()).orElseThrow(UnsupportedOperationException::new));
+            };
+            request.setAttribute(RequestParameter.ACCOUNTS, accounts);
+            request.setAttribute(RequestParameter.CERTIFICATES, certificates);
+            request.setAttribute(RequestAttribute.SUBJECTS, subjects);
+            request.setAttribute(RequestAttribute.FACULTY_ID, facultyId);
+            request.setAttribute(RequestAttribute.APPLICANTS, applicants);
+            request.setAttribute(RequestAttribute.PAGE, page);
+            request.setAttribute(RequestAttribute.COUNT_PAGES, noOfPages);
         } catch (ServiceException e) {
-            logger.log(Level.ERROR, "Go to show applicants failed", e);
-            throw new CommandException("Go to show applicants failed", e);
+            logger.log(Level.ERROR, "Finding applicants failed", e);
+            throw new CommandException("Finding applicants failed", e);
         }
-        request.setAttribute(FACULTIES, faculties);
+        session.setAttribute(SessionAttribute.CURRENT_PAGE, PagePath.GO_TO_SHOW_APPLICANTS_REDIRECT);
         return router;
     }
 }

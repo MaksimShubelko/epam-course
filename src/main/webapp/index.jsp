@@ -8,6 +8,6 @@
         <title>Index Page</title>
     </head>
     <body>
-        <c:redirect url="/controller?command=go_to_login_page"/>
+        <jsp:forward page="pages/login.jsp"/>
     </body>
 </html>

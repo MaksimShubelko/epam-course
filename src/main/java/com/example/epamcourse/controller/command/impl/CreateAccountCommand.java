@@ -14,8 +14,8 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 public class CreateAccountCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -40,7 +40,6 @@ public class CreateAccountCommand implements Command {
                 } else {
                     if (accountService.validateRegistrationData(login, password, passwordCheck, email)) {
                         router.setPage(PagePath.CONFIRM_EMAIL_PAGE); // todo
-                        /*router.setType(Router.RouterType.REDIRECT);*/
                         MailingService mailingService = MailingServiceImpl.getInstance();
                         EmailCodeGenerator emailCodeGenerator = EmailCodeGeneratorImpl.getInstance();
                         int code = emailCodeGenerator.generateCode();

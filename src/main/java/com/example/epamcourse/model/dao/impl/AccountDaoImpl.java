@@ -13,10 +13,7 @@ import org.apache.logging.log4j.Logger;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static com.example.epamcourse.model.dao.TableColumn.ROLE;
 import static com.example.epamcourse.model.dao.TableColumn.STATUS;
@@ -34,30 +31,36 @@ public class AccountDaoImpl implements AccountDao {
             """;
 
     public static final String FIND_ACCOUNT_BY_IP = """
-            SELECT account_id, login, password, role, email, status, ip
+            SELECT account_id, login, password, role, email, status, ip, image_path
             FROM accounts
             WHERE ip = ?
             """;
 
+    private static final String UPDATE_ACCOUNT = """
+            UPDATE accounts SET  
+            status = ?, image_path = ?
+            WHERE account_id = ?
+            """;
+
     private static final String FIND_ACCOUNT_BY_ID = """
-            SELECT account_id, login, password, role, email, status, ip 
+            SELECT account_id, login, password, role, email, status, ip, image_path 
             FROM accounts
             WHERE account_id = ?
             """;
     private static final String FIND_ACCOUNTS_FOR_PAGE = """
-            SELECT account_id, login, password, role, email, status, ip 
+            SELECT account_id, login, password, role, email, status, ip, image_path 
             FROM accounts
             LIMIT ?, ?
             """;
 
     private static final String FIND_ACCOUNT_BY_LOGIN = """
-            SELECT account_id, login, password, role, email, status, ip 
+            SELECT account_id, login, password, role, email, status, ip, image_path 
             FROM accounts
             WHERE login = ?
             """;
 
     private static final String FIND_ACCOUNT_BY_LOGIN_AND_PASSWORD = """
-            SELECT account_id, login, password, role, email, status, ip
+            SELECT account_id, login, password, role, email, status, ip, image_path
             FROM accounts
             WHERE login = ? and password = ?
             """;
@@ -69,8 +72,14 @@ public class AccountDaoImpl implements AccountDao {
             """;
 
     private static final String FIND_ALL_ACCOUNTS = """
-            SELECT account_id, login, password, role, email, status, ip
+            SELECT account_id, login, password, role, email, status, ip, image_path
             FROM accounts       
+            """;
+
+    private static final String FIND_IMAGE_PATH_BY_LOGIN = """
+            SELECT image_path
+            FROM accounts 
+            WHERE login = ?      
             """;
 
     private static final String DELETE_ACCOUNT = """
@@ -213,17 +222,18 @@ public class AccountDaoImpl implements AccountDao {
         return fields.get(0).get(STATUS).toString();
     }
 
-    /*@Override
-    public Long getAccountIdByLogin(String login) throws DaoException {
-        Long accountId = 0L;
+    @Override
+    public List<Map<String, Object>> findImagePathByLogin(String login) throws DaoException {
+        List<Map<String, Object>> imagePath;
         try {
-            accountId = jdbcTemplate.executeSelectF(GET_ACCOUNT_ID_BY_LOGIN, login);
+            imagePath = jdbcTemplate.executeSelectSomeFields(FIND_IMAGE_PATH_BY_LOGIN, Set.of(login));
         } catch (TransactionException e) {
-            logger.log(Level.ERROR, "Error when getting account id by login {}. {}", login, e.getMessage());
-            throw new DaoException("Error when getting account id by login " + login, e);
+            logger.log(Level.ERROR, "Error when getting image path", e);
+            throw new DaoException("Error when getting image path", e);
         }
-        return accountId;
-    }*/
+
+        return imagePath;
+    }
 
     @Override
     public List<Account> findAll() throws DaoException {
@@ -260,12 +270,14 @@ public class AccountDaoImpl implements AccountDao {
     @Override
     public boolean update(Account account) throws DaoException {
         try {
-            jdbcTemplate.executeInsertQuery(UPDATE_STATUS,
+            System.out.println(account);
+            jdbcTemplate.executeUpdateDeleteFields(UPDATE_ACCOUNT,
                     account.getStatus().toString(),
+                    account.getImagePath(),
                     account.getAccountId());
         } catch (TransactionException e) {
-            logger.log(Level.ERROR, "Error when updating password.", e);
-            throw new DaoException("Error when updating password", e);
+            logger.log(Level.ERROR, "Error when updating account.", e);
+            throw new DaoException("Error when updating account", e);
         }
 
         return true;

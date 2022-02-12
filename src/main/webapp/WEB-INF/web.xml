@@ -18,9 +18,14 @@
         <location>/error/error_404.jsp</location>
     </error-page>
 
-    <context-param>
-        <param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
-        <param-value>com.example.epamcourse.resources.pagecontent</param-value>
-    </context-param>
+    <servlet>
+        <servlet-name>controller</servlet-name>
+        <servlet-class>com.example.epamcourse.controller.ControllerServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>controller</servlet-name>
+        <url-pattern>/controller</url-pattern>
+    </servlet-mapping>
 
 </web-app>

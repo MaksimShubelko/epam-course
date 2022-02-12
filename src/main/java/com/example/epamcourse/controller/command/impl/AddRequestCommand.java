@@ -11,8 +11,8 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
 
 import static com.example.epamcourse.controller.command.RequestAttribute.FACULTIES;
@@ -46,6 +46,7 @@ public class AddRequestCommand implements Command {
             logger.log(Level.ERROR, "Adding request failed.", e);
             throw new CommandException("Adding request failed", e);
         }
+        session.setAttribute(SessionAttribute.CURRENT_PAGE, router.getPage());
         return router;
     }
 }

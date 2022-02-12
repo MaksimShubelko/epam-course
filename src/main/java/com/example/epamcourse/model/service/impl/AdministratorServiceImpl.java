@@ -57,6 +57,24 @@ public class AdministratorServiceImpl implements AdministratorService {
     }
 
     @Override
+    public Optional<Administrator> getAdministratorByAccountId(Long accountId) throws ServiceException {
+        Optional<Administrator> administratorOptional = Optional.empty();
+        Administrator administrator;
+        try {
+            transactionManager.initTransaction();
+            administratorOptional = administratorDao.getAdministratorByAccountId(accountId);
+            transactionManager.commit();
+        } catch (DaoException | TransactionException e) {
+            transactionManager.rollback();
+            logger.log(Level.ERROR, "Error when getting applicant id{}", e);
+            throw new ServiceException("Error when getting applicant id", e);
+        } finally {
+            transactionManager.endTransaction();
+        }
+        return administratorOptional;
+    }
+
+    @Override
     public Optional<Administrator> getAdministratorById(Long administratorId) throws ServiceException {
         Optional<Administrator> administratorOptional = Optional.empty();
         Administrator administrator;

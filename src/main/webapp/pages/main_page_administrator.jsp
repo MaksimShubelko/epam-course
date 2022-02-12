@@ -41,7 +41,7 @@
                             <fmt:message key="admin.main.page.faculties" bundle="${content}"/>
                         </button>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" href="${pageContext.request.contextPath}/controller?command=show_faculties&page=1">
+                            <a class="dropdown-item" href="${pageContext.request.contextPath}/controller?command=go_to_show_faculties&page=1">
                                 <fmt:message key="admin.main.page.faculties.show" bundle="${content}"/>
                             </a>
                             <a class="dropdown-item"
@@ -60,8 +60,8 @@
                         </button>
                         <div class="dropdown-menu">
                             <a class="dropdown-item"
-                               href="${pageContext.request.contextPath}/controller?command=show_accounts&page=1">
-                                <fmt:message key="admin.main.page.accounts" bundle="${content}"/>
+                               href="${pageContext.request.contextPath}/controller?command=go_to_show_accounts&page=1">
+                                <fmt:message key="admin.main.page.accounts.show" bundle="${content}"/>
                             </a>
                             <a class="dropdown-item"
                                href="${pageContext.request.contextPath}/controller?command=go_to_add_admin_account&page=1">
@@ -78,7 +78,7 @@
                             <fmt:message key="admin.main.page.applicants" bundle="${content}"/>
                         </button>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" href="${pageContext.request.contextPath}/controller?command=go_to_show_applicants_page&page=1">
+                            <a class="dropdown-item" href="${pageContext.request.contextPath}/controller?command=go_to_show_applicants&page=1">
                                 <fmt:message key="admin.main.page.applicants.search" bundle="${content}"/>
                             </a>
                         </div>

@@ -14,6 +14,18 @@
 <form name="applicantPage" action="${pageContext.request.contextPath}/controller" method="get" class="container h-75">
     <input type="hidden" name="command" value="show_requests_command">
     <div class="row">
+        <div class="col-2">
+            <fmt:message key="applicant.mail.page.recruitment.status" bundle="${content}"/>
+        </div>
+        <div class="col-2">
+            ${recruitment.getRecruitmentStatus()}
+        </div>
+        <div class="col-2">
+            <fmt:message key="applicant.mail.page.recruitment.finish.time" bundle="${content}"/>
+        </div>
+        <div class="col-2">
+            ${recruitment.getFinishRecruitment()}
+        </div>
         <div class="col-2 offset-sm-9">
             <a href="${pageContext.request.contextPath}/controller?command=go_to_edit_applicant_data">
                 <fmt:message key="applicant.edit.data" bundle="${content}"/>
@@ -33,11 +45,16 @@
                         <fmt:message key="applicant.page.add.request" bundle="${content}"/>
                     </a>
                 </div>
+                <div class="col-6">
+                    <a href="${pageContext.request.contextPath}/controller?command=pick_up_documents">
+                        <fmt:message key="applicant.page.pick.up.documents" bundle="${content}"/>
+                    </a>
+                </div>
             </div>
             <div class="col-5 bg-body">
                 <c:set var="faculty_id"/>
                 <c:forEach var="faculty" items="${faculties}" varStatus="loop">
-                    <button type="submit" name="faculty_id" value="${faculty.getFacultyId()}"
+                    <br><button type="submit" name="faculty_id" value="${faculty.getFacultyId()}"
                             class="btn btn-link ui-corner-left">${loop.index + 1}. ${faculty.getFacultyName()}</button>
                 </c:forEach>
             </div>

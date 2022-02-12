@@ -11,6 +11,7 @@ public final class TableColumn {
     public static final String ROLE = "role";
     public static final String STATUS = "status";
     public static final String IP = "ip";
+    public static final String IMAGE_PATH = "image_path";
 
     //table administrators
     public static final String ADMINISTRATORS = "administrators";
@@ -59,14 +60,6 @@ public final class TableColumn {
     public static final String MARK_PASS = "mark_pass";
     public static final String RECRUITMENT_PLAN_FREE = "recruitment_plan_free";
     public static final String RECRUITMENT_PLAN_CANVAS = "recruitment_plan_canvas";
-
-    //table feed_backs
-    public static final String FEED_BACK = "feed_backs";
-    //columns
-    public static final String FEEDBACK_ID = "feedback_id";
-    public static final String FEEDBACK_ID_ADMINISTRATOR_ID = "administrator_id";
-    public static final String FEEDBACK_ID_APPLICANT_ID = "applicant_id";
-    public static final String MESSAGE = "message";
 
     //table subjects
     public static final String SUBJECTS = "subjects";

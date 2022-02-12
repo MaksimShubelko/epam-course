@@ -1,4 +1,4 @@
-package com.example.epamcourse.controller.command.impl;
+package com.example.epamcourse.controller.command.impl.go;
 
 import com.example.epamcourse.controller.command.*;
 import com.example.epamcourse.model.entity.Account;
@@ -18,7 +18,7 @@ import java.util.List;
 
 import static com.example.epamcourse.controller.command.PagePath.SHOW_ACCOUNTS_PAGE;
 
-public class ShowAccountsCommand implements Command {
+public class GoToShowAccountsPageCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
 
     @Override
@@ -42,7 +42,7 @@ public class ShowAccountsCommand implements Command {
             logger.log(Level.ERROR, "Finding accounts failed", e);
             throw new CommandException("Finding accounts failed", e);
         }
-        session.setAttribute(SessionAttribute.CURRENT_PAGE, router.getPage());
+        session.setAttribute(SessionAttribute.CURRENT_PAGE, PagePath.GO_TO_SHOW_ACCOUNT_REDIRECT);
         return router;
     }
 }

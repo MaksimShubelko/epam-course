@@ -23,6 +23,8 @@ public interface AccountDao extends BaseDao<Account> {
     List<Account> findAccountsPage(int accountsSkip, int accountsGet) throws DaoException;
 
     String getAccountStatusByLogin(String login) throws DaoException;
+
+    List<Map<String, Object>> findImagePathByLogin(String login) throws DaoException;
 /*
     Long getAccountIdByLogin(String login) throws DaoException;
 */

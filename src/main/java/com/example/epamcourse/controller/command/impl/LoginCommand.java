@@ -17,8 +17,8 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 import java.util.List;
 
@@ -47,8 +47,6 @@ public class LoginCommand implements Command {
                         .equals(Account.Status.BLOCKED.toString())) {
                     router.setPage(PagePath.BLOCKED_ACCOUNT_PAGE);
                 } else {
-                    List<Faculty> faculties = facultyService.findAllFaculties();
-                    session.setAttribute(FACULTIES, faculties);
                     Long accountId = accountService.getAccountIdByLogin(login);
                     session.setAttribute(SessionAttribute.ACCOUNT_ID, accountId);
                     if (accountService.getAccountRoleByLogin(login) == Account.Role.APPLICANT) {
@@ -57,7 +55,7 @@ public class LoginCommand implements Command {
                         } else {
                             Long applicantId = applicantService.getApplicantIdByAccountId(accountId);
                             session.setAttribute(SessionAttribute.APPLICANT_ID, applicantId);
-                            router.setPage(MAIN_PAGE_APPLICANT);
+                            router.setPage(MAIN_PAGE_APPLICANT_REDIRECT);
                         }
                     } else {
                         if (accountService.getAccountRoleByLogin(login) == Account.Role.ADMIN) {

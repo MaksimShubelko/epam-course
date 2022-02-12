@@ -10,7 +10,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 public class ChangeAccountStatusCommand implements Command {
@@ -26,7 +26,7 @@ public class ChangeAccountStatusCommand implements Command {
         try {
             Long accountId = Long.valueOf(request.getParameter(RequestParameter.ACCOUNT_ID));
             Optional<Account> accountOptional = accountService.findAccountById(accountId);
-            if (accountOptional.isPresent()) {
+            if (accountOptional.isPresent()) { // todo move to service
                 account = accountOptional.get();
                 switch (account.getStatus()) {
                     case ACTIVE -> {

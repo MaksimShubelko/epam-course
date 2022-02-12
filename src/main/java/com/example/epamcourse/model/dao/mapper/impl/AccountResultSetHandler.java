@@ -20,6 +20,7 @@ public class AccountResultSetHandler implements ResultSetHandler<Account> {
                 .setRole(Account.Role.valueOf(resultSet.getString(ROLE).toUpperCase()))
                 .setStatus(Account.Status.valueOf(resultSet.getString(STATUS).toUpperCase()))
                 .setIp(resultSet.getString(IP))
+                .setImagePath(resultSet.getString(IMAGE_PATH))
                 .createAccount();
 
         return account;

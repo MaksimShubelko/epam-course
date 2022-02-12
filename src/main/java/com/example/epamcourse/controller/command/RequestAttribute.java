@@ -10,8 +10,7 @@ public final class RequestAttribute {
     public static final String CERTIFICATE_MARK = "certificate_mark";
     public static final String FACULTY_ID = "faculty_id";
     public static final String APPLICANTS = "applicants";
-    public static final String COUNT_APPLICANTS = "countApplicants";
-    public static final String CURRENT_PAGE = "currentPage";
+    public static final String PAGE = "currentPage";
     public static final String COUNT_PAGES = "countPages";
     public static final String FACULTY = "faculty";
     public static final String APPLICANT = "applicant";
@@ -28,6 +27,12 @@ public final class RequestAttribute {
     public static final String FINISH_RECRUITMENT = "finish_recruitment";
     public static final String RECRUITMENT = "recruitment";
     public static final String DATE_NOW = "date_now";
+    public static final String COMMAND = "command";
+    public static final String CONTENT = "content";
+    public static final String IMAGE = "img";
+    public static final String IMAGE_INPUT_STREAM = "image_input_stream";
+    public static final String IMAGE_NAME = "image_name";
+    public static final String ADMINISTRATOR = "administrator";
 
     private RequestAttribute() {
     }

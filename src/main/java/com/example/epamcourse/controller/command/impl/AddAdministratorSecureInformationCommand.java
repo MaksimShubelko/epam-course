@@ -11,7 +11,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 public class AddAdministratorSecureInformationCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
@@ -28,7 +28,7 @@ public class AddAdministratorSecureInformationCommand implements Command {
                 router.setPage(PagePath.MAIN_PAGE_ADMINISTRATOR);
             }
         } catch (ServiceException e) {
-            logger.log(Level.ERROR, "Adding administrator secure information failed. {}", e);
+            logger.log(Level.ERROR, "Adding administrator secure information failed.", e);
             throw new CommandException("Adding administrator secure information failed", e);
         }
 

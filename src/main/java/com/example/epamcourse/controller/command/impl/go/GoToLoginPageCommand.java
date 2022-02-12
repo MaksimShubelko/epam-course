@@ -4,8 +4,8 @@ import com.example.epamcourse.controller.command.Command;
 import com.example.epamcourse.controller.command.Router;
 import com.example.epamcourse.controller.command.SessionAttribute;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 import static com.example.epamcourse.controller.command.PagePath.LOGIN;
 import static com.example.epamcourse.controller.command.PagePath.LOGIN_REDIRECT;
