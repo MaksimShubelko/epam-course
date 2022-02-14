@@ -32,8 +32,12 @@
                     <fmt:message key="request.benefits" bundle="${content}"/>
                 </h6>
                 <select class="custom-select" name="privileges" required>
-                    <option value="true">true</option>
-                    <option value="false">false</option>
+                    <option value="true">
+                        <fmt:message key="request.benefits.true" bundle="${content}"/>
+                    </option>
+                    <option value="false">
+                        <fmt:message key="request.benefits.false" bundle="${content}"/>
+                    </option>
                 </select>
             </div>
         </div>

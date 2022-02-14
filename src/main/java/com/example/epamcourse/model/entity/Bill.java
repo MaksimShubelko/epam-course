@@ -4,11 +4,13 @@ public class Bill extends BaseEntity {
     private Long billId;
     private Long facultyId;
     private Long applicantId;
+    private Boolean archive;
 
-    public Bill(Long billId, Long facultyId, Long applicantId) {
+    public Bill(Long billId, Long facultyId, Long applicantId, Boolean archive) {
         this.billId = billId;
         this.applicantId = applicantId;
         this.facultyId = facultyId;
+        this.archive = archive;
     }
 
     public Bill(Long applicantId) {
@@ -31,14 +33,6 @@ public class Bill extends BaseEntity {
         this.applicantId = applicantId;
     }
 
-    /*public Integer getTotalMark() {
-        return totalMark;
-    }
-
-    public void setTotalMark(Integer totalMark) {
-        this.totalMark = totalMark;
-    }*/
-
     public Long getFacultyId() {
         return facultyId;
     }
@@ -52,9 +46,9 @@ public class Bill extends BaseEntity {
         if (this == o) return true;
         if (!(o instanceof Bill)) return false;
         Bill bill = (Bill) o;
+        if (archive != null ? !archive.equals(bill.archive) : bill.archive != null) return false;
         if (facultyId != null ? !facultyId.equals(bill.facultyId) : bill.facultyId != null) return false;
         return (applicantId != null ? !applicantId.equals(bill.applicantId) : bill.applicantId != null);
-        /*totalMark != null ? totalMark.equals(bill.totalMark) : bill.totalMark == null;*/
     }
 
     @Override
@@ -63,9 +57,7 @@ public class Bill extends BaseEntity {
         int result = 1;
         result = prime * result + Long.hashCode(billId);
         result = prime * result + ((applicantId == null) ? 0 : applicantId.hashCode());
-/*
-        result = prime * result + ((totalMark == null) ? 0 : totalMark.hashCode());
-*/
+        result = prime * result + Boolean.hashCode(archive);
         result = prime * result + ((facultyId == null) ? 0 : facultyId.hashCode());
 
         return result;
@@ -81,6 +73,8 @@ public class Bill extends BaseEntity {
                 .append(applicantId)
                 .append(", facultyId=")
                 .append(facultyId)
+                .append(", archive=")
+                .append(archive)
                 .append('}');
 
         return stringData.toString();

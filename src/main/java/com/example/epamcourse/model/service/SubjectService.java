@@ -10,6 +10,8 @@ public interface SubjectService {
 
     boolean updateSubject(Long applicantId, Integer... subjectMarks) throws ServiceException;
 
+    boolean deleteSubjects(Long applicantId) throws ServiceException;
+
     List<Subject> findSubject(Long applicantId) throws ServiceException;
 
 }

@@ -84,6 +84,24 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
+    public boolean deleteSubjects(Long applicantId) throws ServiceException {
+        boolean isSubjectDeleted = false;
+        List<Subject> subjects;
+        try {
+            transactionManager.initTransaction();
+            isSubjectDeleted = subjectDao.delete(applicantId); // todo
+            transactionManager.commit();
+        } catch (DaoException | TransactionException e) {
+            transactionManager.rollback();
+            logger.log(Level.ERROR, "Error when finding certificate for applicant}", e);
+            throw new ServiceException("Error when finding certificate for applicant", e);
+        } finally {
+            transactionManager.endTransaction();
+        }
+        return isSubjectDeleted;
+    }
+
+    @Override
     public List<Subject> findSubject(Long applicantId) throws ServiceException {
         List<Subject> subjects = Collections.emptyList();
         try {

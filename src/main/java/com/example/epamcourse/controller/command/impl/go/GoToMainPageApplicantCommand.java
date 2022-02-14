@@ -1,9 +1,6 @@
 package com.example.epamcourse.controller.command.impl.go;
 
-import com.example.epamcourse.controller.command.Command;
-import com.example.epamcourse.controller.command.RequestAttribute;
-import com.example.epamcourse.controller.command.Router;
-import com.example.epamcourse.controller.command.SessionAttribute;
+import com.example.epamcourse.controller.command.*;
 import com.example.epamcourse.model.entity.Faculty;
 import com.example.epamcourse.model.entity.Recruitment;
 import com.example.epamcourse.model.exception.CommandException;
@@ -43,7 +40,7 @@ public class GoToMainPageApplicantCommand implements Command {
             logger.log(Level.ERROR, "Go to main page applicant failed.", e);
             throw new CommandException("Go to main page applicant failed.", e);
         }
-        session.setAttribute(SessionAttribute.CURRENT_PAGE, router.getPage());
+        session.setAttribute(SessionAttribute.CURRENT_PAGE, MAIN_PAGE_APPLICANT_REDIRECT);
         return router;
     }
 }

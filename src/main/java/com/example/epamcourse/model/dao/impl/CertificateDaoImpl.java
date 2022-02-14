@@ -35,8 +35,9 @@ public class CertificateDaoImpl implements CertificateDao {
             """;
 
     private static final String DELETE_CERTIFICATE = """
-              DELETE FROM certificates 
-              WHERE certificate_id = ?
+              DELETE FROM certificates
+              WHERE 
+              (SELECT certificate_id FROM applicants WHERE applicant_id = ?) = certificate_id
             """;
 
     private static final String ADD_CERTIFICATE = """

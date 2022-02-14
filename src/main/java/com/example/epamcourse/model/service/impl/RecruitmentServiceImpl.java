@@ -10,6 +10,8 @@ import com.example.epamcourse.model.exception.DaoException;
 import com.example.epamcourse.model.exception.ServiceException;
 import com.example.epamcourse.model.exception.TransactionException;
 import com.example.epamcourse.model.service.RecruitmentService;
+import com.example.epamcourse.model.validator.RecruitmentValidator;
+import com.example.epamcourse.model.validator.impl.RecruitmentValidatorImpl;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,6 +28,30 @@ public class RecruitmentServiceImpl implements RecruitmentService {
 
     public static RecruitmentService getInstance() {
         return instance;
+    }
+
+    @Override
+    public boolean isRecruitmentActive() throws ServiceException {
+        RecruitmentValidator recruitmentValidator = RecruitmentValidatorImpl.getInstance();
+        Recruitment recruitment = null;
+        try {
+            transactionManager.initTransaction();
+            Optional<Recruitment> recruitmentOptional;
+            recruitmentOptional = recruitmentDao.findRecruitment();
+            if (recruitmentOptional.isPresent()) {
+                recruitment = recruitmentOptional.get();
+            }
+            transactionManager.commit();
+        } catch (DaoException | TransactionException e) {
+            transactionManager.rollback();
+            logger.log(Level.ERROR, "Error when finding recruitment.", e);
+            throw new ServiceException("Error when finding recruitment", e);
+        } finally {
+            transactionManager.endTransaction();
+        }
+
+        return recruitmentValidator.isFinishRecruitmentValid(recruitment.getFinishRecruitment())
+                && recruitment.getRecruitmentStatus();
     }
 
     @Override

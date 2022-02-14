@@ -19,7 +19,11 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
+
+import static com.example.epamcourse.model.service.ApplicantFindingType.ALL;
+import static com.example.epamcourse.model.service.ApplicantFindingType.ARCHIVE;
 
 public class ApplicantServiceImpl implements ApplicantService {
     private static final Logger logger = LogManager.getLogger();
@@ -115,7 +119,12 @@ public class ApplicantServiceImpl implements ApplicantService {
         ApplicantFindingService applicantFindingService = ApplicantFindingServiceImpl.getInstance();
         List<Applicant> applicants = Collections.emptyList();
         Long applicantId = 0L;
+        boolean isArchive = false;
         try {
+            if (ARCHIVE.name().equals(recruitmentStatus.toUpperCase())) {
+                isArchive = true;
+                recruitmentStatus = ALL.name();
+            }
             transactionManager.initTransaction();
             int recordsPerPage = 5;
             Optional<Faculty> facultyOptional = facultyDao.findEntityById(facultyId);
@@ -123,7 +132,7 @@ public class ApplicantServiceImpl implements ApplicantService {
                 Faculty faculty = facultyOptional.get();
                 int recruitmentPlanFree = faculty.getRecruitmentPlanFree();
                 int recruitmentPlanCanvas = faculty.getRecruitmentPlanCanvas();
-                int countApplicants = billDao.findAllBillsByFacultyId(facultyId).size();
+                int countApplicants = billDao.findAllBillsByFacultyId(facultyId, isArchive).size();
                 int applicantsSkipDepOnRecruitStatus = applicantFindingService.getCountOfApplicantsToSkip(recruitmentStatus,
                         recruitmentPlanFree, recruitmentPlanCanvas, countApplicants);
                 int applicantsTakeDepOnRecruitStatus = applicantFindingService.getCountOfApplicantsToTake(recruitmentStatus,
@@ -131,7 +140,7 @@ public class ApplicantServiceImpl implements ApplicantService {
                 applicants = applicantDao.findApplicantsInOrderByMarkInFacultyAndSurname(facultyId,
                         applicantsSkipDepOnRecruitStatus, applicantsTakeDepOnRecruitStatus,
                         (currentPageNumber - 1) * recordsPerPage,
-                        recordsPerPage);
+                        recordsPerPage, isArchive);
             }
             transactionManager.commit();
         } catch (DaoException | TransactionException e) {

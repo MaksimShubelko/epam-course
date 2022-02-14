@@ -46,6 +46,16 @@
                     <option value="false">false</option>
                 </select>
             </div>
+            <div class="row">
+                <div class="col-3">
+                    <h6>
+                        <fmt:message key="admin.main.page.recruitment.update.restart.recruitment" bundle="${content}"/>
+                    </h6>
+                </div>
+                <div class="col-3">
+                    <input type="checkbox" name="restart_recruitment" value="true">
+                </div>
+            </div>
 
             <div class="row offset-3 p-4">
                 <label class="col-8">

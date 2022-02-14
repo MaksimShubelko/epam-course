@@ -78,11 +78,11 @@ public class BillServiceImpl implements BillService {
 
     @Override
     public boolean deleteBill(Long applicantId) throws ServiceException {
-        boolean isBillUpdated = false;
+        boolean isBillDeleted;
         Applicant applicant;
         try {
             transactionManager.initTransaction();
-            billDao.deleteBillByApplicantId(applicantId);
+            isBillDeleted = billDao.deleteBillByApplicantId(applicantId);
             transactionManager.commit();
         } catch (DaoException | TransactionException e) {
             transactionManager.rollback();
@@ -91,16 +91,34 @@ public class BillServiceImpl implements BillService {
         } finally {
             transactionManager.endTransaction();
         }
-        return isBillUpdated;
+        return isBillDeleted;
+    }
+
+    @Override
+    public boolean isBillArchive(Long applicantId) throws ServiceException {
+        boolean isBillArchive;
+        Applicant applicant;
+        try {
+            transactionManager.initTransaction();
+            isBillArchive = billDao.isBillArchive(applicantId);
+            transactionManager.commit();
+        } catch (DaoException | TransactionException e) {
+            transactionManager.rollback();
+            logger.log(Level.ERROR, "Error when checked archived bill", e);
+            throw new ServiceException("Error when checked archived bill", e);
+        } finally {
+            transactionManager.endTransaction();
+        }
+        return isBillArchive;
     }
 
 
     @Override
-    public long getCountOfBillsInFaculty(Long facultyId) throws ServiceException {
+    public long getCountOfBillsInFaculty(Long facultyId, Boolean isArchive) throws ServiceException {
         long countOfBillsInFaculty;
         try {
             transactionManager.initTransaction();
-            countOfBillsInFaculty = billDao.findAllBillsByFacultyId(facultyId).size();
+            countOfBillsInFaculty = billDao.findAllBillsByFacultyId(facultyId, isArchive).size();
             transactionManager.commit();
         } catch (DaoException | TransactionException e) {
             transactionManager.rollback();
@@ -110,5 +128,20 @@ public class BillServiceImpl implements BillService {
             transactionManager.endTransaction();
         }
         return countOfBillsInFaculty;
+    }
+
+    @Override
+    public void restartRecruitment() throws ServiceException {
+        try {
+            transactionManager.initTransaction();
+            billDao.changeStatusToArchive();
+            transactionManager.commit();
+        } catch (DaoException | TransactionException e) {
+            transactionManager.rollback();
+            logger.log(Level.ERROR, "Error when restarting recruitment", e);
+            throw new ServiceException("Error when restarting recruitment", e);
+        } finally {
+            transactionManager.endTransaction();
+        }
     }
 }

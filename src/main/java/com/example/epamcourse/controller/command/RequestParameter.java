@@ -49,6 +49,8 @@ public final class RequestParameter {
     public static final String IMAGE = "img";
     public static final String IMAGE_INPUT_STREAM = "image_input_stream";
     public static final String IMAGE_NAME = "image_name";
+    public static final String RESTART_RECRUITMENT = "restart_recruitment";
+    public static final String IS_BILLS_ARCHIVE = "is_bills_archive";
 
 
     private RequestParameter() {

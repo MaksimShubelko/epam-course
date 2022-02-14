@@ -47,10 +47,11 @@ public class ApplicantDaoImpl implements ApplicantDao {
                    (SELECT SUM(mark) FROM subjects WHERE applicant_id = applicants.applicant_id) +
                    (SELECT middle_mark FROM certificates WHERE certificate_id = applicants.certificate_id) *
                    10 DESC) as row_num
-                   FROM applicants) as applicants
+                   FROM applicants
                    INNER JOIN bills b on applicants.applicant_id = b.applicant_id
                    INNER JOIN faculties f on f.faculty_id = b.faculty_id AND f.faculty_id = ?
-            where applicants.row_num > ? AND applicants.row_num <= ?
+                   WHERE b.archive = ?) as applicants
+                   WHERE applicants.row_num > ? AND applicants.row_num <= ?
             ORDER BY beneficiary DESC, subjects_mark + certificate_mark * 10 DESC
             LIMIT ?, ?
             """;
@@ -96,7 +97,8 @@ public class ApplicantDaoImpl implements ApplicantDao {
             """;
 
     private static final String UPDATE_APPLICANT = """
-            UPDATE applicants SET firstname = ?, lastname = ?, surname = ?, certificate_id = ?, beneficiary = ?
+            UPDATE applicants SET firstname = ?, 
+            lastname = ?, surname = ?, certificate_id = ?, beneficiary = ?
             WHERE applicant_id = ?
             """;
 
@@ -118,7 +120,8 @@ public class ApplicantDaoImpl implements ApplicantDao {
     }
 
     @Override
-    public List<Applicant> findApplicantsInOrderByMarkInFaculty(Long facultyId, long rowSkip, int rowNext) throws DaoException {
+    public List<Applicant> findApplicantsInOrderByMarkInFaculty(Long facultyId, long rowSkip,
+                                                                int rowNext) throws DaoException {
         List<Applicant> applicants;
         try {
             applicants = jdbcTemplate.executeSelectQuery(FIND_APPLICANTS_IN_ORDER_BY_MARK_IN_FACULTY, facultyId, rowSkip, rowNext);
@@ -131,14 +134,18 @@ public class ApplicantDaoImpl implements ApplicantDao {
     }
 
     @Override
-    public List<Applicant> findApplicantsInOrderByMarkInFacultyAndSurname(Long facultyId, int applicantsSkip, int applicantsTake, long rowSkip, int rowNext) throws DaoException {
+    public List<Applicant> findApplicantsInOrderByMarkInFacultyAndSurname(Long facultyId,
+                                                                          int applicantsSkip, int applicantsTake,
+                                                                          long rowSkip, int rowNext, Boolean isArchive) throws DaoException {
 
         List<Applicant> applicants;
         try {
-            applicants = jdbcTemplate.executeSelectQuery(FIND_APPLICANTS_BY_SURNAME_IN_ORDER_BY_MARK_IN_FACULTY, facultyId, applicantsSkip, applicantsTake, rowSkip, rowNext);
+            System.out.println(isArchive + "dao");
+            applicants = jdbcTemplate.executeSelectQuery(FIND_APPLICANTS_BY_SURNAME_IN_ORDER_BY_MARK_IN_FACULTY, facultyId, isArchive,
+                    applicantsSkip, applicantsTake, rowSkip, rowNext);
         } catch (TransactionException e) {
-            logger.log(Level.ERROR, "Error when finding applicants in faculty in order by mark and surname", e);
-            throw new DaoException("Error when finding applicants in faculty in order by mark and surname", e);
+            logger.log(Level.ERROR, "Error when finding applicants in faculty in order by mark", e);
+            throw new DaoException("Error when finding applicants in faculty in order by mark", e);
         }
 
         return applicants;
@@ -185,7 +192,7 @@ public class ApplicantDaoImpl implements ApplicantDao {
 
     @Override
     public List<Applicant> findAll() throws DaoException {
-        List<Applicant> applicants = null;
+        List<Applicant> applicants;
         try {
             applicants = jdbcTemplate.executeSelectQuery(FIND_ALL_APPLICANTS);
         } catch (TransactionException e) {

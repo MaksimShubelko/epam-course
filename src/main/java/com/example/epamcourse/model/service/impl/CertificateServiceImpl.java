@@ -84,6 +84,24 @@ public class CertificateServiceImpl implements CertificateService {
     }
 
     @Override
+    public boolean deleteCertificate(Long applicantId) throws ServiceException {
+        boolean isCertificateDeleted = false;
+        Optional<Certificate> certificate = Optional.empty();
+        try {
+            transactionManager.initTransaction();
+            isCertificateDeleted = certificateDao.delete(applicantId);
+            transactionManager.commit();
+        } catch (DaoException | TransactionException e) {
+            transactionManager.rollback();
+            logger.log(Level.ERROR, "Error when finding certificate for applicant", e);
+            throw new ServiceException("Error when finding certificate for applicant", e);
+        } finally {
+            transactionManager.endTransaction();
+        }
+        return isCertificateDeleted;
+    }
+
+    @Override
     public Optional<Certificate> findCertificate(Long applicantId) throws ServiceException {
         Optional<Certificate> certificate = Optional.empty();
         try {

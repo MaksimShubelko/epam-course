@@ -35,13 +35,13 @@ public class UpdateApplicantDataCommand implements Command {
             String surname = request.getParameter(RequestParameter.SURNAME);
             String lastname = request.getParameter(RequestParameter.LASTNAME);
             if (applicantService.updateApplicantPersonalData(applicantId, name, surname, lastname)) {
-                router.setPage(PagePath.MAIN_PAGE_APPLICANT);
+                router.setPage(PagePath.MAIN_PAGE_APPLICANT_REDIRECT);
             }
         } catch (ServiceException e) {
             logger.log(Level.ERROR, "Updating applicant secure information failed", e);
             throw new CommandException("Updating applicant secure information failed", e);
         }
-        session.setAttribute(SessionAttribute.CURRENT_PAGE, router.getPage());
+        session.setAttribute(SessionAttribute.CURRENT_PAGE, PagePath.MAIN_PAGE_APPLICANT_REDIRECT);
         return router;
     }
 }

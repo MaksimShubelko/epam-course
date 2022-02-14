@@ -21,7 +21,7 @@ public class AddRequestCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        Router router = new Router(PagePath.MAIN_PAGE_APPLICANT);
+        Router router = new Router(PagePath.MAIN_PAGE_APPLICANT_REDIRECT);
         HttpSession session = request.getSession();
         FacultyService facultyService = FacultyServiceImpl.getInstance();
         BillService billService = BillServiceImpl.getInstance();

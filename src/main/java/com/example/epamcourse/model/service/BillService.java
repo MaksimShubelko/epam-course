@@ -9,6 +9,9 @@ public interface BillService {
 
     boolean deleteBill(Long applicantId) throws ServiceException;
 
-    long getCountOfBillsInFaculty(Long facultyId) throws ServiceException;
+    boolean isBillArchive(Long applicantId) throws ServiceException;
 
+    long getCountOfBillsInFaculty(Long facultyId, Boolean isArchive) throws ServiceException;
+
+    void restartRecruitment() throws ServiceException;
 }

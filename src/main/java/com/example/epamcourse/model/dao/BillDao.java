@@ -10,10 +10,11 @@ public interface BillDao extends BaseDao<Bill> {
 
     boolean deleteBillByApplicantId(Long applicantId) throws DaoException;
 
+    boolean isBillArchive(Long applicantId) throws DaoException;
+
     Optional<Bill> findBillByApplicantId(Long applicantId) throws DaoException;
 
-    List<Bill> findAllBillsByFacultyId(Long facultyId) throws DaoException;
+    List<Bill> findAllBillsByFacultyId(Long facultyId, Boolean isArchive) throws DaoException;
 
-    long getCountOfBillsInFaculty(Long facultyId) throws DaoException;
-
+    boolean changeStatusToArchive() throws DaoException;
 }

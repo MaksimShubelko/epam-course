@@ -32,19 +32,13 @@ public final class TableColumn {
     public static final String APPLICANT_LAST_NAME = "lastname";
     public static final String APPLICANT_SURNAME = "surname";
 
-    //table applicant_subject_id
-    public static final String APPLICANT_SUBJECT_ID = "applicant_subject_id";
-    //columns
-    public static final String APl_ID = "applicant_id";
-    public static final String SUB_ID = "subject_id";
-
     //table bills
     public static final String BILL = "bills";
     //columns
     public static final String BILL_ID = "bill_id";
     public static final String BILL_FACULTY_ID = "faculty_id";
     public static final String BILL_APPLICANT_ID = "applicant_id";
-    public static final String BILL_TOTAL_MARK = "total_mark";
+    public static final String BILL_ARCHIVE = "archive";
 
     //table certificates
     public static final String CERTIFICATES = "certificates";

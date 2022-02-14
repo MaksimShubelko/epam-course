@@ -40,9 +40,9 @@ public class SubjectDaoImpl implements SubjectDao {
             WHERE applicant_id = ?
             """;
 
-    private static final String DELETE_SUBJECT = """
+    private static final String DELETE_SUBJECTS_BY_APPLICANT_ID = """
               DELETE FROM subjects 
-              WHERE subject_id = ?
+              WHERE applicant_id = ?
             """;
 
     private static final String ADD_SUBJECT = """
@@ -88,7 +88,7 @@ public class SubjectDaoImpl implements SubjectDao {
     @Override
     public boolean delete(Long id) throws DaoException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(DELETE_SUBJECT)) {
+             PreparedStatement statement = connection.prepareStatement(DELETE_SUBJECTS_BY_APPLICANT_ID)) {
             statement.setLong(1, id);
             statement.executeUpdate();
         } catch (SQLException e) {

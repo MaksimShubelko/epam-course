@@ -23,24 +23,24 @@ public class BillDaoImpl implements BillDao {
     private JdbcTemplate<Bill> jdbcTemplate;
 
     private static final String FIND_ALL_BILLS = """
-            SELECT bill_id, applicant_id, faculty_id 
+            SELECT bill_id, applicant_id, faculty_id, archive 
             FROM bills
             """;
 
     private static final String FIND_ALL_BILLS_BY_FACULTY_ID = """
-            SELECT bill_id, applicant_id, faculty_id 
+            SELECT bill_id, applicant_id, faculty_id, archive 
             FROM bills
             WHERE faculty_id = ?
             """;
 
     private static final String FIND_BILL_BY_ID = """
-            SELECT bill_id, applicant_id, faculty_id 
+            SELECT bill_id, applicant_id, faculty_id, archive 
             FROM bills 
             WHERE bill_id = ?
             """;
 
     private static final String FIND_BILL_BY_APPLICANT_ID = """
-            SELECT bill_id, applicant_id, faculty_id 
+            SELECT bill_id, applicant_id, faculty_id, archive 
             FROM bills 
             WHERE applicant_id = ?
             """;
@@ -52,23 +52,28 @@ public class BillDaoImpl implements BillDao {
 
     private static final String DELETE_BILL_BY_APPLICANT_ID = """
               DELETE FROM bills 
-              WHERE applicant_id = ?
+              WHERE applicant_id = ? AND archive = 0
             """;
-
-    private static final String FIND_NUMBER_OF_BILLS_IN_FACULTY = """
-            SELECT COUNT(bill_id)
-            FROM bills
-            WHERE faculty_id = 10
-                    """;
 
     private static final String ADD_BILL = """
             INSERT INTO bills (bill_id, applicant_id, faculty_id)
             VALUE (?, ?, ?)
             """;
 
+    private static final String FIND_ARCHIVE_BILL_BY_APPLICANT_ID = """
+            SELECT bill_id, applicant_id, faculty_id, archive 
+            FROM bills 
+            WHERE applicant_id = ? AND archive = 1
+            """;
+
     private static final String UPDATE_BILL = """
             UPDATE bills SET faculty_id = ?
-            WHERE bill_id = ?
+            WHERE bill_id = ? AND archive = 0
+            """;
+
+    private static final String DELETE_BILLS = """
+            UPDATE bills set archive = 1
+            WHERE archive = 0
             """;
 
     private BillDaoImpl() {
@@ -162,6 +167,18 @@ public class BillDaoImpl implements BillDao {
     }
 
     @Override
+    public boolean isBillArchive(Long applicantId) throws DaoException {
+        Optional<Bill> bill;
+        try {
+            bill = jdbcTemplate.executeSelectQueryForObject(FIND_ARCHIVE_BILL_BY_APPLICANT_ID, applicantId);
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when finding bill by applicant id {} {}", applicantId, e);
+            throw new DaoException("Error when finding bill by applicant id " + applicantId, e);
+        }
+        return bill.isPresent();
+    }
+
+    @Override
     public Optional<Bill> findBillByApplicantId(Long applicantId) throws DaoException {
         Optional<Bill> bill = null;
         try {
@@ -175,7 +192,7 @@ public class BillDaoImpl implements BillDao {
     }
 
     @Override
-    public List<Bill> findAllBillsByFacultyId(Long facultyId) throws DaoException {
+    public List<Bill> findAllBillsByFacultyId(Long facultyId, Boolean isArchive) throws DaoException {
         List<Bill> bills;
         try {
             bills = jdbcTemplate.executeSelectQuery(FIND_ALL_BILLS_BY_FACULTY_ID, facultyId);
@@ -187,14 +204,14 @@ public class BillDaoImpl implements BillDao {
     }
 
     @Override
-    public long getCountOfBillsInFaculty(Long facultyId) throws DaoException {
-        long countOfBillsInFaculty;
+    public boolean changeStatusToArchive() throws DaoException {
         try {
-            countOfBillsInFaculty = jdbcTemplate.executeSelectCalculation(FIND_NUMBER_OF_BILLS_IN_FACULTY, facultyId);
+            jdbcTemplate.executeUpdateDeleteFields(DELETE_BILLS);
         } catch (TransactionException e) {
-            logger.log(Level.ERROR, "Error when calculating count of bills in faculty {}", e);
-            throw new DaoException("Error when calculating count of bills in faculty", e);
+            logger.log(Level.ERROR, "Error when updating all bills", e);
+            throw new DaoException("Error when updating all bills", e);
         }
-        return countOfBillsInFaculty;
+
+        return true;
     }
 }

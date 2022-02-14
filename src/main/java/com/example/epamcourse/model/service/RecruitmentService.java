@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 
 public interface RecruitmentService {
 
+    boolean isRecruitmentActive() throws ServiceException;
+
     Recruitment findRecruitment() throws ServiceException;
 
     boolean updateRecruitment(boolean status, LocalDateTime finishRecruitment) throws ServiceException;

@@ -41,7 +41,7 @@ public class ShowRequestsCommand implements Command {
             if (facultyIdRequest != null) {
                 facultyId = Long.valueOf(facultyIdRequest);
             }
-            long countOfApplicants = billService.getCountOfBillsInFaculty(facultyId);
+            long countOfApplicants = billService.getCountOfBillsInFaculty(facultyId, false);
             long noOfPages = (long) Math.ceil(countOfApplicants * 1.0 / recordsPerPage);
             if (request.getParameter(RequestParameter.PAGE) != null) {
                 page = Integer.parseInt(request.getParameter(RequestParameter.PAGE));

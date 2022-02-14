@@ -13,7 +13,7 @@ public interface ApplicantDao extends BaseDao<Applicant> {
     List<Applicant> findApplicantsInOrderByMarkInFaculty(Long facultyId, long rowSkip, int rowNext)
             throws DaoException;
 
-    List<Applicant> findApplicantsInOrderByMarkInFacultyAndSurname(Long facultyId, int applicantsSkip, int applicantsTake, long rowSkip, int rowNext) throws DaoException;
+    List<Applicant> findApplicantsInOrderByMarkInFacultyAndSurname(Long facultyId, int applicantsSkip, int applicantsTake, long rowSkip, int rowNext, Boolean isArchive) throws DaoException;
 
     Optional<Applicant> getApplicantByLogin(String login) throws DaoException;
 

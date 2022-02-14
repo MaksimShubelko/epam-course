@@ -13,7 +13,8 @@ public class BillResultSetHandler implements ResultSetHandler<Bill> {
     public Bill resultToObject(ResultSet resultSet) throws SQLException {
         Bill bill = new Bill(resultSet.getLong(BILL_ID),
                 resultSet.getLong(BILL_FACULTY_ID),
-                resultSet.getLong(BILL_APPLICANT_ID));
+                resultSet.getLong(BILL_APPLICANT_ID),
+                resultSet.getBoolean(BILL_ARCHIVE));
 
         return bill;
     }

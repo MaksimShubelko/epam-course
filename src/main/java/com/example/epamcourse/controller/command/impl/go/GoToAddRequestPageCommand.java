@@ -1,12 +1,8 @@
 package com.example.epamcourse.controller.command.impl.go;
 
-import com.example.epamcourse.controller.command.Command;
-import com.example.epamcourse.controller.command.RequestAttribute;
-import com.example.epamcourse.controller.command.Router;
-import com.example.epamcourse.controller.command.SessionAttribute;
+import com.example.epamcourse.controller.command.*;
 import com.example.epamcourse.model.entity.Certificate;
 import com.example.epamcourse.model.entity.Faculty;
-import com.example.epamcourse.model.entity.Recruitment;
 import com.example.epamcourse.model.entity.Subject;
 import com.example.epamcourse.model.exception.CommandException;
 import com.example.epamcourse.model.exception.ServiceException;
@@ -31,28 +27,39 @@ public class GoToAddRequestPageCommand implements Command {
     public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
         session.setAttribute(SessionAttribute.CURRENT_PAGE, ADD_REQUEST_PAGE_REDIRECT);
-        Long applicantId = (Long) request.getSession().getAttribute(SessionAttribute.APPLICANT_ID);
-        RecruitmentService recruitmentService = RecruitmentServiceImpl.getInstance();
+        Long applicantId = (Long) session.getAttribute(SessionAttribute.APPLICANT_ID);
         SubjectService subjectService = SubjectServiceImpl.getInstance();
+        RecruitmentService recruitmentService = RecruitmentServiceImpl.getInstance();
         CertificateService certificateService = CertificateServiceImpl.getInstance();
         FacultyService facultyService = FacultyServiceImpl.getInstance();
         BillService billService = BillServiceImpl.getInstance();
+        Router router = new Router(ADD_REQUEST_PAGE);
         try {
-            /*if (recruitmentService)*/
-            subjectService.addSubject(applicantId);
-            certificateService.addCertificate(applicantId);
             billService.addBill(applicantId);
-            List<Subject> subjects = subjectService.findSubject(applicantId);
-            Optional<Certificate> certificateOptional = certificateService.findCertificate(applicantId);
-            List<Faculty> faculties = facultyService.findAllFaculties();
-            session.setAttribute(SessionAttribute.FACULTIES, faculties);
-            session.setAttribute(SessionAttribute.SUBJECTS, subjects);
-            session.setAttribute(SessionAttribute.CERTIFICATE, certificateOptional.get());
+            if (recruitmentService.isRecruitmentActive()) {
+                if (!billService.isBillArchive(applicantId)) {
+                    subjectService.addSubject(applicantId);
+                    certificateService.addCertificate(applicantId);
+                    List<Subject> subjects = subjectService.findSubject(applicantId);
+                    Optional<Certificate> certificateOptional = certificateService.findCertificate(applicantId);
+                    List<Faculty> faculties = facultyService.findAllFaculties();
+                    session.setAttribute(SessionAttribute.FACULTIES, faculties);
+                    session.setAttribute(SessionAttribute.SUBJECTS, subjects);
+                    session.setAttribute(SessionAttribute.CERTIFICATE, certificateOptional.get());
+                } else {
+                    router.setPage(MAIN_PAGE_APPLICANT_REDIRECT); // todo
+                    session.setAttribute(RequestAttribute.MESSAGE, LocaleMessageKey.ADD_REQUEST_ERROR);
+                }
+            } else {
+                router.setPage(MAIN_PAGE_APPLICANT_REDIRECT);
+                session.setAttribute(RequestAttribute.MESSAGE, LocaleMessageKey.RECRUITMENT_NOT_STARTED);
+            }
+
+
         } catch (ServiceException e) {
             logger.log(Level.ERROR, "Go to request page failed. {}", e);
             throw new CommandException("Go to request page failed", e);
         }
-        Router router = new Router(ADD_REQUEST_PAGE);
         router.setType(Router.RouterType.REDIRECT);
         return router;
     }

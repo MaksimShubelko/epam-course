@@ -35,7 +35,6 @@ public class GoToEditApplicantDataCommand implements Command {
             Applicant applicant = applicantOptional.orElseThrow(IllegalArgumentException::new);
             Account account = accountOptional.orElseThrow(IllegalArgumentException::new);
             String image = accountService.loadImage(account.getLogin());
-            System.out.println(image + " image");
             session.setAttribute(SessionAttribute.ACCOUNT, account);
             session.setAttribute(SessionAttribute.IMAGE, image);
             session.setAttribute(SessionAttribute.APPLICANT, applicant);
@@ -43,7 +42,7 @@ public class GoToEditApplicantDataCommand implements Command {
             logger.log(Level.ERROR, "Go to edition applicant's data failed.", e);
             throw new CommandException("Go to edition applicant's data failed.", e);
         }
-        session.setAttribute(SessionAttribute.CURRENT_PAGE, router.getPage());
+        session.setAttribute(SessionAttribute.CURRENT_PAGE, PagePath.EDIT_APPLICANT_DATA_REDIRECT);
         return router;
     }
 }

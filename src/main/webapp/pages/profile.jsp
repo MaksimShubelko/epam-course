@@ -47,7 +47,7 @@
                                 <h6><fmt:message key="secure.information.lastname" bundle="${content}"/></h6>
                             </div>
                             <div class="col-6">
-                                <h6>${administrator.getSurname()}</h6>
+                                <h6>${administrator.getLastname()}</h6>
                             </div>
                         </div>
                     </c:when>

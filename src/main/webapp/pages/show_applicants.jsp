@@ -106,7 +106,13 @@
             </ul>
         </div>
     </nav>
-    <div class="d-flex justify-content-start p-3 w-100 row offset-1">
+    <div class="d-flex justify-content-start p-3 w-100">
+        <div class="custom-control custom-radio p-3 col-1">
+            <input type="radio" id="archive" value="archive" name="recruitment_status" class="custom-control-input">
+            <label class="custom-control-label" for="archive">
+                <fmt:message key="admin.main.page.applicants.archive" bundle="${content}"/>
+            </label>
+        </div>
         <div class="custom-control custom-radio p-3 col-1">
             <input type="radio" id="all" value="all" name="recruitment_status" class="custom-control-input" checked>
             <label class="custom-control-label" for="all">
@@ -133,13 +139,11 @@
             </label>
         </div>
         <div class="col-5 p-3 offset-1">
-            <label>
-                <select class="custom-select" name="faculty_id" required>
-                    <c:forEach var="faculty" items="${faculties}" varStatus="loop">
-                        <option value="${faculty.getFacultyId()}">${faculty.getFacultyName()}</option>
-                    </c:forEach>
-                </select>
-            </label>
+            <select class="form-select" name="faculty_id" required>
+                <c:forEach var="faculty" items="${faculties}" varStatus="loop">
+                    <option value="${faculty.getFacultyId()}">${faculty.getFacultyName()}</option>
+                </c:forEach>
+            </select>
         </div>
         <div class="input-group h-25 w-25 p-3 col-1">
             <div class="input-group-append">
@@ -235,6 +239,8 @@
         </div>
     </c:if>
 </form>
+<script src="js/select_save_selected.js"></script>
+<script src="js/radio_btn_save_checked.js"></script>
 </body>
 <jsp:include page="footer.jsp"/>
 </html>

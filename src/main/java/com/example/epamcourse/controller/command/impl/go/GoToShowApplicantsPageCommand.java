@@ -23,11 +23,12 @@ public class GoToShowApplicantsPageCommand implements Command {
     public Router execute(HttpServletRequest request) throws CommandException {
         final int recordsPerPage = 5;
         int page = 1;
-        Long facultyId = 0L;
-        String recruitmentStatus = null;
         HttpSession session = request.getSession();
+        Long facultyId = 0L;
+        String recruitmentStatus = "all";
         Router router = new Router(PagePath.SHOW_APPLICANTS_PAGE);
-        BillService billService = BillServiceImpl.getInstance();
+        router.setType(Router.RouterType.REDIRECT);
+        Boolean isArchive = Boolean.valueOf(request.getParameter(RequestParameter.IS_BILLS_ARCHIVE));
         AccountService accountService = AccountServiceImpl.getInstance();
         SubjectService subjectService = SubjectServiceImpl.getInstance();
         CertificateService certificateService = CertificateServiceImpl.getInstance();
@@ -35,7 +36,7 @@ public class GoToShowApplicantsPageCommand implements Command {
         FacultyService facultyService = FacultyServiceImpl.getInstance();
         try {
             List<Faculty> faculties = facultyService.findAllFaculties();
-            request.setAttribute(RequestAttribute.FACULTIES, faculties);
+            session.setAttribute(RequestAttribute.FACULTIES, faculties);
             if (!Objects.equals(request.getParameter(RequestParameter.FACULTY_ID), null)) {
                 facultyId = Long.parseLong(request.getParameter(RequestParameter.FACULTY_ID));
             }
@@ -45,7 +46,9 @@ public class GoToShowApplicantsPageCommand implements Command {
             if (request.getParameter(RequestParameter.PAGE) != null) {
                 page = Integer.parseInt(request.getParameter(RequestParameter.PAGE));
             }
-            List<Applicant> applicants = applicantService.findApplicantsInFacultyBySurname(facultyId, page, recruitmentStatus);
+            List<Applicant> applicants = applicantService.findApplicantsInFacultyBySurname(facultyId, page,
+                    recruitmentStatus);
+            System.out.println(applicants.size() + " fff");
             long countOfApplicants = applicants.size();
             long noOfPages = (long) Math.ceil(countOfApplicants * 1.0 / recordsPerPage);
             List<List<Subject>> subjects = new ArrayList<>();
@@ -56,13 +59,13 @@ public class GoToShowApplicantsPageCommand implements Command {
                 accounts.add(accountService.findAccountById(applicant.getAccountId()).orElseThrow(UnsupportedOperationException::new));
                 certificates.add(certificateService.findCertificate(applicant.getApplicantId()).orElseThrow(UnsupportedOperationException::new));
             };
-            request.setAttribute(RequestParameter.ACCOUNTS, accounts);
-            request.setAttribute(RequestParameter.CERTIFICATES, certificates);
-            request.setAttribute(RequestAttribute.SUBJECTS, subjects);
-            request.setAttribute(RequestAttribute.FACULTY_ID, facultyId);
-            request.setAttribute(RequestAttribute.APPLICANTS, applicants);
-            request.setAttribute(RequestAttribute.PAGE, page);
-            request.setAttribute(RequestAttribute.COUNT_PAGES, noOfPages);
+            session.setAttribute(RequestParameter.ACCOUNTS, accounts);
+            session.setAttribute(RequestParameter.CERTIFICATES, certificates);
+            session.setAttribute(RequestAttribute.SUBJECTS, subjects);
+            session.setAttribute(RequestAttribute.FACULTY_ID, facultyId);
+            session.setAttribute(RequestAttribute.APPLICANTS, applicants);
+            session.setAttribute(RequestAttribute.PAGE, page);
+            session.setAttribute(RequestAttribute.COUNT_PAGES, noOfPages);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, "Finding applicants failed", e);
             throw new CommandException("Finding applicants failed", e);

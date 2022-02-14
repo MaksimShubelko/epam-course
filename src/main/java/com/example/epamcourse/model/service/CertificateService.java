@@ -10,5 +10,7 @@ public interface CertificateService {
 
     boolean updateCertificate(Long applicantId, double certificateMark) throws ServiceException;
 
+    boolean deleteCertificate(Long applicantId) throws ServiceException;
+
     Optional<Certificate> findCertificate(Long applicantId) throws ServiceException;
 }

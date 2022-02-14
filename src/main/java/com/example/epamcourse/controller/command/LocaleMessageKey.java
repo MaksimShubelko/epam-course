@@ -20,5 +20,9 @@ public final class LocaleMessageKey {
 
     public static final String INCORRECT_CODE = "confirm.email.code.error";
     public static final String INVALID_DATE = "invalid.date.error";
+    public static final String PICK_UP_DOCUMENTS_ERROR = "pick.up.documents.error";
+    public static final String PICK_UP_DOCUMENTS_SUCCESS = "pick.up.documents.success";
+    public static final String ADD_REQUEST_ERROR = "add.request.error";
+    public static final String RECRUITMENT_NOT_STARTED = "recruitment.not.started.error";
 }
 

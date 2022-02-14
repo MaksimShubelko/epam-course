@@ -13,7 +13,7 @@
 <body>
 <form name="applicantPage" action="${pageContext.request.contextPath}/controller" method="get" class="container h-75">
     <input type="hidden" name="command" value="show_requests_command">
-    <div class="row">
+    <div class="row border border-success">
         <div class="col-2">
             <fmt:message key="applicant.mail.page.recruitment.status" bundle="${content}"/>
         </div>
@@ -26,7 +26,8 @@
         <div class="col-2">
             ${recruitment.getFinishRecruitment()}
         </div>
-        <div class="col-2 offset-sm-9">
+
+        <div class="col-2 offset-1">
             <a href="${pageContext.request.contextPath}/controller?command=go_to_edit_applicant_data">
                 <fmt:message key="applicant.edit.data" bundle="${content}"/>
             </a>
@@ -50,12 +51,18 @@
                         <fmt:message key="applicant.page.pick.up.documents" bundle="${content}"/>
                     </a>
                 </div>
+                <c:if test="${message != null}">
+                    <h6 class="text-danger">
+                        <fmt:message key="${message}" bundle="${content}"/>
+                    </h6>
+                </c:if>
             </div>
             <div class="col-5 bg-body">
                 <c:set var="faculty_id"/>
                 <c:forEach var="faculty" items="${faculties}" varStatus="loop">
-                    <br><button type="submit" name="faculty_id" value="${faculty.getFacultyId()}"
-                            class="btn btn-link ui-corner-left">${loop.index + 1}. ${faculty.getFacultyName()}</button>
+                    <br>
+                    <button type="submit" name="faculty_id" value="${faculty.getFacultyId()}"
+                            class="btn text-success btn-link ui-corner-left">${loop.index + 1}. ${faculty.getFacultyName()}</button>
                 </c:forEach>
             </div>
 
@@ -79,10 +86,12 @@
                                 <td>${applicant.getLastname()}</td>
                                 <c:choose>
                                     <c:when test="${applicant.getBeneficiary()}">
-                                        <td><fmt:message key="applicant.page.table.benefits.exist" bundle="${content}"/></td>
+                                        <td><fmt:message key="applicant.page.table.benefits.exist"
+                                                         bundle="${content}"/></td>
                                     </c:when>
                                     <c:otherwise>
-                                        <td><fmt:message key="applicant.page.table.benefits.not.exist" bundle="${content}"/></td>
+                                        <td><fmt:message key="applicant.page.table.benefits.not.exist"
+                                                         bundle="${content}"/></td>
                                     </c:otherwise>
                                 </c:choose>
                                 <c:if test="${(loop.index + 1 + (currentPage - 1) * 5) <= faculty.getRecruitmentPlanFree()}">
