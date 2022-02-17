@@ -18,14 +18,16 @@
         <location>/error/error_404.jsp</location>
     </error-page>
 
-    <servlet>
-        <servlet-name>controller</servlet-name>
-        <servlet-class>com.example.epamcourse.controller.ControllerServlet</servlet-class>
-    </servlet>
+    <error-page>
+        <error-code>403</error-code>
+        <location>/error/error_404.jsp</location>
+    </error-page>
 
-    <servlet-mapping>
-        <servlet-name>controller</servlet-name>
-        <url-pattern>/controller</url-pattern>
-    </servlet-mapping>
+    <jsp-config>
+        <taglib>
+            <taglib-uri>custom-tag</taglib-uri>
+            <taglib-location>/WEB-INF/tld/custom_tag.tld</taglib-location>
+        </taglib>
+    </jsp-config>
 
 </web-app>

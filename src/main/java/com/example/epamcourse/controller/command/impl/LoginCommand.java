@@ -35,7 +35,6 @@ public class LoginCommand implements Command {
         HttpSession session = request.getSession();
         Router router = new Router(LOGIN);
         AccountService accountService = AccountServiceImpl.getInstance();
-        FacultyService facultyService = FacultyServiceImpl.getInstance();
         ApplicantService applicantService = ApplicantServiceImpl.getInstance();
         AdministratorService administratorService = AdministratorServiceImpl.getInstance();
         try {
@@ -48,8 +47,10 @@ public class LoginCommand implements Command {
                     router.setPage(PagePath.BLOCKED_ACCOUNT_PAGE);
                 } else {
                     Long accountId = accountService.getAccountIdByLogin(login);
+                    Account.Role role = accountService.getAccountRoleByLogin(login);
+                    session.setAttribute(SessionAttribute.ROLE, role);
                     session.setAttribute(SessionAttribute.ACCOUNT_ID, accountId);
-                    if (accountService.getAccountRoleByLogin(login) == Account.Role.APPLICANT) {
+                    if (role == Account.Role.APPLICANT) {
                         if (!accountService.isPersonalInformationExist(login)) {
                             router.setPage(APPLICANT_ADD_PERSONAL_INF);
                         } else {
@@ -58,7 +59,7 @@ public class LoginCommand implements Command {
                             router.setPage(MAIN_PAGE_APPLICANT_REDIRECT);
                         }
                     } else {
-                        if (accountService.getAccountRoleByLogin(login) == Account.Role.ADMIN) {
+                        if (role == Account.Role.ADMIN) {
                             if (!accountService.isPersonalInformationExist(login)) {
                                 router.setPage(ADMIN_ADD_PERSONAL_INF);
                             } else {

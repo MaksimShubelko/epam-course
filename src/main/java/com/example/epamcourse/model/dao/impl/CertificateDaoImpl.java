@@ -58,7 +58,7 @@ public class CertificateDaoImpl implements CertificateDao {
 
     @Override
     public List<Certificate> findAll() throws DaoException {
-        List<Certificate>  certificates = null;
+        List<Certificate>  certificates;
         try {
             certificates = jdbcTemplate.executeSelectQuery(FIND_ALL_CERTIFICATES);
         } catch (TransactionException e) {
@@ -98,7 +98,7 @@ public class CertificateDaoImpl implements CertificateDao {
 
     @Override
     public Long add(Certificate certificate) throws DaoException {
-        long certificateId = 0;
+        long certificateId;
         try {
             certificateId = jdbcTemplate.executeInsertQuery(ADD_CERTIFICATE,
                     certificate.getTotalMark());

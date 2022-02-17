@@ -7,36 +7,50 @@
 
 <html>
 <head>
-    <jsp:include page="header.jsp"/>
+    <jsp:include page="../header.jsp"/>
     <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" type="text/css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/css/button.css" type="text/css" rel="stylesheet">
-    <title>Insert title here</title>
+    <title><fmt:message key="edition.faculty.title" bundle="${content}"/></title>
 </head>
 <body>
 <div>
     <form class="container needs-validation h-75" novalidate name="loginForm"
           action="${pageContext.request.contextPath}/controller" method="get">
-        <input type="hidden" name="command" value="add_faculty"/>
-
+        <input type="hidden" name="command" value="edit_faculty"/>
+        <input type="hidden" name="faculty_id" value="${faculty.getFacultyId()}">
+        <div class="row bg-warning">
+            <div class="col-1 offset-sm-9 border border-success border-3">
+                <h6><a href="${pageContext.request.contextPath}/controller?command=go_to_edit_administrator_data">
+                    <fmt:message key="administrator.edit.data" bundle="${content}"/>
+                </a></h6>
+            </div>
+            <div class="col-1 border border-success border-3">
+                <h6>
+                    <a href="${pageContext.request.contextPath}/controller?command=logout">
+                        <fmt:message key="logout" bundle="${content}"/>
+                    </a>
+                </h6>
+            </div>
+        </div>
         <div class="p-5 offset-3">
             <div class="offset-4 p-3">
                 <h6>
-                    <fmt:message key="add.faculty.page" bundle="${content}"/>
+                    <fmt:message key="edit.faculty.page" bundle="${content}"/>
                 </h6>
             </div>
 
             <div class="row offset-1">
                 <label class="col-4 col-form-label">
                     <h6>
-                        <fmt:message key="add.faculty.page.faculty.name" bundle="${content}"/>
+                        <fmt:message key="edit.faculty.page.faculty.name" bundle="${content}"/>
                     </h6>
                 </label>
                 <div class="col-8">
-                    <input type="text" name="faculty_name" pattern="^[A-ЯЁ]([а-яё]+\s?)+$" required>
+                    <input type="text" name="faculty_name" pattern="^[A-ЯЁ]([а-яё]+\s?)+$" value="${faculty.getFacultyName()}" required>
                     <div class="invalid-feedback">
-                       <h6>
-                           <fmt:message key="faculty.name.error" bundle="${content}"/>
-                       </h6>
+                        <h6>
+                            <fmt:message key="faculty.name.error" bundle="${content}"/>
+                        </h6>
                     </div>
                 </div>
             </div>
@@ -44,12 +58,12 @@
             <div class="row offset-1">
                 <label class="col-4 col-form-label">
                     <h6>
-                        <fmt:message key="add.faculty.page.faculty.recruitment.plan.free" bundle="${content}"/>
+                        <fmt:message key="edit.faculty.page.faculty.recruitment.plan.free" bundle="${content}"/>
                     </h6>
                 </label>
                 <div class="col-8">
                     <input type="number" name="recruitment_plan_free"
-                           min="10" max="80" required>
+                           min="10" max="80" value="${faculty.getRecruitmentPlanFree()}" required>
                     <div class="invalid-feedback">
                         <h6>
                             <fmt:message key="faculty.recruitment.plan.error" bundle="${content}"/>
@@ -61,11 +75,12 @@
             <div class="row offset-1">
                 <label class="col-4 col-form-label">
                     <h6>
-                        <fmt:message key="add.faculty.page.faculty.recruitment.plan.canvas" bundle="${content}"/>
+                        <fmt:message key="edit.faculty.page.faculty.recruitment.plan.canvas" bundle="${content}"/>
                     </h6>
                 </label>
                 <div class="col-8">
-                    <input type="number" name="recruitment_plan_canvas" min="10" max="80" required>
+                    <input type="number" name="recruitment_plan_canvas"
+                           min="10" max="80" value="${faculty.getRecruitmentPlanCanvas()}" required>
                     <div class="invalid-feedback">
                         <h6>
                             <fmt:message key="faculty.recruitment.plan.error" bundle="${content}"/>
@@ -76,17 +91,18 @@
 
             <div class="row offset-4 p-1">
                 <label class="col-8">
-                    <input type="submit" value="<fmt:message key="add.faculty.page.add" bundle="${content}" />"
+                    <input type="submit" value="<fmt:message key="edit.faculty.page.edit" bundle="${content}" />"
                            class="blubtn align-middle">
                 </label>
             </div>
         </div>
     </form>
+
 </div>
-<script src="js/validation.js"></script>
+<script src="${pageContext.request.contextPath}/js/validation.js"></script>
 </body>
 <footer>
-    <jsp:include page="footer.jsp"/>
+    <jsp:include page="../footer.jsp"/>
 </footer>
 </html>
 

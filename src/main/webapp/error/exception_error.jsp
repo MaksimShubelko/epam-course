@@ -1,9 +1,8 @@
-<%--
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <fmt:setLocale value="${locale}" scope="session"/>
-<fmt:setBundle basename="local.pagecontent"/>
+<fmt:setBundle basename="local.content" var="content"/>
 
 <!doctype html>
 <html lang="ru">
@@ -11,13 +10,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title><fmt:message key="error.title"/></title>
+    <title><fmt:message key="error.title" bundle="${content}"/></title>
 </head>
 
 <body>
 
 <div class="container" >
-    <h1><fmt:message key="error.oops"/></h1>
+    <h1><fmt:message key="error.oops" bundle="${content}"/></h1>
 
     <table class="table table-bordered">
         <tbody>
@@ -55,10 +54,10 @@
 
     <h4>
         <a href="${pageContext.request.contextPath}/controller?command=to_main_page&actual_page=1" class="link-primary">
-            <fmt:message key="error.back"/>
+            <fmt:message key="error.back" bundle="${content}/>
         </a>
     </h4>
 </div>
     <c:remove var="exception" scope="session"/>
 </body>
-</html>--%>
+</html>

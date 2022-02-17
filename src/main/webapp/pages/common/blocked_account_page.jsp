@@ -4,7 +4,7 @@
 <fmt:setBundle basename="local.content" var="content"/>
 <html>
 <head>
-    <title>Error 404</title>
+    <title><fmt:message key="blocked.account.title" bundle="${content}"/></title>
 </head>
 <body>
 <h2>

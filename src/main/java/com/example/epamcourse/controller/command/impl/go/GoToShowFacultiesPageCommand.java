@@ -27,17 +27,14 @@ public class GoToShowFacultiesPageCommand implements Command {
         int page = 1;
         HttpSession session = request.getSession();
         Router router = new Router(SHOW_FACULTIES_PAGE);
-        ApplicantService applicantService = ApplicantServiceImpl.getInstance();
         FacultyService facultyService = FacultyServiceImpl.getInstance();
         session.setAttribute(SessionAttribute.CURRENT_PAGE, PagePath.SHOW_FACULTIES_REDIRECT);
         try {
             long noOfPages = (long) Math.ceil(facultyService.findAllFaculties().size() * 1.0 / recordsPerPage);
             if (request.getParameter(RequestParameter.PAGE) != null) {
                 page = Integer.parseInt(request.getParameter(RequestParameter.PAGE));
-                System.out.println(page);
             }
             List<Faculty> faculties = facultyService.findFaculties(page);
-            System.out.println(page);
             request.setAttribute(RequestAttribute.FACULTIES, faculties);
             request.setAttribute(RequestAttribute.PAGE, page);
             request.setAttribute(RequestAttribute.COUNT_PAGES, noOfPages);

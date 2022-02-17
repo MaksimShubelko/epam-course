@@ -32,9 +32,9 @@ public class ApplicantDaoImpl implements ApplicantDao {
             (SELECT SUM(mark) FROM subjects WHERE applicant_id = applicants.applicant_id) as subjects_mark,
             (SELECT middle_mark FROM certificates WHERE certificate_id = applicants.certificate_id) as certificate_mark
             FROM applicants
-            INNER JOIN bills b on applicants.applicant_id = b.applicant_id
+            INNER JOIN bills b on applicants.applicant_id = b.applicant_id AND b.archive = 0
             INNER JOIN faculties f on f.faculty_id = b.faculty_id AND f.faculty_id = ?
-            ORDER BY beneficiary DESC, subjects_mark + certificate_mark * 10 DESC
+            ORDER BY beneficiary DESC, subjects_mark + certificate_mark * 10 DESC 
             LIMIT ?, ?
             """;
 
@@ -140,7 +140,8 @@ public class ApplicantDaoImpl implements ApplicantDao {
 
         List<Applicant> applicants;
         try {
-            System.out.println(isArchive + "dao");
+            System.out.println(facultyId +" " + isArchive + " " +
+                    applicantsSkip + applicantsTake + rowSkip + rowNext);
             applicants = jdbcTemplate.executeSelectQuery(FIND_APPLICANTS_BY_SURNAME_IN_ORDER_BY_MARK_IN_FACULTY, facultyId, isArchive,
                     applicantsSkip, applicantsTake, rowSkip, rowNext);
         } catch (TransactionException e) {

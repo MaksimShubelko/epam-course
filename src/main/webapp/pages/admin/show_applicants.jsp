@@ -6,25 +6,27 @@
 <fmt:setBundle basename="local.content" var="content"/>
 <html>
 <head>
-    <jsp:include page="header.jsp"/>
-    <link href="css/bootstrap.min.css" type="text/css" rel="stylesheet">
-    <link href="css/button.css" type="text/css" rel="stylesheet">
-    <title>Insert title here</title>
+    <jsp:include page="../header.jsp"/>
+    <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" type="text/css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/css/button.css" type="text/css" rel="stylesheet">
+    <title><fmt:message key="show.applicants.title" bundle="${content}"/></title>
 </head>
 <body>
 <form class="needs-validation h-75" novalidate action="${pageContext.request.contextPath}/controller" method="get"
       class="h-75">
     <input type="hidden" name="command" value="go_to_show_applicants">
-    <div class="row">
-        <div class="col-2 offset-sm-9">
-            <a href="${pageContext.request.contextPath}/controller?command=go_to_edit_administrator_data">
+    <div class="row bg-warning">
+        <div class="col-1 offset-sm-9 border border-success border-3">
+            <h6><a href="${pageContext.request.contextPath}/controller?command=go_to_edit_administrator_data">
                 <fmt:message key="administrator.edit.data" bundle="${content}"/>
-            </a>
+            </a></h6>
         </div>
-        <div class="col-1">
-            <a href="${pageContext.request.contextPath}/controller?command=logout">
-                <fmt:message key="logout" bundle="${content}"/>
-            </a>
+        <div class="col-1 border border-success border-3">
+            <h6>
+                <a href="${pageContext.request.contextPath}/controller?command=logout">
+                    <fmt:message key="logout" bundle="${content}"/>
+                </a>
+            </h6>
         </div>
     </div>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -239,8 +241,8 @@
         </div>
     </c:if>
 </form>
-<script src="js/select_save_selected.js"></script>
-<script src="js/radio_btn_save_checked.js"></script>
+<script src="${pageContext.request.contextPath}/js/select_save_selected.js"></script>
+<script src="${pageContext.request.contextPath}/js/radio_btn_save_checked.js"></script>
 </body>
-<jsp:include page="footer.jsp"/>
+<jsp:include page="../footer.jsp"/>
 </html>

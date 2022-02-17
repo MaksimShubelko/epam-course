@@ -33,10 +33,7 @@ public class ControllerServlet extends HttpServlet {
         String stringCommand = request.getParameter(RequestParameter.COMMAND);
         Command command = CommandProvider.defineCommand(stringCommand).orElseThrow(IllegalArgumentException::new);
         try {
-            System.out.println(command.toString());
             Router router = command.execute(request);
-            System.out.println(router.getPage());
-            System.out.println(router.getType());
             switch (router.getType()) {
                 case FORWARD -> request.getRequestDispatcher(router.getPage()).forward(request, response);
                 case REDIRECT -> response.sendRedirect(request.getContextPath() + router.getPage());

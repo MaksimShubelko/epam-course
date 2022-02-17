@@ -142,12 +142,7 @@ public class AccountServiceImpl implements AccountService {
     public boolean addAccount(String login, String password, String passwordCheck, String email, String ip) throws ServiceException {
         boolean isAccountAdded = false;
         AccountValidator validator = AccountValidatorImpl.getInstance();
-        System.out.println("add account");
-        if ((validator.isLoginValid(login)
-                && validator.passwordCheck(password, passwordCheck)
-                && validator.isPasswordValid(password))
-                && !isAccountLoginExist(login)) {
-
+        if (validateRegistrationData(login, password, passwordCheck, email)) {
             Account account = new Account.AccountBuilder()
                     .setLogin(login)
                     .setPassword(password)
@@ -206,41 +201,29 @@ public class AccountServiceImpl implements AccountService {
     public boolean addAdminAccount(String login, String password, String email, String passwordCheck) throws ServiceException {
         boolean isAccountAdded = false;
         AccountValidator validator = AccountValidatorImpl.getInstance();
-        if (!(validator.isLoginValid(login) &&
-                validator.isPasswordValid(password)) || isAccountLoginExist(login)) {
-            // todo
-        } else {
-            if (!validator.passwordCheck(password, passwordCheck)) {
-// todo
-            } else {
-                Account account = new Account.AccountBuilder()
-                        .setLogin(login)
-                        .setPassword(password)
-                        .setEmail(email)
-                        .setRole(Account.Role.ADMIN)
-                        .createAccount();
-                String hashPassword = HashGenerator.hashPassword(password);
-                try {
-                    transactionManager.initTransaction();
-                    accountDao.add(account, hashPassword);
-                    transactionManager.commit();
-                    isAccountAdded = true;
-                } catch (DaoException | TransactionException e) {
-                    transactionManager.rollback();
-                    logger.log(Level.ERROR, "Error when adding admin with login {} and password {}, {}", login, password, e);
-                    throw new ServiceException("Error when adding admin with login " + login + " and password " + password, e);
-                } finally {
-                    transactionManager.endTransaction();
-                }
+        if (validateRegistrationData(login, password, passwordCheck, email)) {
+            Account account = new Account.AccountBuilder()
+                    .setLogin(login)
+                    .setPassword(password)
+                    .setEmail(email)
+                    .setRole(Account.Role.ADMIN)
+                    .createAccount();
+            String hashPassword = HashGenerator.hashPassword(password);
+            try {
+                transactionManager.initTransaction();
+                accountDao.add(account, hashPassword);
+                transactionManager.commit();
+                isAccountAdded = true;
+            } catch (DaoException | TransactionException e) {
+                transactionManager.rollback();
+                logger.log(Level.ERROR, "Error when adding admin with login {} and password {}, {}", login, password, e);
+                throw new ServiceException("Error when adding admin with login " + login + " and password " + password, e);
+            } finally {
+                transactionManager.endTransaction();
             }
         }
         return isAccountAdded;
     }
-
-    /*@Override
-    public boolean updatePassword(SessionRequestContent content) throws ServiceException {
-        return false;
-    }*/
 
     @Override
     public String getAccountStatusByLogin(String login) throws ServiceException {
@@ -309,7 +292,7 @@ public class AccountServiceImpl implements AccountService {
             transactionManager.commit();
         } catch (DaoException | TransactionException e) {
             transactionManager.rollback();
-            logger.log(Level.ERROR, "Error when finding account role by login, {}", e);
+            logger.log(Level.ERROR, "Error when finding account role by login", e);
             throw new ServiceException("Error when finding account role by login", e);
         } finally {
             transactionManager.endTransaction();
@@ -352,12 +335,9 @@ public class AccountServiceImpl implements AccountService {
             Optional<Account> accountOptional = accountDao.findAccountByLogin(login);
             Account account;
             if (accountOptional.isPresent()) {
-                System.out.println("PRESENT ACCOUNTS");
                 account = accountOptional.get();
                 account.setImagePath(imagePathString);
                 accountDao.update(account);
-            } else {
-                System.out.println("NO ACCOUNTS");
             }
             transactionManager.commit();
         } catch (DaoException | TransactionException | IOException e) {

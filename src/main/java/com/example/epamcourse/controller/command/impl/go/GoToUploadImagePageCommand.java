@@ -30,7 +30,7 @@ public class GoToUploadImagePageCommand implements Command {
         try {
             AccountService accountService = AccountServiceImpl.getInstance();
             Long accountId = (Long) session.getAttribute(SessionAttribute.ACCOUNT_ID);
-            Optional<Account> accountOptional = null;
+            Optional<Account> accountOptional;
             accountOptional = accountService.findAccountById(accountId);
             Account account = accountOptional.orElseThrow(IllegalArgumentException::new);
             String image = accountService.loadImage(account.getLogin());

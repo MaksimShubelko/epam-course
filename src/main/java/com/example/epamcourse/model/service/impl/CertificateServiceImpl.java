@@ -25,6 +25,10 @@ public class CertificateServiceImpl implements CertificateService {
     private final ApplicantDao applicantDao = ApplicantDaoImpl.getInstance();
     private final TransactionManager transactionManager = TransactionManager.getInstance();
 
+    public static CertificateService getInstance() {
+        return instance;
+    }
+
     private CertificateServiceImpl() {
     }
 
@@ -124,7 +128,4 @@ public class CertificateServiceImpl implements CertificateService {
         return certificate;
     }
 
-    public static CertificateService getInstance() {
-        return instance;
-    }
 }

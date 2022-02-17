@@ -20,6 +20,9 @@ public final class SessionAttribute {
     public static final String ADMINISTRATOR = "administrator";
     public static final String ADMINISTRATOR_ID = "administrator_id";
     public static final String IMAGE = "img";
+    public static final String ROLE = "role";
+    public static final String EMAIL = "email";
+    public static final String MESSAGE = "message";
 
     private SessionAttribute() {
     }

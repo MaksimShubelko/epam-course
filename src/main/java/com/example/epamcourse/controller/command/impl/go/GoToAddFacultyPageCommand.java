@@ -12,8 +12,19 @@ import org.apache.logging.log4j.Logger;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
+/**
+ * @author shubelko
+ * @version 1.0
+ */
 public class GoToAddFacultyPageCommand implements Command {
 
+    /**
+     * Execute
+     *
+     * @param request the request
+     * @return the router
+     * @throws CommandException the command exception
+     */
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         Router router = new Router(PagePath.ADD_FACULTY_PAGE);

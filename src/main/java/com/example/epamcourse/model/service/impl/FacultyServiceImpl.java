@@ -25,6 +25,13 @@ public class FacultyServiceImpl implements FacultyService {
     private final ApplicantDao applicantDao = ApplicantDaoImpl.getInstance();
     private final FacultyDao facultyDao = FacultyDaoImpl.getInstance();
 
+    public static FacultyService getInstance() {
+        return instance;
+    }
+
+    private FacultyServiceImpl() {
+    }
+
     @Override
     public List<Faculty> findAllFaculties() throws ServiceException {
         List<Faculty> faculties;
@@ -65,17 +72,22 @@ public class FacultyServiceImpl implements FacultyService {
     public boolean editFaculty(Long facultyId, String facultyName, int recruitmentPlanFree, int recruitmentPlanCanvas) throws ServiceException {
         boolean isFacultyEdited = false;
         Optional<Faculty> facultyOptional;
+        FacultyValidator facultyValidator = FacultyValidatorImpl.getInstance();
         Faculty faculty;
         try {
             transactionManager.initTransaction();
             facultyOptional = facultyDao.findEntityById(facultyId);
             if (facultyOptional.isPresent()) {
-                faculty = facultyOptional.get();
-                faculty.setFacultyName(facultyName);
-                faculty.setRecruitmentPlanCanvas(recruitmentPlanCanvas);
-                faculty.setRecruitmentPlanFree(recruitmentPlanFree);
-                facultyDao.update(faculty);
-                isFacultyEdited = true;
+                if (facultyValidator.isFacultyNameValid(facultyName)
+                        && facultyValidator.isRecruitmentPlanValid(recruitmentPlanFree)
+                && facultyValidator.isRecruitmentPlanValid(recruitmentPlanCanvas)){
+                    faculty = facultyOptional.get();
+                    faculty.setFacultyName(facultyName);
+                    faculty.setRecruitmentPlanCanvas(recruitmentPlanCanvas);
+                    faculty.setRecruitmentPlanFree(recruitmentPlanFree);
+                    facultyDao.update(faculty);
+                    isFacultyEdited = true;
+                }
             }
             transactionManager.commit();
         } catch (DaoException | TransactionException e) {
@@ -158,7 +170,6 @@ public class FacultyServiceImpl implements FacultyService {
         return faculties;
     }
 
-    public static FacultyService getInstance() {
-        return instance;
-    }
+
+
 }

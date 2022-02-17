@@ -35,7 +35,7 @@ public class AdministratorServiceImpl implements AdministratorService {
         boolean isAdministratorSecureInformationAdded = false;
         SecureInformationValidator validator = SecureInformationValidatorImpl.getInstance();
         try {
-            if (validator.isNameValid(name) && validator.isLastnameValid(lastname) && validator.isSurnameValid(surname)) {
+            if (isAdminSecureInformationValid(name, surname, lastname)) {
                 Administrator administrator = new Administrator();
                 administrator.setFirstname(name);
                 administrator.setSurname(surname);
@@ -59,7 +59,6 @@ public class AdministratorServiceImpl implements AdministratorService {
     @Override
     public Optional<Administrator> getAdministratorByAccountId(Long accountId) throws ServiceException {
         Optional<Administrator> administratorOptional = Optional.empty();
-        Administrator administrator;
         try {
             transactionManager.initTransaction();
             administratorOptional = administratorDao.getAdministratorByAccountId(accountId);
@@ -77,7 +76,6 @@ public class AdministratorServiceImpl implements AdministratorService {
     @Override
     public Optional<Administrator> getAdministratorById(Long administratorId) throws ServiceException {
         Optional<Administrator> administratorOptional = Optional.empty();
-        Administrator administrator;
         try {
             transactionManager.initTransaction();
             administratorOptional = administratorDao.findEntityById(administratorId);
@@ -121,12 +119,14 @@ public class AdministratorServiceImpl implements AdministratorService {
             transactionManager.initTransaction();
             Optional<Administrator> administratorOptional = administratorDao.findEntityById(administratorId);
             if (administratorOptional.isPresent()) {
-                administrator = administratorOptional.get();
-                administrator.setFirstname(name);
-                administrator.setLastname(lastname);
-                administrator.setSurname(surname);
-                administratorDao.update(administrator);
-                isAdministratorUpdated = true;
+                if (isAdminSecureInformationValid(name, surname, lastname)) {
+                    administrator = administratorOptional.get();
+                    administrator.setFirstname(name);
+                    administrator.setLastname(lastname);
+                    administrator.setSurname(surname);
+                    administratorDao.update(administrator);
+                    isAdministratorUpdated = true;
+                }
             }
             transactionManager.commit();
         } catch (DaoException | TransactionException e) {
@@ -138,5 +138,12 @@ public class AdministratorServiceImpl implements AdministratorService {
         }
 
         return isAdministratorUpdated;
+    }
+
+    public boolean isAdminSecureInformationValid(String name, String surname, String lastname) {
+        SecureInformationValidator validator = SecureInformationValidatorImpl.getInstance();
+        return validator.isNameValid(name)
+                && validator.isLastnameValid(lastname)
+                && validator.isSurnameValid(surname);
     }
 }

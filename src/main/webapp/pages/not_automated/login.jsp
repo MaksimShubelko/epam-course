@@ -7,13 +7,13 @@
 
 <html>
 <head>
-    <jsp:include page="header.jsp"/>
+    <jsp:include page="../header.jsp"/>
     <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" type="text/css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/css/button.css" type="text/css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600&display=swap" rel="stylesheet">
-    <title>Insert title here</title>
+    <title><fmt:message key="login.title" bundle="${content}"/></title>
 </head>
 <body>
 <div>
@@ -62,6 +62,6 @@
 </div>
 </body>
 <footer>
-    <jsp:include page="footer.jsp"/>
+    <jsp:include page="../footer.jsp"/>
 </footer>
 </html>

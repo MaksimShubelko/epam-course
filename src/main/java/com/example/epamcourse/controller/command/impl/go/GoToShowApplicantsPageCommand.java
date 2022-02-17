@@ -24,11 +24,10 @@ public class GoToShowApplicantsPageCommand implements Command {
         final int recordsPerPage = 5;
         int page = 1;
         HttpSession session = request.getSession();
-        Long facultyId = 0L;
-        String recruitmentStatus = "all";
+        long facultyId = 0L;
+        String recruitmentStatus = ApplicantFindingType.ALL.name();
         Router router = new Router(PagePath.SHOW_APPLICANTS_PAGE);
         router.setType(Router.RouterType.REDIRECT);
-        Boolean isArchive = Boolean.valueOf(request.getParameter(RequestParameter.IS_BILLS_ARCHIVE));
         AccountService accountService = AccountServiceImpl.getInstance();
         SubjectService subjectService = SubjectServiceImpl.getInstance();
         CertificateService certificateService = CertificateServiceImpl.getInstance();
@@ -46,9 +45,8 @@ public class GoToShowApplicantsPageCommand implements Command {
             if (request.getParameter(RequestParameter.PAGE) != null) {
                 page = Integer.parseInt(request.getParameter(RequestParameter.PAGE));
             }
-            List<Applicant> applicants = applicantService.findApplicantsInFacultyBySurname(facultyId, page,
+            List<Applicant> applicants = applicantService.findApplicantsByFacultyIdAndRecruitmentStatus(facultyId, page,
                     recruitmentStatus);
-            System.out.println(applicants.size() + " fff");
             long countOfApplicants = applicants.size();
             long noOfPages = (long) Math.ceil(countOfApplicants * 1.0 / recordsPerPage);
             List<List<Subject>> subjects = new ArrayList<>();
@@ -56,8 +54,8 @@ public class GoToShowApplicantsPageCommand implements Command {
             List<Certificate> certificates = new ArrayList<>();
             for (Applicant applicant : applicants) {
                 subjects.add(subjectService.findSubject(applicant.getApplicantId()));
-                accounts.add(accountService.findAccountById(applicant.getAccountId()).orElseThrow(UnsupportedOperationException::new));
-                certificates.add(certificateService.findCertificate(applicant.getApplicantId()).orElseThrow(UnsupportedOperationException::new));
+                accounts.add(accountService.findAccountById(applicant.getAccountId()).orElseGet(null));
+                certificates.add(certificateService.findCertificate(applicant.getApplicantId()).orElseGet(null));
             };
             session.setAttribute(RequestParameter.ACCOUNTS, accounts);
             session.setAttribute(RequestParameter.CERTIFICATES, certificates);

@@ -7,16 +7,30 @@
 
 <html>
 <head>
-    <jsp:include page="header.jsp"/>
+    <jsp:include page="../header.jsp"/>
     <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" type="text/css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/css/button.css" type="text/css" rel="stylesheet">
-    <title>Insert title here</title>
+    <title><fmt:message key="edition.recruitment.title" bundle="${content}"/></title>
 </head>
 <body>
 <div>
-    <form class="container needs-validation h-75" novalidate action="${pageContext.request.contextPath}/controller"
+    <form class="needs-validation h-75" novalidate action="${pageContext.request.contextPath}/controller"
           method="get">
         <input type="hidden" name="command" value="edit_recruitment"/>
+        <div class="row bg-warning">
+            <div class="col-1 offset-sm-9 border border-success border-3">
+                <h6><a href="${pageContext.request.contextPath}/controller?command=go_to_edit_administrator_data">
+                    <fmt:message key="administrator.edit.data" bundle="${content}"/>
+                </a></h6>
+            </div>
+            <div class="col-1 border border-success border-3">
+                <h6>
+                    <a href="${pageContext.request.contextPath}/controller?command=logout">
+                        <fmt:message key="logout" bundle="${content}"/>
+                    </a>
+                </h6>
+            </div>
+        </div>
         <div class="offset-4 p-5 w-75">
             <div class="offset-3 p-4">
                 <h6><fmt:message key="admin.main.page.recruitment.update.welcome.message" bundle="${content}"/></h6>
@@ -67,10 +81,10 @@
         </div>
     </form>
 </div>
-<script src="js/validation.js"></script>
+<script src="${pageContext.request.contextPath}/js/validation.js"></script>
 </body>
 <footer>
-    <jsp:include page="footer.jsp"/>
+    <jsp:include page="../footer.jsp"/>
 </footer>
 </html>
 

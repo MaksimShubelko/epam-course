@@ -6,6 +6,4 @@ public interface RecruitmentValidator {
 
     boolean isFinishRecruitmentValid(LocalDateTime finishRecruitment);
 
-    boolean isRecruitmentStatusValid(boolean status);
-
 }

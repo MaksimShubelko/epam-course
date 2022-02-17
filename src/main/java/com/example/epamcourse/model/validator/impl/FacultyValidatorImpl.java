@@ -1,9 +1,11 @@
 package com.example.epamcourse.model.validator.impl;
 
 import com.example.epamcourse.model.validator.FacultyValidator;
+import com.oracle.wls.shaded.org.apache.regexp.RE;
 
 public class FacultyValidatorImpl implements FacultyValidator {
     private final static String FACULTY_NAME_REGEX = "^[A-ЯЁ]([а-яё]+\\s?)+$";
+    private final static String RECRUITMENT_PLAN_REGEX = "^[5-9]|([1-7][0-9])|80$";
     private final static int minApplicants = 5;
     private final static int maxApplicants = 80;
     private static FacultyValidatorImpl instance = new FacultyValidatorImpl();

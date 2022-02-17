@@ -30,13 +30,13 @@ public class CreateAccountCommand implements Command {
         String email = request.getParameter(RequestParameter.EMAIL);
         String ip = request.getRemoteAddr();
         Router router = new Router(PagePath.CREATION_ACCOUNT);
+        router.setType(Router.RouterType.REDIRECT);
         try {
-
             if (accountService.isAccountLoginExist(login)) {
-                request.setAttribute(RequestAttribute.MESSAGE, LocaleMessageKey.LOGIN_PRESENT_ERROR_MESSAGE);
+                session.setAttribute(SessionAttribute.MESSAGE, LocaleMessageKey.LOGIN_PRESENT_ERROR_MESSAGE);
             } else {
                 if (accountService.isIpPresent(ip)) {
-                    request.setAttribute(RequestAttribute.MESSAGE, LocaleMessageKey.IP_PRESENT_ERROR_MESSAGE);
+                    session.setAttribute(SessionAttribute.MESSAGE, LocaleMessageKey.IP_PRESENT_ERROR_MESSAGE);
                 } else {
                     if (accountService.validateRegistrationData(login, password, passwordCheck, email)) {
                         router.setPage(PagePath.CONFIRM_EMAIL_PAGE); // todo
@@ -54,8 +54,8 @@ public class CreateAccountCommand implements Command {
                 }
             }
         } catch (ServiceException e) {
-            logger.log(Level.ERROR, "Register account failed. Login command failed", e);
-            throw new CommandException("Register account failed. Login command failed", e);
+            logger.log(Level.ERROR, "Register account failed.", e);
+            throw new CommandException("Register account failed.", e);
         }
         session.setAttribute(SessionAttribute.CURRENT_PAGE, router.getPage());
         return router;

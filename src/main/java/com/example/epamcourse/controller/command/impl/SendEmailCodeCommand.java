@@ -34,10 +34,8 @@ public class SendEmailCodeCommand implements Command {
         int codeExpected = Integer.parseInt(request.getParameter(RequestParameter.EMAIL_CODE_EXPECTED));
         String codeActualString = request.getParameter(RequestParameter.EMAIL_CODE_ACTUAL);
         int codeActual = Integer.parseInt(codeActualString.isBlank() ? "" : codeActualString);
-        System.out.println("fdgfgg");
         if (codeActual == codeExpected) {
             try {
-                System.out.println("fdgfgg1");
                 if (accountService.addAccount(login, password, passwordCheck, email, ip)) {
                     router.setPage(PagePath.LOGIN);
                 }

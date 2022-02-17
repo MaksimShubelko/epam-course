@@ -23,11 +23,10 @@ public class GoToShowAccountsPageCommand implements Command {
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        final int recordsPerPage = 5;
         int page = 1;
+        final int recordsPerPage = 5;
         HttpSession session = request.getSession();
         Router router = new Router(SHOW_ACCOUNTS_PAGE);
-        ApplicantService applicantService = ApplicantServiceImpl.getInstance();
         AccountService accountService = AccountServiceImpl.getInstance();
         try {
             long noOfPages = (long) Math.ceil(accountService.findAllAccounts().size() * 1.0 / recordsPerPage);

@@ -13,7 +13,7 @@ public interface ApplicantService {
 
     List<Applicant> findApplicantsInFaculty(Long facultyId, int currentPageNumber) throws ServiceException;
 
-    List<Applicant> findApplicantsInFacultyBySurname(Long facultyId, int currentPageNumber, String recruitmentStatus) throws ServiceException;
+    List<Applicant> findApplicantsByFacultyIdAndRecruitmentStatus(Long facultyId, int currentPageNumber, String recruitmentStatus) throws ServiceException;
 
     Optional<Applicant> getApplicantById(Long accountId) throws ServiceException;
 

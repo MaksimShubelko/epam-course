@@ -7,23 +7,29 @@
 
 <html>
 <head>
-    <jsp:include page="header.jsp"/>
+    <jsp:include page="../header.jsp"/>
     <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" type="text/css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/css/button.css" type="text/css" rel="stylesheet">
-    <title>Insert title here</title>
+    <title><fmt:message key="edition.applicant.data.title" bundle="${content}"/></title>
 </head>
 <body>
 <div>
-    <form class="container needs-validation h-75" novalidate
-          action="${pageContext.request.contextPath}/controller" method="get">
-        <input type="hidden" name="command" value="applicant_add_secure_information"/>
+    <form class="container needs-validation h-75" enctype="multipart/form-data" novalidate
+          action="${pageContext.request.contextPath}/controller"
+          method="get">
+        <input type="hidden" name="command" value="update_applicant_data"/>
+        <img class="h-50 offset-6 p-4" src="${img}">
+        <div class="row col-12">
+            <a class="offset-7" href="${pageContext.request.contextPath}/controller?command=go_to_upload_image">
+                <h6><fmt:message key="change.image" bundle="${content}"/></h6>
+            </a>
+        </div>
 
         <div class="offset-4 p-5 w-75">
-            <label class="form-label">
-                <h6>
-                    <fmt:message key="secure.information.title" bundle="${content}"/>
-                </h6>
-            </label>
+            <div class="offset-4">
+                <h6><fmt:message key="edit.applicant.data.welcome.message" bundle="${content}"/></h6>
+            </div>
+
 
             <div class="row">
                 <label class="col-3 col-form-label">
@@ -64,19 +70,21 @@
                 </div>
             </div>
 
+
             <div class="row">
                 <div class="col-10 offset-4 p-1">
                     <input type="submit"
-                           value="<fmt:message key="add.secure.information" bundle="${content}" />"
+                           value="<fmt:message key="edit.applicant.data.button" bundle="${content}" />"
                            class="blubtn align-middle"/>
                 </div>
             </div>
         </div>
     </form>
 </div>
-<script src="js/validation.js"></script>
+<script src="${pageContext.request.contextPath}/js/validation.js"></script>
 </body>
 <footer>
-    <jsp:include page="footer.jsp"/>
+    <jsp:include page="../footer.jsp"/>
 </footer>
 </html>
+

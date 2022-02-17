@@ -96,21 +96,11 @@ public class AccountDaoImpl implements AccountDao {
             UPDATE accounts SET password = ?
             WHERE account_id = ?
             """;
-    private static final String UPDATE_STATUS = """
-            UPDATE accounts SET status = ?
-            WHERE account_id = ?
-            """;
 
     private static final String UPDATE_ROLE = """
             UPDATE accounts SET role = ?
             
             WHERE account_id = ?
-            """;
-
-    private static final String FIND_ACCOUNT_ID_BY_LOGIN = """
-            SELECT account_id
-            FROM accounts
-            WHERE login = ? 
             """;
 
     private AccountDaoImpl() {
@@ -119,7 +109,7 @@ public class AccountDaoImpl implements AccountDao {
 
     @Override
     public Optional<Account> findEntityById(Long id) throws DaoException {
-        Optional<Account> account = null;
+        Optional<Account> account;
         try {
             account = jdbcTemplate.executeSelectQueryForObject(FIND_ACCOUNT_BY_ID, id);
         } catch (TransactionException e) {
@@ -132,7 +122,7 @@ public class AccountDaoImpl implements AccountDao {
 
     @Override
     public Optional<Account> findAccountByLogin(String login) throws DaoException {
-        Optional<Account> account = null;
+        Optional<Account> account;
         try {
             account = jdbcTemplate.executeSelectQueryForObject(FIND_ACCOUNT_BY_LOGIN, login);
         } catch (TransactionException e) {
@@ -158,7 +148,7 @@ public class AccountDaoImpl implements AccountDao {
 
     @Override
     public Optional<Account> findAccountByLoginAndPassword(String login, String password) throws DaoException {
-        Optional<Account> account = null;
+        Optional<Account> account;
         try {
             account = jdbcTemplate
                     .executeSelectQueryForObject(FIND_ACCOUNT_BY_LOGIN_AND_PASSWORD, login, password);
@@ -173,7 +163,7 @@ public class AccountDaoImpl implements AccountDao {
 
     @Override
     public List<Map<String, Object>> getAccountRoleById(Long accountId) throws DaoException {
-        List<Map<String, Object>> role = null;
+        List<Map<String, Object>> role;
         try {
             role = jdbcTemplate.executeSelectSomeFields(FIND_ACCOUNT_ROLE_BY_ID, Set.of(ROLE), accountId);
         } catch (TransactionException e) {
@@ -199,7 +189,7 @@ public class AccountDaoImpl implements AccountDao {
 
     @Override
     public List<Account> findAccountsPage(int accountsSkip, int accountsGet) throws DaoException {
-        List<Account> accounts = null;
+        List<Account> accounts;
         try {
             accounts = jdbcTemplate.executeSelectQuery(FIND_ACCOUNTS_FOR_PAGE, accountsSkip, accountsGet);
         } catch (TransactionException e) {
@@ -237,7 +227,7 @@ public class AccountDaoImpl implements AccountDao {
 
     @Override
     public List<Account> findAll() throws DaoException {
-        List<Account> accounts = null;
+        List<Account> accounts;
         try {
             accounts = jdbcTemplate.executeSelectQuery(FIND_ALL_ACCOUNTS);
         } catch (TransactionException e) {
@@ -270,7 +260,6 @@ public class AccountDaoImpl implements AccountDao {
     @Override
     public boolean update(Account account) throws DaoException {
         try {
-            System.out.println(account);
             jdbcTemplate.executeUpdateDeleteFields(UPDATE_ACCOUNT,
                     account.getStatus().toString(),
                     account.getImagePath(),
@@ -285,7 +274,7 @@ public class AccountDaoImpl implements AccountDao {
 
     @Override
     public Long add(Account account, String password) throws DaoException {
-        long accountId = 0;
+        long accountId;
         try {
             accountId = jdbcTemplate.executeInsertQuery(ADD_ACCOUNT,
                     account.getLogin(),

@@ -32,26 +32,29 @@ public class RecruitmentServiceImpl implements RecruitmentService {
 
     @Override
     public boolean isRecruitmentActive() throws ServiceException {
+        Recruitment recruitment;
+        boolean isRecruitmentActive = false;
         RecruitmentValidator recruitmentValidator = RecruitmentValidatorImpl.getInstance();
-        Recruitment recruitment = null;
         try {
             transactionManager.initTransaction();
             Optional<Recruitment> recruitmentOptional;
             recruitmentOptional = recruitmentDao.findRecruitment();
             if (recruitmentOptional.isPresent()) {
                 recruitment = recruitmentOptional.get();
+                isRecruitmentActive = recruitmentValidator
+                        .isFinishRecruitmentValid(recruitment.getFinishRecruitment())
+                        && recruitment.getRecruitmentStatus();
             }
             transactionManager.commit();
         } catch (DaoException | TransactionException e) {
             transactionManager.rollback();
-            logger.log(Level.ERROR, "Error when finding recruitment.", e);
-            throw new ServiceException("Error when finding recruitment", e);
+            logger.log(Level.ERROR, "Error when checking recruitment.", e);
+            throw new ServiceException("Error when checking recruitment", e);
         } finally {
             transactionManager.endTransaction();
         }
 
-        return recruitmentValidator.isFinishRecruitmentValid(recruitment.getFinishRecruitment())
-                && recruitment.getRecruitmentStatus();
+        return isRecruitmentActive;
     }
 
     @Override
@@ -98,5 +101,12 @@ public class RecruitmentServiceImpl implements RecruitmentService {
             transactionManager.endTransaction();
         }
         return isRecruitmentUpdated;
+    }
+
+    @Override
+    public boolean isFinishRecruitmentValid(LocalDateTime finishRecruitment) {
+        RecruitmentValidator recruitmentValidator = RecruitmentValidatorImpl.getInstance();
+
+        return recruitmentValidator.isFinishRecruitmentValid(finishRecruitment);
     }
 }

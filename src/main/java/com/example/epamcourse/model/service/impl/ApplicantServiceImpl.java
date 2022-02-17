@@ -47,7 +47,7 @@ public class ApplicantServiceImpl implements ApplicantService {
         boolean isApplicantSecureInformationAdded = false;
         SecureInformationValidator validator = SecureInformationValidatorImpl.getInstance();
         try {
-            if (validator.isNameValid(name) && validator.isLastnameValid(lastname) && validator.isSurnameValid(surname)) {
+            if (isApplicantSecureInformationValid(name, surname, lastname)) {
                 Applicant applicant = new Applicant();
                 applicant.setFirstname(name);
                 applicant.setSurname(surname);
@@ -113,9 +113,9 @@ public class ApplicantServiceImpl implements ApplicantService {
     }
 
     @Override
-    public List<Applicant> findApplicantsInFacultyBySurname(Long facultyId,
-                                                            int currentPageNumber,
-                                                            String recruitmentStatus) throws ServiceException {
+    public List<Applicant> findApplicantsByFacultyIdAndRecruitmentStatus(Long facultyId,
+                                                                         int currentPageNumber,
+                                                                         String recruitmentStatus) throws ServiceException {
         ApplicantFindingService applicantFindingService = ApplicantFindingServiceImpl.getInstance();
         List<Applicant> applicants = Collections.emptyList();
         Long applicantId = 0L;
@@ -224,12 +224,14 @@ public class ApplicantServiceImpl implements ApplicantService {
             transactionManager.initTransaction();
             Optional<Applicant> applicantOptional = applicantDao.findEntityById(applicantId);
             if (applicantOptional.isPresent()) {
-                applicant = applicantOptional.get();
-                applicant.setFirstname(name);
-                applicant.setLastname(lastname);
-                applicant.setSurname(surname);
-                applicantDao.update(applicant);
-                isApplicantUpdated = true;
+                if (isApplicantSecureInformationValid(name, surname, lastname)) {
+                    applicant = applicantOptional.get();
+                    applicant.setFirstname(name);
+                    applicant.setLastname(lastname);
+                    applicant.setSurname(surname);
+                    applicantDao.update(applicant);
+                    isApplicantUpdated = true;
+                }
             }
             transactionManager.commit();
         } catch (DaoException | TransactionException e) {
@@ -279,6 +281,13 @@ public class ApplicantServiceImpl implements ApplicantService {
             transactionManager.endTransaction();
         }
         return isCertificatePresent;
+    }
+
+    public boolean isApplicantSecureInformationValid(String name, String surname, String lastname) {
+        SecureInformationValidator validator = SecureInformationValidatorImpl.getInstance();
+        return validator.isNameValid(name)
+                && validator.isLastnameValid(lastname)
+                && validator.isSurnameValid(surname);
     }
 
 

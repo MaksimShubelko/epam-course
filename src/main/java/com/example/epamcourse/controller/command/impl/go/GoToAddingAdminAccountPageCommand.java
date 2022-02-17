@@ -12,7 +12,19 @@ import jakarta.servlet.http.HttpSession;
 import static com.example.epamcourse.controller.command.PagePath.ADD_ADMIN_ACCOUNT_PAGE;
 import static com.example.epamcourse.controller.command.PagePath.ADD_ADMIN_ACCOUNT_PAGE_REDIRECT;
 
+/**
+ * @author shubelko
+ * @version 1.0
+ */
 public class GoToAddingAdminAccountPageCommand implements Command {
+
+    /**
+     * Execute
+     *
+     * @param request the request
+     * @return the router
+     * @throws CommandException the command exception
+     */
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();

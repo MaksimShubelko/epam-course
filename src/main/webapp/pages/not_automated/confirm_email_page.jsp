@@ -5,18 +5,18 @@
 <fmt:setBundle basename="local.content" var="content"/>
 <html>
 <head>
-    <link href="/css/button.css" type="text/css" rel="stylesheet">
-    <link href="/css/bootstrap.min.css" type="text/css" rel="stylesheet">
-    <jsp:include page="header.jsp"/>
-    <title>Insert title here</title>
+    <link href="${pageContext.request.contextPath}/css/button.css" type="text/css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" type="text/css" rel="stylesheet">
+    <jsp:include page="../header.jsp"/>
+    <title><fmt:message key="confirm.email.title" bundle="${content}"/></title>
 </head>
 <body>
 <div>
-    <form class="container needs-validation h-75" novalidate action="${pageContext.request.contextPath}/controller"
+    <form class="needs-validation h-75" novalidate action="${pageContext.request.contextPath}/controller"
           method="get">
         <div class="offset-5 p-5">
             <input type="hidden" name="command" value="confirm_email"/>
-            <label class="form-label offset-2">
+            <label class="form-label offset-1">
                 <h6>
                     <fmt:message key="confirm.email.enter.code" bundle="${content}"/>
                 </h6>
@@ -28,11 +28,15 @@
             </c:if>
 
             <div class="row">
-                <div class="col-sm-4 offset-1">
+                <div class="col-sm-4">
                     <input type="hidden" id="p1" name="email_code_expected" value="${email_code_expected}">
                     <input type="number" id="p2" name="email_code_actual"
                            pattern="^[0-9]{6}$" required/>
-
+                    <div class="invalid-feedback">
+                        <h6>
+                            <fmt:message key="email.confirm.error" bundle="${content}"/>
+                        </h6>
+                    </div>
                 </div>
             </div>
 
@@ -44,7 +48,7 @@
         </div>
     </form>
 </div>
-<script src="js/password_confirm.js"></script>
+<script src="${pageContext.request.contextPath}/js/password_confirm.js"></script>
 </body>
-<jsp:include page="footer.jsp"/>
+<jsp:include page="../footer.jsp"/>
 </html>

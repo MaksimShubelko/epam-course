@@ -11677,3 +11677,8 @@ src: url(/fonts/Oswald-VariableFont_wght.ttf) format("truetype");
 h6{
     font-family: "Oswald-VariableFont_wght";
 }
+.grad {
+    background: rgb(163,214,55);
+    background: linear-gradient(333deg, rgba(163,214,55,0.7878501742493873) 0%, rgba(70,255,0,0) 94%)
+}
+

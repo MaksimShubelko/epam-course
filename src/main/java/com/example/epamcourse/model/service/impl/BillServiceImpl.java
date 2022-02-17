@@ -55,7 +55,6 @@ public class BillServiceImpl implements BillService {
     @Override
     public boolean updateBill(Long applicantId, Long facultyId) throws ServiceException {
         boolean isBillUpdated = false;
-        Applicant applicant;
         try {
             transactionManager.initTransaction();
             Optional<Bill> billOptional = billDao.findBillByApplicantId(applicantId);

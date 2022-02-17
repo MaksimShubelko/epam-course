@@ -20,9 +20,21 @@ import java.util.Optional;
 
 import static com.example.epamcourse.controller.command.PagePath.*;
 
+/**
+ * class GoToAddRequestPageCommand
+ *
+ * @author M.Shubelko
+ */
 public class GoToAddRequestPageCommand implements Command {
     private static final Logger logger = LogManager.getLogger();
 
+    /**
+     * Execute
+     *
+     * @param request the request
+     * @return the router
+     * @throws CommandException the command exception
+     */
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
@@ -47,14 +59,13 @@ public class GoToAddRequestPageCommand implements Command {
                     session.setAttribute(SessionAttribute.SUBJECTS, subjects);
                     session.setAttribute(SessionAttribute.CERTIFICATE, certificateOptional.get());
                 } else {
-                    router.setPage(MAIN_PAGE_APPLICANT_REDIRECT); // todo
+                    router.setPage(MAIN_PAGE_APPLICANT_REDIRECT);
                     session.setAttribute(RequestAttribute.MESSAGE, LocaleMessageKey.ADD_REQUEST_ERROR);
                 }
             } else {
                 router.setPage(MAIN_PAGE_APPLICANT_REDIRECT);
                 session.setAttribute(RequestAttribute.MESSAGE, LocaleMessageKey.RECRUITMENT_NOT_STARTED);
             }
-
 
         } catch (ServiceException e) {
             logger.log(Level.ERROR, "Go to request page failed. {}", e);

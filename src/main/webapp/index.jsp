@@ -8,6 +8,6 @@
         <title>Index Page</title>
     </head>
     <body>
-        <jsp:forward page="pages/login.jsp"/>
+        <jsp:forward page="pages/not_automated/login.jsp"/>
     </body>
 </html>

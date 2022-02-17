@@ -18,14 +18,11 @@ public class AccountValidatorImpl implements AccountValidator {
     }
 
     public boolean isLoginValid(String login) {
-        System.out.println(login);
-        System.out.println(Objects.equals(login, null));
-        System.out.println(login != null && !login.isBlank() && login.matches(LOGIN_REGEX));
+
         return login != null && !login.isBlank() && login.matches(LOGIN_REGEX);
     }
 
     public boolean isPasswordValid(String password) {
-        System.out.println(password != null && !password.isBlank() && password.matches(PASSWORD_REGEX));
         return password != null && !password.isBlank() && password.matches(PASSWORD_REGEX);
     }
 

@@ -21,6 +21,7 @@ public class AddAdminAccountCommand implements Command {
         String passwordCheck = request.getParameter(RequestParameter.PASSWORD_CHECK);
         String email = request.getParameter(RequestParameter.EMAIL);
         Router router = new Router(PagePath.ADD_ADMIN_ACCOUNT_PAGE);
+        router.setType(Router.RouterType.REDIRECT);
         try {
             if (accountService.addAdminAccount(login, password, email, passwordCheck)) {
                 router.setPage(PagePath.MAIN_PAGE_ADMINISTRATOR);

@@ -6,23 +6,25 @@
 <fmt:setBundle basename="local.content" var="content"/>
 <html>
 <head>
-    <jsp:include page="header.jsp"/>
-    <link href="css/bootstrap.min.css" type="text/css" rel="stylesheet">
-    <link href="css/button.css" type="text/css" rel="stylesheet">
-    <title>Insert title here</title>
+    <jsp:include page="../header.jsp"/>
+    <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" type="text/css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/css/button.css" type="text/css" rel="stylesheet">
+    <title><fmt:message key="admin.main.page.title" bundle="${content}"/></title>
 </head>
 <body>
-<form class="needs-validation h-100" novalidate action="${pageContext.request.contextPath}/controller" method="get">
-    <div class="row">
-        <div class="col-2 offset-sm-9">
-            <a href="${pageContext.request.contextPath}/controller?command=go_to_edit_administrator_data">
+<form class="h-75" action="${pageContext.request.contextPath}/controller" method="get">
+    <div class="row bg-warning">
+        <div class="col-1 offset-sm-9 border border-success border-3">
+            <h6><a href="${pageContext.request.contextPath}/controller?command=go_to_edit_administrator_data">
                 <fmt:message key="administrator.edit.data" bundle="${content}"/>
-            </a>
+            </a></h6>
         </div>
-        <div class="col-1">
-            <a href="${pageContext.request.contextPath}/controller?command=logout">
-                <fmt:message key="logout" bundle="${content}"/>
-            </a>
+        <div class="col-1 border border-success border-3">
+            <h6>
+                <a href="${pageContext.request.contextPath}/controller?command=logout">
+                    <fmt:message key="logout" bundle="${content}"/>
+                </a>
+            </h6>
         </div>
     </div>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -33,7 +35,6 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <div class="d-flex justify-content-between">
-
                     <div class="input-group p-1">
                         <div class="input-group-prepend">
                             <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"
@@ -62,10 +63,10 @@
                             <div class="dropdown-menu">
                                 <a class="dropdown-item"
                                    href="${pageContext.request.contextPath}/controller?command=go_to_show_accounts&page=1">
-                                    <fmt:message key="admin.main.page.accounts" bundle="${content}"/>
+                                    <fmt:message key="admin.main.page.accounts.show" bundle="${content}"/>
                                 </a>
                                 <a class="dropdown-item"
-                                   href="${pageContext.request.contextPath}/controller?command=go_to_add_admin_account&page=1">
+                                   href="${pageContext.request.contextPath}/controller?command=go_to_add_admin_account">
                                     <fmt:message key="admin.main.page.accounts.add.admin" bundle="${content}"/>
                                 </a>
                             </div>
@@ -104,45 +105,7 @@
             </ul>
         </div>
     </nav>
-
-    <div class="row">
-        <div class="col-6 p-5 offset-sm-2">
-            <input type="hidden" name="command" value="send_message">
-            <input type="hidden" name="email" value="${email}">
-            <c:set var="title" value="${title}"/>
-            <c:set var="message" value="${message}"/>
-
-            <div class="row">
-                <fmt:message key="admin.sender.page.send.to" bundle="${content}"/>
-                <div class="col-3">
-                    <h6>${email}</h6>
-                </div>
-            </div>
-
-            <div class="row">
-                <input type="text" class="form-control h-25 m-3"
-                       placeholder="<fmt:message key="admin.sender.page.title" bundle="${content}"/>" name="title"
-                       value="${title}" aria-placeholder=""
-                       aria-describedby="basic-addon1">
-                <textarea type="text" class="form-control h-50 m-3"
-                          placeholder="<fmt:message key="admin.sender.page.message" bundle="${content}"/>"
-                          name="message"
-                          aria-describedby="basic-addon1">${message}</textarea>
-
-            </div>
-            <div class="row">
-                <div class="col-3">
-                    <input type="submit" name="submit">
-                </div>
-                <div class="col-3">
-                    <a href="${pageContext.request.contextPath}/controller?command=go_to_show_applicants&page=1">
-                        <fmt:message key="btn.back" bundle="${content}"/></a>
-                </div>
-            </div>
-
-        </div>
-    </div>
 </form>
 </body>
-<jsp:include page="footer.jsp"/>
+<jsp:include page="../footer.jsp"/>
 </html>

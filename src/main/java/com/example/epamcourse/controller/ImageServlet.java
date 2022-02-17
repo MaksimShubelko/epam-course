@@ -37,7 +37,6 @@ public class ImageServlet extends HttpServlet {
         String imageName = content.getSubmittedFileName();
         request.setAttribute(RequestAttribute.IMAGE_INPUT_STREAM, imageInputStream);
         request.setAttribute(RequestAttribute.IMAGE_NAME, imageName);
-        System.out.println("sdsfdfd");
         processRequest(request, response);
     }
 

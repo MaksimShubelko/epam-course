@@ -21,8 +21,4 @@ public class RecruitmentValidatorImpl implements RecruitmentValidator {
         return LocalDateTime.now().isBefore(finishRecruitment);
     }
 
-    @Override
-    public boolean isRecruitmentStatusValid(boolean status) {
-        return false;
-    }
 }

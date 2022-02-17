@@ -1,19 +1,20 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <fmt:setLocale value="${locale}" scope="session"/>
 <fmt:setBundle basename="local.content" var="content"/>
 <html>
 <head>
-    <link href="/css/button.css" type="text/css" rel="stylesheet">
-    <link href="/css/bootstrap.min.css" type="text/css" rel="stylesheet">
-    <jsp:include page="header.jsp"/>
-    <title>Insert title here</title>
+    <link href="${pageContext.request.contextPath}/css/button.css" type="text/css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" type="text/css" rel="stylesheet">
+    <jsp:include page="../header.jsp"/>
+    <title><fmt:message key="registration.title" bundle="${content}"/></title>
 </head>
 <body>
 <div>
-    <form class="container needs-validation h-75" novalidate action="${pageContext.request.contextPath}/controller" method="get">
-        <input type="hidden" name="command" value="add_admin_account"/>
+    <form class="container needs-validation h-75" novalidate action="${pageContext.request.contextPath}/controller"
+          method="get">
+        <input type="hidden" name="command" value="create_account"/>
         <div class="offset-5">
             <label class="form-label offset-1">
                 <h6>
@@ -104,10 +105,10 @@
                 </div>
             </div>
         </div>
-
     </form>
 </div>
-<script src="js/validation.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/validation.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/validation.js"></script>
 </body>
-<jsp:include page="footer.jsp"/>
+<jsp:include page="../footer.jsp"/>
 </html>

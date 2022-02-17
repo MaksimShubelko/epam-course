@@ -27,7 +27,6 @@ public class GoToEditRecruitmentPageCommand implements Command {
             RecruitmentService recruitmentService = RecruitmentServiceImpl.getInstance();
             Recruitment recruitment = recruitmentService.findRecruitment();
             session.setAttribute(SessionAttribute.RECRUITMENT, recruitment);
-            System.out.println(recruitment.getFinishRecruitment());
         } catch (ServiceException e) {
             logger.log(Level.ERROR, "Go to edition recruitment failed.", e);
             throw new CommandException("Go to edition recruitment failed.", e);

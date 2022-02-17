@@ -34,12 +34,10 @@ public class GoToEditAdministratorDataCommand implements Command {
         AccountService accountService = AccountServiceImpl.getInstance();
         try {
             Long accountId = (Long) request.getSession().getAttribute(SessionAttribute.ACCOUNT_ID);
-            Long applicantId = (Long) request.getSession().getAttribute(SessionAttribute.APPLICANT_ID);
             Optional<Account> accountOptional = accountService.findAccountById(accountId);
             Account account = accountOptional.orElseThrow(IllegalArgumentException::new);
             AdministratorService administratorService = AdministratorServiceImpl.getInstance();
             Long administratorId = (Long) session.getAttribute(SessionAttribute.ADMINISTRATOR_ID);
-            System.out.println(administratorId);
             Optional<Administrator> administratorOptional = administratorService.getAdministratorById(administratorId);
             Administrator administrator = administratorOptional.orElseThrow(IllegalArgumentException::new);
             String image = accountService.loadImage(account.getLogin());

@@ -7,10 +7,10 @@
 
 <html>
 <head>
-    <jsp:include page="header.jsp"/>
+    <jsp:include page="../header.jsp"/>
     <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" type="text/css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/css/button.css" type="text/css" rel="stylesheet">
-    <title>Insert title here</title>
+    <title><fmt:message key="profile.title" bundle="${content}"/></title>
 </head>
 <body>
 <div>
@@ -93,10 +93,10 @@
         </div>
     </form>
 </div>
-<script src="js/validation.js"></script>
+<script src="${pageContext.request.contextPath}/js/validation.js"></script>
 </body>
 <footer>
-    <jsp:include page="footer.jsp"/>
+    <jsp:include page="../footer.jsp"/>
 </footer>
 </html>
 

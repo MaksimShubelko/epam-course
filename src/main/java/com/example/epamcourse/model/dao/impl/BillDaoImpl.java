@@ -30,7 +30,7 @@ public class BillDaoImpl implements BillDao {
     private static final String FIND_ALL_BILLS_BY_FACULTY_ID = """
             SELECT bill_id, applicant_id, faculty_id, archive 
             FROM bills
-            WHERE faculty_id = ?
+            WHERE faculty_id = ? AND archive = ?
             """;
 
     private static final String FIND_BILL_BY_ID = """
@@ -61,8 +61,8 @@ public class BillDaoImpl implements BillDao {
             """;
 
     private static final String FIND_ARCHIVE_BILL_BY_APPLICANT_ID = """
-            SELECT bill_id, applicant_id, faculty_id, archive 
-            FROM bills 
+            SELECT bill_id, applicant_id, faculty_id, archive\040
+            FROM bills
             WHERE applicant_id = ? AND archive = 1
             """;
 
@@ -82,7 +82,7 @@ public class BillDaoImpl implements BillDao {
 
     @Override
     public List<Bill> findAll() throws DaoException {
-        List<Bill> bills = null;
+        List<Bill> bills;
         try {
             bills = jdbcTemplate.executeSelectQuery(FIND_ALL_BILLS);
         } catch (TransactionException e) {
@@ -95,7 +95,7 @@ public class BillDaoImpl implements BillDao {
 
     @Override
     public Optional<Bill> findEntityById(Long id) throws DaoException {
-        Optional<Bill> bill = null;
+        Optional<Bill> bill;
         try {
             bill = jdbcTemplate.executeSelectQueryForObject(FIND_BILL_BY_ID, id);
         } catch (TransactionException e) {
@@ -108,20 +108,12 @@ public class BillDaoImpl implements BillDao {
 
     @Override
     public boolean delete(Long id) throws DaoException {
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(DELETE_BILL)) {
-            statement.setLong(1, id);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            logger.log(Level.ERROR, "Error when deleting bill with id {} {}", id, e);
-            throw new DaoException("Error when deleting bill with id " + id, e);
-        }
         return false;
     }
 
     @Override
     public Long add(Bill bill) throws DaoException {
-        long billId = 0;
+        long billId;
         try {
             billId = jdbcTemplate.executeInsertQuery(ADD_BILL,
                     bill.getBillId(),
@@ -180,7 +172,7 @@ public class BillDaoImpl implements BillDao {
 
     @Override
     public Optional<Bill> findBillByApplicantId(Long applicantId) throws DaoException {
-        Optional<Bill> bill = null;
+        Optional<Bill> bill;
         try {
             bill = jdbcTemplate.executeSelectQueryForObject(FIND_BILL_BY_APPLICANT_ID, applicantId);
         } catch (TransactionException e) {
@@ -195,7 +187,7 @@ public class BillDaoImpl implements BillDao {
     public List<Bill> findAllBillsByFacultyId(Long facultyId, Boolean isArchive) throws DaoException {
         List<Bill> bills;
         try {
-            bills = jdbcTemplate.executeSelectQuery(FIND_ALL_BILLS_BY_FACULTY_ID, facultyId);
+            bills = jdbcTemplate.executeSelectQuery(FIND_ALL_BILLS_BY_FACULTY_ID, facultyId, isArchive);
         } catch (TransactionException e) {
             logger.log(Level.ERROR, "Error when finding bill by faculty id {} {}", facultyId, e);
             throw new DaoException("Error when finding bill by faculty id " + facultyId, e);

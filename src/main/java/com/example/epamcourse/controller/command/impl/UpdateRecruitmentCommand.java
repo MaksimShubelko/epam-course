@@ -24,7 +24,6 @@ public class UpdateRecruitmentCommand implements Command {
         HttpSession session = request.getSession();
         RecruitmentService recruitmentService = RecruitmentServiceImpl.getInstance();
         Router router = new Router(PagePath.MAIN_PAGE_ADMINISTRATOR);
-        LocalDateTime dateNow = LocalDateTime.now();
         try {
             boolean recruitmentStatus = Boolean.parseBoolean(request.getParameter(RequestParameter.RECRUITMENT_STATUS));
             boolean isRestartRecruitment = Boolean.parseBoolean(request.getParameter(RequestParameter.RESTART_RECRUITMENT));
@@ -33,11 +32,12 @@ public class UpdateRecruitmentCommand implements Command {
                 billService.restartRecruitment();
             }
             LocalDateTime finishRecruitment = LocalDateTime.parse(request.getParameter(RequestParameter.FINISH_RECRUITMENT));
-            if (dateNow.isAfter(finishRecruitment)) {
+            if (!recruitmentService.isFinishRecruitmentValid(finishRecruitment)) {
                 router.setPage(PagePath.EDIT_RECRUITMENT);
                 request.setAttribute(RequestAttribute.MESSAGE, LocaleMessageKey.INVALID_DATE);
+            } else {
+                recruitmentService.updateRecruitment(recruitmentStatus, finishRecruitment);
             }
-            recruitmentService.updateRecruitment(recruitmentStatus, finishRecruitment);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, "Updating recruitment failed", e);
             throw new CommandException("Updating recruitment failed", e);

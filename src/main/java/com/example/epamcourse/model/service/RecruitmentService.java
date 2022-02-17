@@ -12,4 +12,6 @@ public interface RecruitmentService {
     Recruitment findRecruitment() throws ServiceException;
 
     boolean updateRecruitment(boolean status, LocalDateTime finishRecruitment) throws ServiceException;
+
+    boolean isFinishRecruitmentValid(LocalDateTime finishRecruitment);
 }

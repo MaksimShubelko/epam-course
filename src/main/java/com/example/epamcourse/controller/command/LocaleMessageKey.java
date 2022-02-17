@@ -24,5 +24,6 @@ public final class LocaleMessageKey {
     public static final String PICK_UP_DOCUMENTS_SUCCESS = "pick.up.documents.success";
     public static final String ADD_REQUEST_ERROR = "add.request.error";
     public static final String RECRUITMENT_NOT_STARTED = "recruitment.not.started.error";
+    public static final String MESSAGE_ERROR = "message.error";
 }
 

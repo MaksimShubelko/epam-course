@@ -11,7 +11,7 @@ import static com.example.epamcourse.model.entity.Account.Role.*;
 
 public enum CommandType {
     LOGIN(new LoginCommand(), NOT_AUTOMATED, APPLICANT, ADMIN),
-    CREATE_ACCOUNT(new CreateAccountCommand(), NOT_AUTOMATED, APPLICANT, ADMIN),
+    CREATE_ACCOUNT(new CreateAccountCommand(), NOT_AUTOMATED),
     GO_TO_LOGIN_PAGE(new GoToLoginPageCommand(), NOT_AUTOMATED, APPLICANT, ADMIN),
     GO_TO_REGISTRATION_PAGE(new GoToRegistrationPageCommand(), NOT_AUTOMATED, APPLICANT, ADMIN),
     TO_EXCEPTION_PAGE(new GoToExceptionPageCommand(), NOT_AUTOMATED, APPLICANT, ADMIN),
@@ -40,10 +40,10 @@ public enum CommandType {
     CONFIRM_EMAIL(new SendEmailCodeCommand(), NOT_AUTOMATED),
     GO_TO_SENDER_PAGE(new GoToSenderPageCommand(), ADMIN),
     SEND_MESSAGE(new SendMessageCommand(), ADMIN),
-    UPLOAD_IMAGE(new UploadImageCommand()),
+    UPLOAD_IMAGE(new UploadImageCommand(), APPLICANT, ADMIN),
     GO_TO_CONFIRM_EMAIL_PAGE(new SendMessageCommand(), APPLICANT),
-    GO_TO_PROFILE_PAGE(new GoToProfilePageCommand()),
-    PICK_UP_DOCUMENTS(new PickUpDocumentsCommand()),
+    GO_TO_PROFILE_PAGE(new GoToProfilePageCommand(), APPLICANT, ADMIN),
+    PICK_UP_DOCUMENTS(new PickUpDocumentsCommand(), APPLICANT),
     GO_TO_EDIT_RECRUITMENT_PAGE(new GoToEditRecruitmentPageCommand(), ADMIN),
     EDIT_RECRUITMENT(new UpdateRecruitmentCommand(), ADMIN),
     GO_TO_EDIT_ADMINISTRATOR_DATA(new GoToEditAdministratorDataCommand(), ADMIN),
