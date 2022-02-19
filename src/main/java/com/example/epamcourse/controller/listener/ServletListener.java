@@ -6,20 +6,23 @@ import jakarta.servlet.annotation.WebListener;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 
+
+/**
+ * class ServletListener
+ *
+ * @author M.Shubelko
+ */
 @WebListener
 public class ServletListener implements ServletContextListener {
 
-    public ServletListener() {
 
-    }
-
+    /**
+     * Context destroyed
+     *
+     * @param servletContextEvent the servletContextEvent
+     */
     @Override
-    public void contextInitialized(ServletContextEvent sce) {
-
-    }
-
-    @Override
-    public void contextDestroyed(ServletContextEvent sce) {
+    public void contextDestroyed(ServletContextEvent servletContextEvent) {
         ConnectionPool.getInstance().destroyPool();
     }
 }

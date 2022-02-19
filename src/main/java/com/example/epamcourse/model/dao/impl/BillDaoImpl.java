@@ -5,21 +5,32 @@ import com.example.epamcourse.model.dao.mapper.impl.BillResultSetHandler;
 import com.example.epamcourse.model.entity.Bill;
 import com.example.epamcourse.model.exception.DaoException;
 import com.example.epamcourse.model.exception.TransactionException;
-import com.example.epamcourse.model.pool.ConnectionPool;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * class BillDaoImpl
+ *
+ * @author M.Shubelko
+ */
 public class BillDaoImpl implements BillDao {
+    /**
+     * The logger
+     */
     private static final Logger logger = LogManager.getLogger();
+
+    /**
+     * The instance
+     */
     private static BillDao instance = new BillDaoImpl();
 
+    /**
+     * The jdbcTemplate
+     */
     private JdbcTemplate<Bill> jdbcTemplate;
 
     private static final String FIND_ALL_BILLS = """
@@ -76,10 +87,28 @@ public class BillDaoImpl implements BillDao {
             WHERE archive = 0
             """;
 
+    /**
+     * The private constructor
+     */
     private BillDaoImpl() {
         this.jdbcTemplate = new JdbcTemplate<>(new BillResultSetHandler());
     }
 
+    /**
+     * Gent instance
+     *
+     * @return instance the instance
+     */
+    public static BillDao getInstance() {
+        return instance;
+    }
+
+    /**
+     * Find all bills
+     *
+     * @return bills the bills
+     * @throws DaoException the DaoException
+     */
     @Override
     public List<Bill> findAll() throws DaoException {
         List<Bill> bills;
@@ -93,17 +122,24 @@ public class BillDaoImpl implements BillDao {
         return bills;
     }
 
+    /**
+     * Find bill by id
+     *
+     * @param id the id
+     * @return billOptional the bill optional
+     * @throws DaoException the DaoException
+     */
     @Override
     public Optional<Bill> findEntityById(Long id) throws DaoException {
-        Optional<Bill> bill;
+        Optional<Bill> billOptional;
         try {
-            bill = jdbcTemplate.executeSelectQueryForObject(FIND_BILL_BY_ID, id);
+            billOptional = jdbcTemplate.executeSelectQueryForObject(FIND_BILL_BY_ID, id);
         } catch (TransactionException e) {
             logger.log(Level.ERROR, "Error when finding bill by id {} {}", id, e);
             throw new DaoException("Error when finding bill by id " + id, e);
         }
 
-        return bill;
+        return billOptional;
     }
 
     @Override
@@ -111,6 +147,13 @@ public class BillDaoImpl implements BillDao {
         return false;
     }
 
+    /**
+     * Add bill
+     *
+     * @param bill the bill
+     * @return billId the bill id
+     * @throws DaoException the DaoException
+     */
     @Override
     public Long add(Bill bill) throws DaoException {
         long billId;
@@ -127,6 +170,13 @@ public class BillDaoImpl implements BillDao {
         return billId;
     }
 
+    /**
+     * Update bill
+     *
+     * @param bill the bill
+     * @return true the true
+     * @throws DaoException the DaoException
+     */
     @Override
     public boolean update(Bill bill) throws DaoException {
         try {
@@ -141,10 +191,13 @@ public class BillDaoImpl implements BillDao {
         return true;
     }
 
-    public static BillDao getInstance() {
-        return instance;
-    }
-
+    /**
+     * Delete bill by applicantId
+     *
+     * @param applicantId the applicant id
+     * @return true the true
+     * @throws DaoException the DaoException
+     */
     @Override
     public boolean deleteBillByApplicantId(Long applicantId) throws DaoException {
         try {
@@ -158,31 +211,53 @@ public class BillDaoImpl implements BillDao {
         return true;
     }
 
+    /**
+     * Checking bill's archiving
+     *
+     * @param applicantId the applicant id
+     * @return applicantOptional the applicantOptional
+     * @throws DaoException the DaoException
+     */
     @Override
     public boolean isBillArchive(Long applicantId) throws DaoException {
         Optional<Bill> bill;
         try {
             bill = jdbcTemplate.executeSelectQueryForObject(FIND_ARCHIVE_BILL_BY_APPLICANT_ID, applicantId);
         } catch (TransactionException e) {
-            logger.log(Level.ERROR, "Error when finding bill by applicant id {} {}", applicantId, e);
-            throw new DaoException("Error when finding bill by applicant id " + applicantId, e);
+            logger.log(Level.ERROR, "Error when checking bill's archiving", e);
+            throw new DaoException("Error when checking bill's archiving", e);
         }
         return bill.isPresent();
     }
 
+    /**
+     * Find bill by applicantId
+     *
+     * @param applicantId the applicant id
+     * @return applicantId the applicant id
+     * @throws DaoException the DaoException
+     */
     @Override
     public Optional<Bill> findBillByApplicantId(Long applicantId) throws DaoException {
-        Optional<Bill> bill;
+        Optional<Bill> billOptional;
         try {
-            bill = jdbcTemplate.executeSelectQueryForObject(FIND_BILL_BY_APPLICANT_ID, applicantId);
+            billOptional = jdbcTemplate.executeSelectQueryForObject(FIND_BILL_BY_APPLICANT_ID, applicantId);
         } catch (TransactionException e) {
-            logger.log(Level.ERROR, "Error when finding bill by applicant id {} {}", applicantId, e);
-            throw new DaoException("Error when finding bill by applicant id " + applicantId, e);
+            logger.log(Level.ERROR, "Error when finding bill by applicant id", e);
+            throw new DaoException("Error when finding bill by applicant id ", e);
         }
 
-        return bill;
+        return billOptional;
     }
 
+    /**
+     * Find bills by facultyId
+     *
+     * @param facultyId the faculty id
+     * @param isArchive the archiving
+     * @return bills the bills
+     * @throws DaoException the DaoException
+     */
     @Override
     public List<Bill> findAllBillsByFacultyId(Long facultyId, Boolean isArchive) throws DaoException {
         List<Bill> bills;
@@ -195,6 +270,12 @@ public class BillDaoImpl implements BillDao {
         return bills;
     }
 
+    /**
+     * Change all bill's status to archive
+     *
+     * @return true the true
+     * @throws DaoException the DaoException
+     */
     @Override
     public boolean changeStatusToArchive() throws DaoException {
         try {

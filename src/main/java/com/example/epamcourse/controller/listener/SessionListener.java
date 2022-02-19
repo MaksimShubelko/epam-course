@@ -9,20 +9,23 @@ import jakarta.servlet.http.HttpSessionListener;
 
 @WebListener
 public class SessionListener implements HttpSessionListener {
-    private static final String DEFAULT_LOCALE = "en_US";
+    /** The constant DEFAULT_LOCALE **/
+    private static final String DEFAULT_LOCALE = "ru_RUS";
+
+    /** The constant ROW_AMOUNT **/
     private static final int ROW_AMOUNT = 5;
 
+    /**
+     * Session created
+     *
+     * @param sessionEvent
+     */
     @Override
-    public void sessionCreated(HttpSessionEvent se) {
-        HttpSession session = se.getSession();
+    public void sessionCreated(HttpSessionEvent sessionEvent) {
+        HttpSession session = sessionEvent.getSession();
         session.setAttribute(SessionAttribute.SESSION_LOCALE, DEFAULT_LOCALE);
         session.setAttribute(SessionAttribute.ROW_AMOUNT, ROW_AMOUNT);
 
-
-    }
-
-    @Override
-    public void sessionDestroyed(HttpSessionEvent se) {
 
     }
 

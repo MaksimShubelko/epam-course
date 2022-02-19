@@ -13,7 +13,7 @@ public interface FacultyService {
 
     boolean editFaculty(Long facultyId, String facultyName, int recruitmentPlanFree, int recruitmentPlanCanvas) throws ServiceException;
 
-    boolean deleteFaculty(Long facultyId) throws ServiceException;
+    void deleteFaculty(Long facultyId) throws ServiceException;
 
     boolean addFaculty(String facultyName, int recruitmentPlanFree, int recruitmentPlanCanvas) throws ServiceException;
 

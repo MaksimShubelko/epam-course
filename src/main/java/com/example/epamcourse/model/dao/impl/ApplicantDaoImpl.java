@@ -16,16 +16,27 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * class ApplicantDaoImpl
+ *
+ * @author M.Shubelko
+ */
 public class ApplicantDaoImpl implements ApplicantDao {
+
+    /**
+     * The logger
+     */
     private static final Logger logger = LogManager.getLogger();
-    private static ApplicantDao instance = new ApplicantDaoImpl();
 
-    private JdbcTemplate<Applicant> jdbcTemplate;
+    /**
+     * The instance
+     */
+    private static final ApplicantDao instance = new ApplicantDaoImpl();
 
-    private static final String FIND_APPLICANTS_BY_SURNAME = """
-            SELECT applicant_id, firstname, lastname, surname, account_id, beneficiary
-            WHERE surname = ?
-            """;
+    /**
+     * The jdbcTemplate
+     */
+    private final JdbcTemplate<Applicant> jdbcTemplate;
 
     private static final String FIND_APPLICANTS_IN_ORDER_BY_MARK_IN_FACULTY = """
             SELECT applicants.applicant_id, surname, firstname, lastname, account_id, beneficiary, certificate_id,
@@ -102,23 +113,29 @@ public class ApplicantDaoImpl implements ApplicantDao {
             WHERE applicant_id = ?
             """;
 
+    /**
+     * The private constructor
+     */
     private ApplicantDaoImpl() {
         this.jdbcTemplate = new JdbcTemplate<>(new ApplicantResultSetHandler());
     }
 
-
-    @Override
-    public List<Applicant> findApplicantsBySurname(String surname) {
-        List<Applicant> applicants = null;
-        try {
-            applicants = jdbcTemplate.executeSelectQuery(FIND_ALL_APPLICANTS);
-        } catch (TransactionException e) {
-            logger.log(Level.ERROR, "Error when finding data");
-        }
-
-        return applicants;
+    /**
+     * Get instance
+     */
+    public static ApplicantDao getInstance() {
+        return instance;
     }
 
+    /**
+     * Find applicant in faculty in order by mark
+     *
+     * @param facultyId the faculty id
+     * @param rowSkip the row skip
+     * @param rowNext the row next
+     * @return applicant the applicants
+     * @throws DaoException the DaoException
+     */
     @Override
     public List<Applicant> findApplicantsInOrderByMarkInFaculty(Long facultyId, long rowSkip,
                                                                 int rowNext) throws DaoException {
@@ -133,15 +150,24 @@ public class ApplicantDaoImpl implements ApplicantDao {
         return applicants;
     }
 
+    /**
+     * Find applicant in faculty in order by mark and recruitment status
+     *
+     * @param facultyId the faculty id
+     * @param applicantsSkip the applicants skip
+     * @param  applicantsTake the applicants take
+     * @param rowSkip the row skip
+     * @param rowNext the row next
+     * @return applicants the applicants
+     * @throws DaoException the DaoException
+     */
     @Override
-    public List<Applicant> findApplicantsInOrderByMarkInFacultyAndSurname(Long facultyId,
-                                                                          int applicantsSkip, int applicantsTake,
-                                                                          long rowSkip, int rowNext, Boolean isArchive) throws DaoException {
+    public List<Applicant> findApplicantsInOrderByMarkInFacultyAndRecruitmentStatus(Long facultyId,
+                                                                                    int applicantsSkip, int applicantsTake,
+                                                                                    long rowSkip, int rowNext, Boolean isArchive) throws DaoException {
 
         List<Applicant> applicants;
         try {
-            System.out.println(facultyId +" " + isArchive + " " +
-                    applicantsSkip + applicantsTake + rowSkip + rowNext);
             applicants = jdbcTemplate.executeSelectQuery(FIND_APPLICANTS_BY_SURNAME_IN_ORDER_BY_MARK_IN_FACULTY, facultyId, isArchive,
                     applicantsSkip, applicantsTake, rowSkip, rowNext);
         } catch (TransactionException e) {
@@ -152,9 +178,16 @@ public class ApplicantDaoImpl implements ApplicantDao {
         return applicants;
     }
 
+    /**
+     * Find applicant by login
+     *
+     * @param login the login
+     * @return applicantOptional the applicantOptional
+     * @throws DaoException the DaoException
+     */
     @Override
-    public Optional<Applicant> getApplicantByLogin(String login) throws DaoException {
-        Optional<Applicant> applicant = null;
+    public Optional<Applicant> findApplicantByLogin(String login) throws DaoException {
+        Optional<Applicant> applicant;
         try {
             applicant = jdbcTemplate.executeSelectQueryForObject(FIND_APPLICANT_BY_ACCOUNT_LOGIN, login);
         } catch (TransactionException e) {
@@ -165,32 +198,32 @@ public class ApplicantDaoImpl implements ApplicantDao {
         return applicant;
     }
 
+    /**
+     * Find applicant by account id
+     *
+     * @param id the id
+     * @return applicantOptional the applicant optional
+     * @throws DaoException the DaoException
+     */
     @Override
-    public Optional<Applicant> getApplicantByAccountId(Long id) throws DaoException {
-        Optional<Applicant> applicant = null;
+    public Optional<Applicant> findApplicantByAccountId(Long id) throws DaoException {
+        Optional<Applicant> applicantOptional;
         try {
-            applicant = jdbcTemplate.executeSelectQueryForObject(FIND_APPLICANT_BY_ACCOUNT_ID, id);
+            applicantOptional = jdbcTemplate.executeSelectQueryForObject(FIND_APPLICANT_BY_ACCOUNT_ID, id);
         } catch (TransactionException e) {
             logger.log(Level.ERROR, "Error when getting applicant by id {} {}", id, e);
             throw new DaoException("Error when getting applicant by account id " + id, e);
         }
 
-        return applicant;
+        return applicantOptional;
     }
 
-    @Override
-    public List<Applicant> findApplicantsIsBeneficiary(String facultyName) throws DaoException {
-        List<Applicant> applicants = null;
-        try {
-            applicants = jdbcTemplate.executeSelectQuery(FIND_APPLICANTS_BENEFICIARY_IN_FACULTY, facultyName);
-        } catch (TransactionException e) {
-            logger.log(Level.ERROR, "Error when finding beneficiary applicants", e);
-            throw new DaoException("Error when finding beneficiary applicants", e);
-        }
-
-        return applicants;
-    }
-
+    /**
+     * Find all applicants
+     *
+     * @return applicants the applicants
+     * @throws DaoException the DaoException
+     */
     @Override
     public List<Applicant> findAll() throws DaoException {
         List<Applicant> applicants;
@@ -205,19 +238,32 @@ public class ApplicantDaoImpl implements ApplicantDao {
         return applicants;
     }
 
+    /**
+     * Find applicant by id
+     *
+     * @param id the id
+     * @return applicantOptional the applicant optional
+     * @throws DaoException the DaoException
+     */
     @Override
     public Optional<Applicant> findEntityById(Long id) throws DaoException {
-        Optional<Applicant> applicant = null;
+        Optional<Applicant> applicantOptional;
         try {
-            applicant = jdbcTemplate.executeSelectQueryForObject(FIND_APPLICANT_BY_ID, id);
+            applicantOptional = jdbcTemplate.executeSelectQueryForObject(FIND_APPLICANT_BY_ID, id);
         } catch (TransactionException e) {
             logger.log(Level.ERROR, "Error when finding applicant by id {} {}", id, e);
             throw new DaoException("Error when finding applicant by id " + id, e);
         }
 
-        return applicant;
+        return applicantOptional;
     }
 
+    /**
+     * Delete applicant
+     *
+     * @param id the id
+     * @throws DaoException the DaoException
+     */
     @Override
     public boolean delete(Long id) throws DaoException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
@@ -232,6 +278,13 @@ public class ApplicantDaoImpl implements ApplicantDao {
         return true;
     }
 
+    /**
+     * Add applicant
+     *
+     * @param applicant the applicant
+     * @return id the id
+     * @throws DaoException the DaoException
+     */
     @Override
     public Long add(Applicant applicant) throws DaoException {
         long applicantId = 0;
@@ -250,6 +303,13 @@ public class ApplicantDaoImpl implements ApplicantDao {
         return applicantId;
     }
 
+    /**
+     * Update applicant
+     *
+     * @param applicant the applicant
+     * @return true the true
+     * @throws DaoException the DaoException
+     */
     @Override
     public boolean update(Applicant applicant) throws DaoException {
         try {
@@ -268,7 +328,4 @@ public class ApplicantDaoImpl implements ApplicantDao {
         return true;
     }
 
-    public static ApplicantDao getInstance() {
-        return instance;
-    }
 }

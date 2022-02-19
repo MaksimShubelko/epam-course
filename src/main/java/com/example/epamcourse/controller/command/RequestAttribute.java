@@ -1,39 +1,78 @@
 package com.example.epamcourse.controller.command;
 
+/**
+ * class RequestAttribute
+ *
+ * @author M.Shubelko
+ */
 public final class RequestAttribute {
-    public static final String ACCOUNT = "account";
+
+    /** The constant FACULTIES **/
     public static final String FACULTIES = "faculties";
+
+    /** The constant ERROR_MASSAGE **/
     public static final String ERROR_MASSAGE = "message";
-    public static final String SUBJECT_STRING = "Subject string";
+
+    /** The constant SUBJECTS **/
     public static final String SUBJECTS = "subjects";
-    public static final String CERTIFICATE = "certificate";
-    public static final String CERTIFICATE_MARK = "certificate_mark";
+
+    /** The constant FACULTY_ID **/
     public static final String FACULTY_ID = "faculty_id";
+
+    /** The constant APPLICANTS **/
     public static final String APPLICANTS = "applicants";
+
+    /** The constant PAGE **/
     public static final String PAGE = "currentPage";
+
+    /** The constant COUNT_PAGES **/
     public static final String COUNT_PAGES = "countPages";
+
+    /** The constant FACULTY **/
     public static final String FACULTY = "faculty";
-    public static final String APPLICANT = "applicant";
+
+    /** The constant ACCOUNTS **/
     public static final String ACCOUNTS = "accounts";
-    public static final String EMAIL_CODE = "email_code";
+
+    /** The constant LOGIN **/
     public static final String LOGIN = "login";
+
+    /** The constant PASSWORD **/
     public static final String PASSWORD = "password";
+
+    /** The constant EMAIL **/
     public static final String EMAIL = "email";
+
+    /** The constant PASSWORD_CHECK **/
     public static final String PASSWORD_CHECK = "password_check";
+
+    /** The constant EMAIL_CODE_EXPECTED **/
     public static final String EMAIL_CODE_EXPECTED = "email_code_expected";
+
+    /** The constant IP **/
     public static final String IP = "ip";
+
+    /** The constant MESSAGE **/
     public static final String MESSAGE = "message";
-    public static final String TITLE = "title";
-    public static final String FINISH_RECRUITMENT = "finish_recruitment";
+
+    /** The constant RECRUITMENT **/
     public static final String RECRUITMENT = "recruitment";
-    public static final String DATE_NOW = "date_now";
-    public static final String COMMAND = "command";
-    public static final String CONTENT = "content";
+
+    /** The constant IMAGE **/
     public static final String IMAGE = "img";
+
+    /** The constant IMAGE_INPUT_STREAM **/
     public static final String IMAGE_INPUT_STREAM = "image_input_stream";
+
+    /** The constant IMAGE_NAME **/
     public static final String IMAGE_NAME = "image_name";
+
+    /** The constant ADMINISTRATOR **/
     public static final String ADMINISTRATOR = "administrator";
 
+    /**
+     * The private constructor
+     */
     private RequestAttribute() {
     }
 }

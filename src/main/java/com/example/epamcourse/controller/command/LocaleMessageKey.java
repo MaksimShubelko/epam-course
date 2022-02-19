@@ -1,29 +1,40 @@
 package com.example.epamcourse.controller.command;
 
+/**
+ * class LocaleMessageKey
+ *
+ * @author M.Shubelko
+ */
 public final class LocaleMessageKey {
-    public static final String LOGIN_WELCOME_MASSAGE = "login.welcome.message";
-    public static final String LOGIN_ERROR = "login.error.message";
-    public static final String ACCOUNT_CREATION_SUCCESS = "account.creation.success";
-    public static final String ACCOUNT_CREATION_ERROR = "account.creation.error";
-    public static final String ACCOUNT_DATA_ERROR = "sing_up.data.invalid.message";
 
-    public static final String LOGIN_ERROR_MESSAGE = "login.error";
-    public static final String IP_PRESENT_ERROR_MESSAGE = "login.ip.present.error";
-    public static final String LOGIN_PRESENT_ERROR_MESSAGE = "login.present.error";
-    public static final String REGISTRATION_ERROR_INVALID_EMAIL_FORMAT = "login.error.registration";
-    public static final String REGISTRATION_ERROR_INVALID_LOGIN_FORMAT = "email.error.registration";
-    public static final String REGISTRATION_ERROR_INVALID_PASSWORD_FORMAT = "password.error.registration";
-    public static final String REGISTRATION_ERROR_INVALID_PASSWORD_MISMATCH = "password.error.mismatch";
-    public static final String PASSWORD_DOUBLE_CHECK_ERROR = "sing_up.password.invalid_double_check_message";
+    /** The constant LOGIN_ERROR **/
+    public static final String LOGIN_ERROR = "login.error";
+
+    /** The constant IP_PRESENT_ERROR **/
+    public static final String IP_PRESENT_ERROR = "login.ip.present.error";
+
+    /** The constant LOGIN_PRESENT_ERROR **/
+    public static final String LOGIN_PRESENT_ERROR = "login.present.error";
+
+    /** The constant ILLEGAL_ADDRESS **/
     public static final String ILLEGAL_ADDRESS = "illegal.address.error";
+
+    /** The constant ILLEGAL_ROLE **/
     public static final String ILLEGAL_ROLE = "illegal.address.error";
 
-    public static final String INCORRECT_CODE = "confirm.email.code.error";
+    /** The constant INVALID_DATE **/
     public static final String INVALID_DATE = "invalid.date.error";
-    public static final String PICK_UP_DOCUMENTS_ERROR = "pick.up.documents.error";
+
+    /** The constant PICK_UP_DOCUMENTS_SUCCESS **/
     public static final String PICK_UP_DOCUMENTS_SUCCESS = "pick.up.documents.success";
+
+    /** The constant ADD_REQUEST_ERROR **/
     public static final String ADD_REQUEST_ERROR = "add.request.error";
+
+    /** The constant RECRUITMENT_NOT_STARTED **/
     public static final String RECRUITMENT_NOT_STARTED = "recruitment.not.started.error";
+
+    /** The constant MESSAGE_ERROR **/
     public static final String MESSAGE_ERROR = "message.error";
 }
 

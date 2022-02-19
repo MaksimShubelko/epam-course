@@ -18,9 +18,23 @@ import java.util.List;
 
 import static com.example.epamcourse.controller.command.PagePath.SHOW_FACULTIES_PAGE;
 
+/**
+ * class GoToShowFacultiesPageCommand
+ *
+ * @author M.Shubelko
+ */
 public class GoToShowFacultiesPageCommand implements Command {
+
+    /** The logger. */
     private static final Logger logger = LogManager.getLogger();
 
+    /**
+     * Execute
+     *
+     * @param request the request
+     * @return the router
+     * @throws CommandException the command exception
+     */
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         final int recordsPerPage = 5;

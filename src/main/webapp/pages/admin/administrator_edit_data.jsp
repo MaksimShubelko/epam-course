@@ -19,7 +19,7 @@
     <input type="hidden" name="command" value="update_administrator_data"/>
     <img class="h-50 offset-6 p-4" src="${img}">
     <div class="row col-12">
-      <a class="offset-7" href="${pageContext.request.contextPath}/controller?command=go_to_upload_image">
+      <a class="offset-7" href="${pageContext.request.contextPath}/controller?command=go_to_upload_image_page">
         <h6><fmt:message key="change.image" bundle="${content}"/></h6>
       </a>
     </div>

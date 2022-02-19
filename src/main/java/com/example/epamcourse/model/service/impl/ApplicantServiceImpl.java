@@ -1,6 +1,5 @@
 package com.example.epamcourse.model.service.impl;
 
-import com.example.epamcourse.controller.command.SessionAttribute;
 import com.example.epamcourse.model.dao.*;
 import com.example.epamcourse.model.dao.impl.*;
 import com.example.epamcourse.model.entity.Applicant;
@@ -19,7 +18,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 
 import static com.example.epamcourse.model.service.ApplicantFindingType.ALL;
@@ -75,7 +73,7 @@ public class ApplicantServiceImpl implements ApplicantService {
         Long applicantId = 0L;
         try {
             transactionManager.initTransaction();
-            applicant = applicantDao.getApplicantByAccountId(accountId);
+            applicant = applicantDao.findApplicantByAccountId(accountId);
             if (applicant.isPresent()) {
                 applicantId = applicant.get().getApplicantId();
             }
@@ -137,7 +135,7 @@ public class ApplicantServiceImpl implements ApplicantService {
                         recruitmentPlanFree, recruitmentPlanCanvas, countApplicants);
                 int applicantsTakeDepOnRecruitStatus = applicantFindingService.getCountOfApplicantsToTake(recruitmentStatus,
                         recruitmentPlanFree, recruitmentPlanCanvas, countApplicants);
-                applicants = applicantDao.findApplicantsInOrderByMarkInFacultyAndSurname(facultyId,
+                applicants = applicantDao.findApplicantsInOrderByMarkInFacultyAndRecruitmentStatus(facultyId,
                         applicantsSkipDepOnRecruitStatus, applicantsTakeDepOnRecruitStatus,
                         (currentPageNumber - 1) * recordsPerPage,
                         recordsPerPage, isArchive);
@@ -179,7 +177,7 @@ public class ApplicantServiceImpl implements ApplicantService {
         Optional<Applicant> applicantOptional = Optional.empty();
         try {
             transactionManager.initTransaction();
-            applicantOptional = applicantDao.getApplicantByAccountId(accountId);
+            applicantOptional = applicantDao.findApplicantByAccountId(accountId);
             transactionManager.commit();
         } catch (DaoException | TransactionException e) {
             transactionManager.rollback();

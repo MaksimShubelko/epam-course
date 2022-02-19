@@ -16,9 +16,23 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
 
+/**
+ * class AddApplicantSecureInformationCommand
+ *
+ * @author M.Shubelko
+ */
 public class AddApplicantSecureInformationCommand implements Command {
+
+    /** The logger. */
     private static final Logger logger = LogManager.getLogger();
 
+    /**
+     * Execute
+     *
+     * @param request the request
+     * @return the router
+     * @throws CommandException the command exception
+     */
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();

@@ -16,9 +16,23 @@ import jakarta.servlet.http.HttpSession;
 
 import java.time.LocalDateTime;
 
+/**
+ * class UpdateRecruitmentCommand
+ *
+ * @author M.Shubelko
+ */
 public class UpdateRecruitmentCommand implements Command {
+
+    /** The logger. */
     private static final Logger logger = LogManager.getLogger();
 
+    /**
+     * Execute
+     *
+     * @param request the request
+     * @return the router
+     * @throws CommandException the command exception
+     */
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();

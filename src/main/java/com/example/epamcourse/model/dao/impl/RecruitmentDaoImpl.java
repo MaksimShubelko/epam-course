@@ -1,10 +1,7 @@
 package com.example.epamcourse.model.dao.impl;
 
-import com.example.epamcourse.model.dao.FacultyDao;
 import com.example.epamcourse.model.dao.RecruitmentDao;
 import com.example.epamcourse.model.dao.mapper.impl.RecruitmentResultSetHandler;
-import com.example.epamcourse.model.dao.mapper.impl.SubjectResultSetHandler;
-import com.example.epamcourse.model.entity.Faculty;
 import com.example.epamcourse.model.entity.Recruitment;
 import com.example.epamcourse.model.exception.DaoException;
 import com.example.epamcourse.model.exception.TransactionException;
@@ -16,11 +13,29 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * class RecruitmentDaoImpl
+ *
+ * @author M.Shubelko
+ */
 public class RecruitmentDaoImpl implements RecruitmentDao {
+
+    /**
+     * The logger
+     */
     private static final Logger logger = LogManager.getLogger();
+
+    /** The constant RECRUITMENT_ID **/
     private static final Long RECRUITMENT_ID = 1L;
+
+    /**
+     * The instance
+     */
     private static RecruitmentDao instance = new RecruitmentDaoImpl();
 
+    /**
+     * The jdbcTemplate
+     */
     private JdbcTemplate<Recruitment> jdbcTemplate;
 
     private static final String UPDATE_RECRUITMENT = """
@@ -35,10 +50,18 @@ public class RecruitmentDaoImpl implements RecruitmentDao {
             WHERE recruitment_id = ?
             """;
 
+    /**
+     * The private constructor
+     */
     private RecruitmentDaoImpl() {
         this.jdbcTemplate = new JdbcTemplate<>(new RecruitmentResultSetHandler());
     }
 
+    /**
+     * GetInstance
+     *
+     * @return instance
+     */
     public static RecruitmentDao getInstance() {
         return instance;
     }
@@ -63,6 +86,12 @@ public class RecruitmentDaoImpl implements RecruitmentDao {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Update recruitment
+     *
+     * @return true the true
+     * @throws DaoException the DaoException
+     */
     @Override
     public boolean update(Recruitment recruitment) throws DaoException {
         try {
@@ -78,6 +107,12 @@ public class RecruitmentDaoImpl implements RecruitmentDao {
         return true;
     }
 
+    /**
+     * Find recruitment
+     *
+     * @return recruitmentOptional the recruitment optional
+     * @throws DaoException the DaoException
+     */
     @Override
     public Optional<Recruitment> findRecruitment() throws DaoException {
         Optional<Recruitment> recruitment;

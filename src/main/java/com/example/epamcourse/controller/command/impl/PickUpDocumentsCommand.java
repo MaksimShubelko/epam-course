@@ -20,9 +20,23 @@ import java.util.Optional;
 
 import static com.example.epamcourse.controller.command.PagePath.MAIN_PAGE_APPLICANT_REDIRECT;
 
+/**
+ * class PickUpDocumentsCommand
+ *
+ * @author M.Shubelko
+ */
 public class PickUpDocumentsCommand implements Command {
+
+    /** The logger. */
     private static final Logger logger = LogManager.getLogger();
 
+    /**
+     * Execute
+     *
+     * @param request the request
+     * @return the router
+     * @throws CommandException the command exception
+     */
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         Router router = new Router(PagePath.MAIN_PAGE_APPLICANT_REDIRECT);

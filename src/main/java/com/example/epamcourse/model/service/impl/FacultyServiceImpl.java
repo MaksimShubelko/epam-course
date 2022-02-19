@@ -102,7 +102,7 @@ public class FacultyServiceImpl implements FacultyService {
     }
 
     @Override
-    public boolean deleteFaculty(Long facultyId) throws ServiceException {
+    public void deleteFaculty(Long facultyId) throws ServiceException {
         boolean isFacultyDeleted;
         Optional<Faculty> facultyOptional;
         Faculty faculty;
@@ -118,7 +118,6 @@ public class FacultyServiceImpl implements FacultyService {
             transactionManager.endTransaction();
         }
 
-        return isFacultyDeleted;
     }
 
     @Override

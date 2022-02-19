@@ -7,7 +7,6 @@ import com.example.epamcourse.model.exception.DaoException;
 import java.util.Optional;
 
 public interface AdministratorDao extends BaseDao<Administrator> {
-    Optional<Administrator> getAdministratorByAccountId(Long id) throws DaoException;
-
+    Optional<Administrator> findAdministratorByAccountId(Long id) throws DaoException;
 
 }

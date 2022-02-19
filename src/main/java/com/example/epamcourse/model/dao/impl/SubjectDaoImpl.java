@@ -17,10 +17,26 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * class SubjectDaoImpl
+ *
+ * @author M.Shubelko
+ */
 public class SubjectDaoImpl implements SubjectDao {
+
+    /**
+     * The logger
+     */
     private static final Logger logger = LogManager.getLogger();
+
+    /**
+     * The instance
+     */
     private static SubjectDao instance = new SubjectDaoImpl();
 
+    /**
+     * The jdbcTemplate
+     */
     private JdbcTemplate<Subject> jdbcTemplate;
 
     private static final String FIND_ALL_SUBJECTS = """
@@ -55,8 +71,20 @@ public class SubjectDaoImpl implements SubjectDao {
             WHERE subject_id = ?
             """;
 
+    /**
+     * The private constructor
+     */
     private SubjectDaoImpl() {
         this.jdbcTemplate = new JdbcTemplate<>(new SubjectResultSetHandler());
+    }
+
+    /**
+     * Get instance
+     *
+     * @return instance
+     */
+    public static SubjectDao getInstance() {
+        return instance;
     }
 
     @Override
@@ -72,6 +100,12 @@ public class SubjectDaoImpl implements SubjectDao {
         return subjects;
     }
 
+    /**
+     * Find subject by id
+     *
+     * @return subjectOptional the subject optional
+     * @throws DaoException the DaoException
+     */
     @Override
     public Optional<Subject> findEntityById(Long id) throws DaoException {
         Optional<Subject> subject = null;
@@ -85,6 +119,12 @@ public class SubjectDaoImpl implements SubjectDao {
         return subject;
     }
 
+    /**
+     * Delete subject
+     *
+     * @return true the true
+     * @throws DaoException the DaoException
+     */
     @Override
     public boolean delete(Long id) throws DaoException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
@@ -99,6 +139,12 @@ public class SubjectDaoImpl implements SubjectDao {
         return true;
     }
 
+    /**
+     * Add subject
+     *
+     * @return id the id
+     * @throws DaoException the DaoException
+     */
     @Override
     public Long add(Subject subject) throws DaoException {
         long certificateId = 0;
@@ -115,6 +161,12 @@ public class SubjectDaoImpl implements SubjectDao {
         return certificateId;
     }
 
+    /**
+     * Update subject
+     *
+     * @return true the true
+     * @throws DaoException the DaoException
+     */
     @Override
     public boolean update(Subject subject) throws DaoException {
         try {
@@ -129,13 +181,15 @@ public class SubjectDaoImpl implements SubjectDao {
         return true;
     }
 
-    public static SubjectDao getInstance() {
-        return instance;
-    }
-
+    /**
+     * Find subject by applicantId
+     *
+     * @return subjects the subjects
+     * @throws DaoException the DaoException
+     */
     @Override
     public List<Subject> findSubjectByApplicantId(Long applicantId) throws DaoException {
-        List<Subject> subject = Collections.emptyList();
+        List<Subject> subject;
         try {
             subject = jdbcTemplate.executeSelectQuery(FIND_SUBJECT_BY_APPLICANT_ID, applicantId);
         } catch (TransactionException e) {

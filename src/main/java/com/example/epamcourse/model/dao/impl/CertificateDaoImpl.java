@@ -16,11 +16,26 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
-
+/**
+ * class CertificateDaoImpl
+ *
+ * @author M.Shubelko
+ */
 public class CertificateDaoImpl implements CertificateDao {
+
+    /**
+     * The logger
+     */
     private static final Logger logger = LogManager.getLogger();
+
+    /**
+     * The instance
+     */
     private static CertificateDao instance = new CertificateDaoImpl();
 
+    /**
+     * The jdbcTemplate
+     */
     private JdbcTemplate<Certificate> jdbcTemplate;
 
     private static final String FIND_ALL_CERTIFICATES = """
@@ -51,11 +66,28 @@ public class CertificateDaoImpl implements CertificateDao {
             """;
 
 
-
+    /**
+     * The private constructor
+     */
     private CertificateDaoImpl() {
         this.jdbcTemplate = new JdbcTemplate<>(new CertificateResultSetHandler());
     }
 
+    /**
+     * Get instance
+     *
+     * @return instance the instance
+     */
+    public static CertificateDao getInstance() {
+        return instance;
+    }
+
+    /**
+     * Find all certificates
+     *
+     * @return certificates the certificates
+     * @throws DaoException the DaoException
+     */
     @Override
     public List<Certificate> findAll() throws DaoException {
         List<Certificate>  certificates;
@@ -69,19 +101,33 @@ public class CertificateDaoImpl implements CertificateDao {
         return certificates;
     }
 
+    /**
+     * Find certificate by id
+     *
+     * @param id the id
+     * @return true the true
+     * @throws DaoException the DaoException
+     */
     @Override
     public Optional<Certificate> findEntityById(Long id) throws DaoException {
-        Optional<Certificate> certificate;
+        Optional<Certificate> certificateOptional;
         try {
-            certificate = jdbcTemplate.executeSelectQueryForObject(FIND_CERTIFICATE_BY_ID, id);
+            certificateOptional = jdbcTemplate.executeSelectQueryForObject(FIND_CERTIFICATE_BY_ID, id);
         } catch (TransactionException e) {
-            logger.log(Level.ERROR, "Error when finding certificate by id {} {}", id, e);
-            throw new DaoException("Error when finding certificate by id " + id, e);
+            logger.log(Level.ERROR, "Error when finding certificate by id", e);
+            throw new DaoException("Error when finding certificate by id", e);
         }
 
-        return certificate;
+        return certificateOptional;
     }
 
+    /**
+     * Delete certificate
+     *
+     * @param id the id
+     * @return true the true
+     * @throws DaoException the DaoException
+     */
     @Override
     public boolean delete(Long id) throws DaoException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
@@ -96,6 +142,13 @@ public class CertificateDaoImpl implements CertificateDao {
         return true;
     }
 
+    /**
+     * Add certificate
+     *
+     * @param certificate the certificate
+     * @return certificateId the certificate id
+     * @throws DaoException the DaoException
+     */
     @Override
     public Long add(Certificate certificate) throws DaoException {
         long certificateId;
@@ -110,6 +163,13 @@ public class CertificateDaoImpl implements CertificateDao {
         return certificateId;
     }
 
+    /**
+     * Add certificate
+     *
+     * @param certificate the certificate
+     * @return true the true
+     * @throws DaoException the DaoException
+     */
     @Override
     public boolean update(Certificate certificate) throws DaoException {
         try {
@@ -124,7 +184,4 @@ public class CertificateDaoImpl implements CertificateDao {
         return true;
     }
 
-    public static CertificateDao getInstance() {
-        return instance;
-    }
 }

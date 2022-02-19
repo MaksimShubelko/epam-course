@@ -33,8 +33,6 @@ public class SubjectServiceImpl implements SubjectService {
     @Override
     public boolean addSubject(Long applicantId) throws ServiceException {
         boolean isSubjectAdded = false;
-        SubjectValidator validator = SubjectValidatorImpl.getInstance();
-
         try {
             transactionManager.initTransaction();
             ApplicantService applicantService = ApplicantServiceImpl.getInstance();
@@ -89,7 +87,7 @@ public class SubjectServiceImpl implements SubjectService {
         List<Subject> subjects;
         try {
             transactionManager.initTransaction();
-            isSubjectDeleted = subjectDao.delete(applicantId); // todo
+            isSubjectDeleted = subjectDao.delete(applicantId);
             transactionManager.commit();
         } catch (DaoException | TransactionException e) {
             transactionManager.rollback();

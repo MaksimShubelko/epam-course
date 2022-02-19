@@ -20,7 +20,7 @@ public interface AccountService {
 
     boolean validateRegistrationData(String login, String password, String passwordCheck, String email) throws ServiceException;
 
-    boolean updateAccount(Account account) throws ServiceException;
+    void updateAccount(Account account) throws ServiceException;
 
     boolean addAdminAccount(String login, String password, String email, String passwordCheck) throws ServiceException;
 
@@ -40,6 +40,6 @@ public interface AccountService {
 
     List<Account> findAccountsInPage(int page) throws ServiceException;
 
-    boolean deleteAccount(Long accountId) throws ServiceException;
+    void deleteAccount(Long accountId) throws ServiceException;
 
 }

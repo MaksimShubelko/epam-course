@@ -16,10 +16,26 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * class AccountDaoImpl
+ *
+ * @author M.Shubelko
+ */
 public class AdministratorDaoImpl implements AdministratorDao {
+
+    /**
+     * The logger
+     */
     private static final Logger logger = LogManager.getLogger();
+
+    /**
+     * The instance
+     */
     private static AdministratorDao instance = new AdministratorDaoImpl();
 
+    /**
+     * The jdbcTemplate
+     */
     private JdbcTemplate<Administrator> jdbcTemplate;
 
     private static final String FIND_ALL_ADMINISTRATORS = """
@@ -54,37 +70,69 @@ public class AdministratorDaoImpl implements AdministratorDao {
             WHERE administrator_id = ?
             """;
 
+    /**
+     * Get instance
+     *
+     * @return administrators the administrators
+     */
+    public static AdministratorDao getInstance() {
+        return instance;
+    }
 
+
+    /**
+     * The private constructor
+     */
     private AdministratorDaoImpl() {
         this.jdbcTemplate = new JdbcTemplate<>(new AdministratorResultSetHandler());
     }
 
+    /**
+     * Find all administrators
+     *
+     * @return administrators the administrators
+     * @throws DaoException the DaoException
+     */
     @Override
     public List<Administrator> findAll() throws DaoException {
         List<Administrator> administrators = null;
         try {
             administrators = jdbcTemplate.executeSelectQuery(FIND_ALL_ADMINISTRATORS);
         } catch (TransactionException e) {
-            logger.log(Level.ERROR, "Error when finding all administrators {}", e);
+            logger.log(Level.ERROR, "Error when finding all administrators", e);
             throw new DaoException("Error when finding all administrators", e);
         }
 
         return administrators;
     }
 
+    /**
+     * Find administrator by id
+     *
+     * @param id the id
+     * @return administratorOptional the administrator optional
+     * @throws DaoException the DaoException
+     */
     @Override
     public Optional<Administrator> findEntityById(Long id) throws DaoException {
-        Optional<Administrator> administrator = null;
+        Optional<Administrator> administratorOptional ;
         try {
-            administrator = jdbcTemplate.executeSelectQueryForObject(FIND_ADMINISTRATOR_BY_ID, id);
+            administratorOptional = jdbcTemplate.executeSelectQueryForObject(FIND_ADMINISTRATOR_BY_ID, id);
         } catch (TransactionException e) {
             logger.log(Level.ERROR, "Error when finding administrator by id = {}  {}", id, e);
             throw new DaoException("Error when finding administrator by id = " + id, e);
         }
 
-        return administrator;
+        return administratorOptional;
     }
 
+    /**
+     * Delete administrator by id
+     *
+     * @param id the id
+     * @return true the true
+     * @throws DaoException the DaoException
+     */
     @Override
     public boolean delete(Long id) throws DaoException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
@@ -99,6 +147,13 @@ public class AdministratorDaoImpl implements AdministratorDao {
         return true;
     }
 
+    /**
+     * Add administrator
+     *
+     * @param administrator the Administrator
+     * @return administratorOptional the administrator optional
+     * @throws DaoException the DaoException
+     */
     @Override
     public Long add(Administrator administrator) throws DaoException {
         long administratorId = 0;
@@ -116,6 +171,13 @@ public class AdministratorDaoImpl implements AdministratorDao {
         return administratorId;
     }
 
+    /**
+     * Update administrator
+     *
+     * @param administrator the Administrator
+     * @return true the true
+     * @throws DaoException the DaoException
+     */
     public boolean update(Administrator administrator) throws DaoException {
         try {
             jdbcTemplate.executeInsertQuery(UPDATE_ADMINISTRATOR,
@@ -132,12 +194,15 @@ public class AdministratorDaoImpl implements AdministratorDao {
 
     }
 
-    public static AdministratorDao getInstance() {
-        return instance;
-    }
-
+    /**
+     * Find administrator
+     *
+     * @param id the id
+     * @return administratorOptional the administrator optional
+     * @throws DaoException the DaoException
+     */
     @Override
-    public Optional<Administrator> getAdministratorByAccountId(Long id) throws DaoException {
+    public Optional<Administrator> findAdministratorByAccountId(Long id) throws DaoException {
         Optional<Administrator> administrator = null;
         try {
             administrator = jdbcTemplate.executeSelectQueryForObject(FIND_ADMINISTRATOR_BY_ACCOUNT_ID, id);

@@ -23,14 +23,28 @@ import java.util.Optional;
 import static com.example.epamcourse.controller.command.PagePath.MAIN_PAGE_APPLICANT;
 import static com.example.epamcourse.controller.command.PagePath.MAIN_PAGE_APPLICANT_REDIRECT;
 
+/**
+ * class ShowRequestsCommand
+ *
+ * @author M.Shubelko
+ */
 public class ShowRequestsCommand implements Command {
-    private static Long facultyId = 0L;
+
+    /** The logger. */
     private static final Logger logger = LogManager.getLogger();
 
+    /**
+     * Execute
+     *
+     * @param request the request
+     * @return the router
+     * @throws CommandException the command exception
+     */
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         final int recordsPerPage = 5;
         int page = 1;
+        long facultyId = 0L;
         HttpSession session = request.getSession();
         Router router = new Router(MAIN_PAGE_APPLICANT_REDIRECT);
         ApplicantService applicantService = ApplicantServiceImpl.getInstance();

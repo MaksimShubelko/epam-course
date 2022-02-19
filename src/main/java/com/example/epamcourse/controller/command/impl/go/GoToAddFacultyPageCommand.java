@@ -13,8 +13,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 /**
- * @author shubelko
- * @version 1.0
+ * class GoToAddFacultyPageCommand
+ *
+ * @author M.Shubelko
  */
 public class GoToAddFacultyPageCommand implements Command {
 

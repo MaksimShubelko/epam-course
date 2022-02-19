@@ -16,11 +16,27 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * class FacultyDaoImpl
+ *
+ * @author M.Shubelko
+ */
 public class FacultyDaoImpl implements FacultyDao {
-    private static final Logger logger = LogManager.getLogger();
-    private static FacultyDao instance = new FacultyDaoImpl();
 
-    private JdbcTemplate<Faculty> jdbcTemplate;
+    /**
+     * The logger
+     */
+    private static final Logger logger = LogManager.getLogger();
+
+    /**
+     * The instance
+     */
+    private static final FacultyDao instance = new FacultyDaoImpl();
+
+    /**
+     * The jdbcTemplate
+     */
+    private final JdbcTemplate<Faculty> jdbcTemplate;
 
     private static final String FIND_ALL_FACULTIES = """
             SELECT faculty_id, faculty_name, 
@@ -66,11 +82,29 @@ public class FacultyDaoImpl implements FacultyDao {
             WHERE faculty_id = ?
             """;
 
+    /**
+     * The private constructor
+     */
     private FacultyDaoImpl() {
         this.jdbcTemplate = new JdbcTemplate<>(new FacultyResultSetHandler());
     }
 
+    /**
+     * Get instance
+     *
+     * @return instance
+     */
+    public static FacultyDao getInstance() {
+        return instance;
+    }
 
+
+    /**
+     * Find all faculties
+     *
+     * @return faculties the faculties
+     * @throws DaoException the DaoException
+     */
     @Override
     public List<Faculty> findAll() throws DaoException {
         List<Faculty> faculties = null;
@@ -84,22 +118,17 @@ public class FacultyDaoImpl implements FacultyDao {
         return faculties;
     }
 
-    @Override
-    public Optional<Faculty> findFacultyByName(String name) throws DaoException {
-        Optional<Faculty> faculty = null;
-        try {
-            faculty = jdbcTemplate.executeSelectQueryForObject(FIND_FACULTY_BY_NAME, name);
-        } catch (TransactionException e) {
-            logger.log(Level.ERROR, "Error when finding faculty by name {} {}", name, e);
-            throw new DaoException("Error when finding certificate by name " + name, e);
-        }
-
-        return faculty;
-    }
-
+    /**
+     * Find faculties to page
+     *
+     * @param facultiesSkip the faculties skip
+     * @param facultiesGet the faculties get
+     * @return faculties the faculties
+     * @throws DaoException the DaoException
+     */
     @Override
     public List<Faculty> findFacultiesPage(int facultiesSkip, int facultiesGet) throws DaoException {
-        List<Faculty> faculties = null;
+        List<Faculty> faculties;
         try {
             faculties = jdbcTemplate.executeSelectQuery(FIND_FACULTIES_LIMIT, facultiesSkip, facultiesGet);
         } catch (TransactionException e) {
@@ -109,19 +138,33 @@ public class FacultyDaoImpl implements FacultyDao {
         return faculties;
     }
 
+    /**
+     * Find faculty by id
+     *
+     * @param id the id
+     * @return facultyOptional the faculty optional
+     * @throws DaoException the DaoException
+     */
     @Override
     public Optional<Faculty> findEntityById(Long id) throws DaoException {
-        Optional<Faculty> faculty;
+        Optional<Faculty> facultyOptional;
         try {
-            faculty = jdbcTemplate.executeSelectQueryForObject(FIND_FACULTY_BY_ID, id);
+            facultyOptional = jdbcTemplate.executeSelectQueryForObject(FIND_FACULTY_BY_ID, id);
         } catch (TransactionException e) {
             logger.log(Level.ERROR, "Error when finding faculty by id {} {}", id, e);
             throw new DaoException("Error when finding faculty by id " + id, e);
         }
 
-        return faculty;
+        return facultyOptional;
     }
 
+    /**
+     * Delete faculty
+     *
+     * @param id the id
+     * @return facultyId the faculty id
+     * @throws DaoException the DaoException
+     */
     @Override
     public boolean delete(Long id) throws DaoException {
         try (Connection connection = ConnectionPool.getInstance().getConnection(); PreparedStatement statement = connection.prepareStatement(DELETE_FACULTY)) {
@@ -135,6 +178,13 @@ public class FacultyDaoImpl implements FacultyDao {
         return true;
     }
 
+    /**
+     * Add faculty
+     *
+     * @param faculty the faculty
+     * @return facultyId the faculty id
+     * @throws DaoException the DaoException
+     */
     @Override
     public Long add(Faculty faculty) throws DaoException {
         long facultyId = 0;
@@ -151,6 +201,13 @@ public class FacultyDaoImpl implements FacultyDao {
         return facultyId;
     }
 
+    /**
+     * Update faculty
+     *
+     * @param faculty the faculty
+     * @return true the true
+     * @throws DaoException the DaoException
+     */
     @Override
     public boolean update(Faculty faculty) throws DaoException {
         try {
@@ -165,9 +222,5 @@ public class FacultyDaoImpl implements FacultyDao {
         }
 
         return true;
-    }
-
-    public static FacultyDao getInstance() {
-        return instance;
     }
 }

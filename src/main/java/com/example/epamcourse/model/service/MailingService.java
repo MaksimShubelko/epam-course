@@ -4,5 +4,5 @@ import com.example.epamcourse.model.exception.ServiceException;
 
 public interface MailingService {
 
-    boolean sendMessage(String messageText, String messageSubject, String sendTo) throws ServiceException;
+    void sendMessage(String messageText, String messageSubject, String sendTo) throws ServiceException;
 }

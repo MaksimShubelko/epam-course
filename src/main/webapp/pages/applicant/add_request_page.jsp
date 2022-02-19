@@ -15,7 +15,7 @@
 <div>
     <form name="loginForm" class="needs-validation w-75 h-100" novalidate
           action="${pageContext.request.contextPath}/controller" method="get">
-        <input type="hidden" name="command" value="add_request_command"/>
+        <input type="hidden" name="command" value="add_request"/>
         <div class="row bg-warning">
             <div class="col-1 offset-sm-9 border border-success border-3">
                 <h6><a href="${pageContext.request.contextPath}/controller?command=go_to_edit_administrator_data">

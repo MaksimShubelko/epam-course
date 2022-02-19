@@ -33,7 +33,7 @@ public class CertificateServiceImpl implements CertificateService {
     }
 
     @Override
-    public boolean addCertificate(Long applicantId) throws ServiceException {
+    public void addCertificate(Long applicantId) throws ServiceException {
         boolean isCertificateAdded = false;
         Applicant applicant;
         try {
@@ -57,11 +57,10 @@ public class CertificateServiceImpl implements CertificateService {
         } finally {
             transactionManager.endTransaction();
         }
-        return isCertificateAdded;
     }
 
     @Override
-    public boolean updateCertificate(Long applicantId, double certificateMark) throws ServiceException {
+    public void updateCertificate(Long applicantId, double certificateMark) throws ServiceException {
         boolean isCertificateUpdated = false;
         CertificateValidatorImpl validator = CertificateValidatorImpl.getInstance();
         try {
@@ -84,11 +83,10 @@ public class CertificateServiceImpl implements CertificateService {
         } finally {
             transactionManager.endTransaction();
         }
-        return isCertificateUpdated;
     }
 
     @Override
-    public boolean deleteCertificate(Long applicantId) throws ServiceException {
+    public void deleteCertificate(Long applicantId) throws ServiceException {
         boolean isCertificateDeleted = false;
         Optional<Certificate> certificate = Optional.empty();
         try {
@@ -102,7 +100,6 @@ public class CertificateServiceImpl implements CertificateService {
         } finally {
             transactionManager.endTransaction();
         }
-        return isCertificateDeleted;
     }
 
     @Override

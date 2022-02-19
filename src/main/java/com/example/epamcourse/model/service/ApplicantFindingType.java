@@ -6,5 +6,4 @@ public enum ApplicantFindingType {
     FREE,
     CANVAS,
     NOT_RECEIVED;
-
 }

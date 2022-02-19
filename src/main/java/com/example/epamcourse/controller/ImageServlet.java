@@ -18,18 +18,44 @@ import java.io.InputStream;
 
 import static com.example.epamcourse.controller.command.SessionAttribute.EXCEPTION;
 
+/**
+ * class ImageServlet
+ *
+ * @author M.Shubelko
+ * Overrides doPost and doGet methods by calling
+ * the own method processRequest(request, response)
+ */
 @MultipartConfig(fileSizeThreshold = 1024 * 1024,
         maxFileSize = 1024 * 1024,
         maxRequestSize = 1024 * 1024)
 @WebServlet(urlPatterns = "/upload_image_controller")
 public class ImageServlet extends HttpServlet {
+
+    /**
+     * The logger
+     */
     private static final Logger logger = LogManager.getLogger();
 
+    /**
+     * Do get.
+     *
+     * @param request the request
+     * @param response the response
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         processRequest(request, response);
     }
 
+
+    /**
+     * Do post.
+     *
+     * @param request the request
+     * @param response the response
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         Part content = request.getPart(RequestParameter.IMAGE);

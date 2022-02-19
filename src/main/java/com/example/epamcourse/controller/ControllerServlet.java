@@ -15,15 +15,41 @@ import java.io.IOException;
 
 import static com.example.epamcourse.controller.command.SessionAttribute.EXCEPTION;
 
+
+/**
+ * class ControllerServlet
+ *
+ * @author M.Shubelko
+ * Overrides doPost and doGet methods by calling
+ * the own method processRequest(request, response)
+ */
 @WebServlet(urlPatterns = "/controller", name = "controller")
 public class ControllerServlet extends HttpServlet {
+
+    /**
+     * The logger
+     */
     private static final Logger logger = LogManager.getLogger();
 
+    /**
+     * Do get.
+     *
+     * @param request the request
+     * @param response the response
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         processRequest(request, response);
     }
 
+    /**
+     * Do post.
+     *
+     * @param request the request
+     * @param response the response
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         processRequest(request, response);

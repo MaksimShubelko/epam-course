@@ -1,58 +1,111 @@
 package com.example.epamcourse.controller.command;
 
+/**
+ * class RequestParameter
+ *
+ * @author M.Shubelko
+ */
 public final class RequestParameter {
+
+    /** The constant COMMAND **/
     public static final String COMMAND = "command";
-    //account
+
+    /** The constant LOGIN **/
     public static final String LOGIN = "login";
+
+    /** The constant PASSWORD **/
     public static final String PASSWORD = "password";
+
+    /** The constant EMAIL **/
     public static final String EMAIL = "email";
-    public static final String ROLE = "role";
+
+    /** The constant PASSWORD_CHECK **/
     public static final String PASSWORD_CHECK = "password_check";
 
-    //applicant/administrator secure information
+    /** The constant NAME **/
     public static final String NAME = "name";
+
+    /** The constant SURNAME **/
     public static final String SURNAME = "surname";
+
+    /** The constant LASTNAME **/
     public static final String LASTNAME = "lastname";
 
-    //applicant
+    /** The constant PRIVILEGES **/
     public static final String PRIVILEGES = "privileges";
 
-    //certificate
+    /** The constant APPLICANT_ID **/
     public static final String APPLICANT_ID = "applicant_id";
+
+    /** The constant CERTIFICATE_MARK **/
     public static final String CERTIFICATE_MARK = "certificate_mark";
 
-    //subject
+    /** The constant SUBJECT_MATH_MARK **/
     public static final String SUBJECT_MATH_MARK = "MATH";
-    public static final String SUBJECT_PHYSIC_MARK = "PHYSIC";
-    public static final String SUBJECT_ENGLISH_MARK = "ENGLISH";
-    public static final String SUBJECT_TYPE = "subject_types";
 
+    /** The constant SUBJECT_PHYSIC_MARK **/
+    public static final String SUBJECT_PHYSIC_MARK = "PHYSIC";
+
+    /** The constant SUBJECT_ENGLISH_MARK **/
+    public static final String SUBJECT_ENGLISH_MARK = "ENGLISH";
+
+    /** The constant FACULTY_ID **/
     public static final String FACULTY_ID = "faculty_id";
 
+    /** The constant LOCALE **/
     public static final String LOCALE = "locale";
+
+    /** The constant PAGE **/
     public static final String PAGE = "page";
-    public static final String APPLICANTS = "applicants";
+
+    /** The constant FACULTY_NAME **/
     public static final String FACULTY_NAME = "faculty_name";
+
+    /** The constant RECRUITMENT_PLAN_FREE **/
     public static final String RECRUITMENT_PLAN_FREE = "recruitment_plan_free";
+
+    /** The constant RECRUITMENT_PLAN_CANVAS **/
     public static final String RECRUITMENT_PLAN_CANVAS = "recruitment_plan_canvas";
+
+    /** The constant ACCOUNT_ID **/
     public static final String ACCOUNT_ID = "account_id";
+
+    /** The constant EMAIL_CODE_EXPECTED **/
     public static final String EMAIL_CODE_EXPECTED = "email_code_expected";
+
+    /** The constant EMAIL_CODE_ACTUAL **/
     public static final String EMAIL_CODE_ACTUAL = "email_code_actual";
+
+    /** The constant IP **/
     public static final String IP = "ip";
+
+    /** The constant RECRUITMENT_STATUS **/
     public static final String RECRUITMENT_STATUS = "recruitment_status";
+
+    /** The constant ACCOUNTS **/
     public static final String ACCOUNTS = "accounts";
+
+    /** The constant CERTIFICATES **/
     public static final String CERTIFICATES = "certificates";
+
+    /** The constant TITLE **/
     public static final String TITLE = "title";
+
+    /** The constant MESSAGE **/
     public static final String MESSAGE = "message";
-    public static final String FACULTY = "faculty";
+
+    /** The constant FINISH_RECRUITMENT **/
     public static final String FINISH_RECRUITMENT = "finish_recruitment";
+
+    /** The constant IMAGE **/
     public static final String IMAGE = "img";
-    public static final String IMAGE_INPUT_STREAM = "image_input_stream";
-    public static final String IMAGE_NAME = "image_name";
+
+    /** The constant RESTART_RECRUITMENT **/
     public static final String RESTART_RECRUITMENT = "restart_recruitment";
-    public static final String IS_BILLS_ARCHIVE = "is_bills_archive";
 
-
+    /**
+     * The private constructor
+     */
     private RequestParameter() {
     }
 }

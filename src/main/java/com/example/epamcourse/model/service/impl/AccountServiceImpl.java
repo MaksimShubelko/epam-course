@@ -29,7 +29,6 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public class AccountServiceImpl implements AccountService {
@@ -141,7 +140,6 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public boolean addAccount(String login, String password, String passwordCheck, String email, String ip) throws ServiceException {
         boolean isAccountAdded = false;
-        AccountValidator validator = AccountValidatorImpl.getInstance();
         if (validateRegistrationData(login, password, passwordCheck, email)) {
             Account account = new Account.AccountBuilder()
                     .setLogin(login)
@@ -179,13 +177,11 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public boolean updateAccount(Account account) throws ServiceException {
-        boolean isAAccountUpdated;
+    public void updateAccount(Account account) throws ServiceException {
         try {
             transactionManager.initTransaction();
             accountDao.update(account);
             transactionManager.commit();
-            isAAccountUpdated = true;
         } catch (DaoException | TransactionException e) {
             transactionManager.rollback();
             logger.log(Level.ERROR, "Error when updating account", e);
@@ -194,13 +190,11 @@ public class AccountServiceImpl implements AccountService {
             transactionManager.endTransaction();
         }
 
-        return isAAccountUpdated;
     }
 
     @Override
     public boolean addAdminAccount(String login, String password, String email, String passwordCheck) throws ServiceException {
         boolean isAccountAdded = false;
-        AccountValidator validator = AccountValidatorImpl.getInstance();
         if (validateRegistrationData(login, password, passwordCheck, email)) {
             Account account = new Account.AccountBuilder()
                     .setLogin(login)
@@ -228,7 +222,6 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public String getAccountStatusByLogin(String login) throws ServiceException {
         String accountStatus;
-        Long accountId;
         try {
             transactionManager.initTransaction();
             accountStatus = accountDao.getAccountStatusByLogin(login);
@@ -302,7 +295,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public boolean deleteAccount(Long accountId) throws ServiceException {
+    public void deleteAccount(Long accountId) throws ServiceException {
         boolean isAccountDeleted = false;
         try {
             transactionManager.initTransaction();
@@ -317,7 +310,6 @@ public class AccountServiceImpl implements AccountService {
             transactionManager.endTransaction();
         }
 
-        return isAccountDeleted;
     }
 
     @Override
@@ -361,10 +353,10 @@ public class AccountServiceImpl implements AccountService {
             long accountId = account.getAccountId();
             switch (role) {
                 case APPLICANT -> isPersonalInformationPresent = applicantDao
-                        .getApplicantByAccountId(accountId)
+                        .findApplicantByAccountId(accountId)
                         .isPresent();
                 case ADMIN -> isPersonalInformationPresent = administratorDao
-                        .getAdministratorByAccountId(accountId)
+                        .findAdministratorByAccountId(accountId)
                         .isPresent();
                 default -> throw new UnsupportedOperationException();
             }

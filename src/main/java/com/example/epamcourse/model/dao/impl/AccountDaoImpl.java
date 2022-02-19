@@ -18,11 +18,27 @@ import java.util.*;
 import static com.example.epamcourse.model.dao.TableColumn.ROLE;
 import static com.example.epamcourse.model.dao.TableColumn.STATUS;
 
+/**
+ * class AccountDaoImpl
+ *
+ * @author M.Shubelko
+ */
 public class AccountDaoImpl implements AccountDao {
-    private static final Logger logger = LogManager.getLogger();
-    private static AccountDao instance = new AccountDaoImpl();
 
-    private JdbcTemplate<Account> jdbcTemplate;
+    /**
+     * The logger
+     */
+    private static final Logger logger = LogManager.getLogger();
+
+    /**
+     * The instance
+     */
+    private static final AccountDao instance = new AccountDaoImpl();
+
+    /**
+     * The jdbcTemplate
+     */
+    private final JdbcTemplate<Account> jdbcTemplate;
 
     private static final String FIND_ACCOUNT_STATUS_BY_LOGIN = """
             SELECT status
@@ -97,60 +113,85 @@ public class AccountDaoImpl implements AccountDao {
             WHERE account_id = ?
             """;
 
-    private static final String UPDATE_ROLE = """
-            UPDATE accounts SET role = ?
-            
-            WHERE account_id = ?
-            """;
-
+    /**
+     * The private constructor
+     */
     private AccountDaoImpl() {
         this.jdbcTemplate = new JdbcTemplate<>(new AccountResultSetHandler());
     }
 
+    /**
+     * Find by id
+     *
+     * @param id the id
+     * @return accountOptional the account optional
+     * @throws DaoException the DaoException
+     */
     @Override
     public Optional<Account> findEntityById(Long id) throws DaoException {
-        Optional<Account> account;
+        Optional<Account> accountOptional;
         try {
-            account = jdbcTemplate.executeSelectQueryForObject(FIND_ACCOUNT_BY_ID, id);
+            accountOptional = jdbcTemplate.executeSelectQueryForObject(FIND_ACCOUNT_BY_ID, id);
         } catch (TransactionException e) {
             logger.log(Level.ERROR, "Error when finding account with id {}.", id);
             throw new DaoException("Error when finding account with id ".concat(id.toString()), e);
         }
 
-        return account;
+        return accountOptional;
     }
 
+    /**
+     * Find account by login
+     *
+     * @param login the login
+     * @return accountOptional the account optional
+     * @throws DaoException the DaoException
+     */
     @Override
     public Optional<Account> findAccountByLogin(String login) throws DaoException {
-        Optional<Account> account;
+        Optional<Account> accountOptional;
         try {
-            account = jdbcTemplate.executeSelectQueryForObject(FIND_ACCOUNT_BY_LOGIN, login);
+            accountOptional = jdbcTemplate.executeSelectQueryForObject(FIND_ACCOUNT_BY_LOGIN, login);
         } catch (TransactionException e) {
             logger.log(Level.ERROR, "Error when finding account with login {}.", login);
             throw new DaoException("Error when finding account with login " + login, e);
         }
 
-        return account;
+        return accountOptional;
     }
 
+    /**
+     * Find account by ip
+     *
+     * @param ip the ip
+     * @return accountOptional the account optional
+     * @throws DaoException the DaoException
+     */
     @Override
     public Optional<Account> findAccountByIp(String ip) throws DaoException {
-        Optional<Account> account;
+        Optional<Account> accountOptional;
         try {
-            account = jdbcTemplate.executeSelectQueryForObject(FIND_ACCOUNT_BY_IP, ip);
+            accountOptional = jdbcTemplate.executeSelectQueryForObject(FIND_ACCOUNT_BY_IP, ip);
         } catch (TransactionException e) {
             logger.log(Level.ERROR, "Error when finding account with ip {}. {}", ip, e);
             throw new DaoException("Error when finding account with ip " + ip, e);
         }
 
-        return account;
+        return accountOptional;
     }
 
+    /**
+     * Find account by login and password
+     *
+     * @param login the login
+     * @return accountOptional the account optional
+     * @throws DaoException the DaoException
+     */
     @Override
     public Optional<Account> findAccountByLoginAndPassword(String login, String password) throws DaoException {
-        Optional<Account> account;
+        Optional<Account> accountOptional;
         try {
-            account = jdbcTemplate
+            accountOptional = jdbcTemplate
                     .executeSelectQueryForObject(FIND_ACCOUNT_BY_LOGIN_AND_PASSWORD, login, password);
         } catch (TransactionException e) {
             logger.log(Level.ERROR, "Error when finding account with login {} and password {}.",
@@ -158,9 +199,16 @@ public class AccountDaoImpl implements AccountDao {
             throw new DaoException("Error when finding account with login and password: " + login + " " + password, e);
         }
 
-        return account;
+        return accountOptional;
     }
 
+    /**
+     * Find account role by id
+     *
+     * @param accountId the accountId
+     * @return role the role
+     * @throws DaoException the DaoException
+     */
     @Override
     public List<Map<String, Object>> getAccountRoleById(Long accountId) throws DaoException {
         List<Map<String, Object>> role;
@@ -174,19 +222,14 @@ public class AccountDaoImpl implements AccountDao {
         return role;
     }
 
-    @Override
-    public boolean updateRole(Account account, int role) throws DaoException {
-        try {
-            jdbcTemplate.executeInsertQuery(UPDATE_ROLE,
-                    role,
-                    account.getAccountId());
-        } catch (TransactionException e) {
-            e.printStackTrace();
-        }
-
-        return true;
-    }
-
+    /**
+     * Find accounts to page
+     *
+     * @param accountsSkip the accounts skip
+     * @param accountsGet the accounts get
+     * @return accounts the accounts
+     * @throws DaoException the DaoException
+     */
     @Override
     public List<Account> findAccountsPage(int accountsSkip, int accountsGet) throws DaoException {
         List<Account> accounts;
@@ -199,6 +242,13 @@ public class AccountDaoImpl implements AccountDao {
         return accounts;
     }
 
+    /**
+     * Get account's status by login
+     *
+     * @param login the login
+     * @return fields the fields
+     * @throws DaoException the DaoException
+     */
     @Override
     public String getAccountStatusByLogin(String login) throws DaoException {
         List<Map<String, Object>> fields;
@@ -212,19 +262,12 @@ public class AccountDaoImpl implements AccountDao {
         return fields.get(0).get(STATUS).toString();
     }
 
-    @Override
-    public List<Map<String, Object>> findImagePathByLogin(String login) throws DaoException {
-        List<Map<String, Object>> imagePath;
-        try {
-            imagePath = jdbcTemplate.executeSelectSomeFields(FIND_IMAGE_PATH_BY_LOGIN, Set.of(login));
-        } catch (TransactionException e) {
-            logger.log(Level.ERROR, "Error when getting image path", e);
-            throw new DaoException("Error when getting image path", e);
-        }
-
-        return imagePath;
-    }
-
+    /**
+     * Get account status by login
+     *
+     * @return accounts the accounts
+     * @throws DaoException the DaoException
+     */
     @Override
     public List<Account> findAll() throws DaoException {
         List<Account> accounts;
@@ -238,6 +281,13 @@ public class AccountDaoImpl implements AccountDao {
         return accounts;
     }
 
+    /**
+     * Delete an account
+     *
+     * @param id the id
+     * @return true
+     * @throws DaoException the DaoException
+     */
     @Override
     public boolean delete(Long id) throws DaoException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
@@ -257,6 +307,13 @@ public class AccountDaoImpl implements AccountDao {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Update an account
+     *
+     * @param account the account
+     * @return true
+     * @throws DaoException the DaoException
+     */
     @Override
     public boolean update(Account account) throws DaoException {
         try {
@@ -272,6 +329,14 @@ public class AccountDaoImpl implements AccountDao {
         return true;
     }
 
+    /**
+     * Add an account
+     *
+     * @param account the account
+     * @param password the password
+     * @return accountId the accountId
+     * @throws DaoException the DaoException
+     */
     @Override
     public Long add(Account account, String password) throws DaoException {
         long accountId;
@@ -289,21 +354,6 @@ public class AccountDaoImpl implements AccountDao {
 
         return accountId;
     }
-
-    @Override
-    public boolean update(Account account, String hashPassword) throws DaoException {
-        try {
-            jdbcTemplate.executeInsertQuery(UPDATE_PASSWORD,
-                    hashPassword,
-                    account.getAccountId());
-        } catch (TransactionException e) {
-            logger.log(Level.ERROR, "Error when updating password.", e);
-            throw new DaoException("Error when updating password", e);
-        }
-
-        return true;
-    }
-
 
 
     public static AccountDao getInstance() {

@@ -4,7 +4,6 @@ import com.example.epamcourse.model.dao.AdministratorDao;
 import com.example.epamcourse.model.dao.impl.AdministratorDaoImpl;
 import com.example.epamcourse.model.dao.impl.TransactionManager;
 import com.example.epamcourse.model.entity.Administrator;
-import com.example.epamcourse.model.entity.Applicant;
 import com.example.epamcourse.model.exception.DaoException;
 import com.example.epamcourse.model.exception.ServiceException;
 import com.example.epamcourse.model.exception.TransactionException;
@@ -61,7 +60,7 @@ public class AdministratorServiceImpl implements AdministratorService {
         Optional<Administrator> administratorOptional = Optional.empty();
         try {
             transactionManager.initTransaction();
-            administratorOptional = administratorDao.getAdministratorByAccountId(accountId);
+            administratorOptional = administratorDao.findAdministratorByAccountId(accountId);
             transactionManager.commit();
         } catch (DaoException | TransactionException e) {
             transactionManager.rollback();
@@ -96,7 +95,7 @@ public class AdministratorServiceImpl implements AdministratorService {
         Long administratorId = 0L;
         try {
             transactionManager.initTransaction();
-            administratorOptional = administratorDao.getAdministratorByAccountId(accountId);
+            administratorOptional = administratorDao.findAdministratorByAccountId(accountId);
             if (administratorOptional.isPresent()) {
                 administratorId = administratorOptional.get().getAdministratorId();
             }

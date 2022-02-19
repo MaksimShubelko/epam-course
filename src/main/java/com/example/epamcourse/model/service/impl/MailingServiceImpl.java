@@ -14,7 +14,6 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -30,10 +29,8 @@ public class MailingServiceImpl implements MailingService {
     }
 
 
-    public boolean sendMessage(String messageText, String messageSubject, String sendTo) throws ServiceException {
-        final String host = "localhost";
+    public void sendMessage(String messageText, String messageSubject, String sendTo) throws ServiceException {
         final String password = "utdcxpekipbsumsx";
-        boolean isMessageWasSent = false;
         try {
             Session session = createSession();
             MimeMessage message = new MimeMessage(session);
@@ -44,13 +41,11 @@ public class MailingServiceImpl implements MailingService {
             transport.connect(null, password);
             transport.sendMessage(message, message.getAllRecipients());
             transport.close();
-            isMessageWasSent = true;
         } catch (MessagingException | IOException e) {
             logger.log(Level.ERROR, "Error when sent email", e);
             throw new ServiceException("Error when sent email", e);
         }
 
-        return isMessageWasSent;
     }
 
     public Session createSession() throws IOException {

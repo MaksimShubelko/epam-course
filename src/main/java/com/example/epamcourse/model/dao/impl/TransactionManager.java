@@ -10,18 +10,48 @@ import org.apache.logging.log4j.Logger;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+/**
+ * class TransactionManager
+ *
+ * @author M.Shubelko
+ */
 public class TransactionManager {
+
+    /**
+     * The logger
+     */
     private static final Logger logger = LogManager.getLogger();
+
+    /**
+     * The instance
+     */
     private static final TransactionManager instance = new TransactionManager();
+
+    /**
+     * The threadConnection
+     */
     private ThreadLocal<Connection> threadConnection = new ThreadLocal<>();
 
+    /**
+     * The private constructor
+     */
     private TransactionManager() {
     }
 
+    /**
+     * Get instance
+     *
+     * @return instance
+     */
     public static TransactionManager getInstance() {
         return instance;
     }
 
+    /**
+     * Init transaction
+     *
+     * @throws TransactionException the TransactionException
+     */
     public void initTransaction() throws TransactionException {
         if (threadConnection.get() == null) {
             try {
@@ -38,6 +68,12 @@ public class TransactionManager {
         }
     }
 
+    /**
+     * Get connection
+     *
+     * @return connection the connection
+     * @throws TransactionException the TransactionException
+     */
     public Connection getConnection() throws TransactionException {
         Connection connection = threadConnection.get();
         if (connection != null) {
@@ -48,6 +84,9 @@ public class TransactionManager {
     }
 
 
+    /**
+     * End transaction
+     */
     public void endTransaction() {
         Connection connection = threadConnection.get();
         if (connection != null) {
@@ -62,7 +101,11 @@ public class TransactionManager {
         }
     }
 
-
+    /**
+     * Commit connection
+     *
+     * @throws TransactionException the TransactionException
+     */
     public void commit() throws TransactionException {
         Connection connection = threadConnection.get();
         if (connection != null) {
@@ -75,6 +118,9 @@ public class TransactionManager {
         }
     }
 
+    /**
+     * Rollback connection
+     */
     public void rollback() {
         Connection connection = threadConnection.get();
         if (connection != null) {
@@ -86,6 +132,9 @@ public class TransactionManager {
         }
     }
 
+    /**
+     * Close connection
+     */
     private void close(Connection connection) {
         try {
             connection.close();

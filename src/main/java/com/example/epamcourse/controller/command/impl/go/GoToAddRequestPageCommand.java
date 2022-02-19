@@ -26,6 +26,8 @@ import static com.example.epamcourse.controller.command.PagePath.*;
  * @author M.Shubelko
  */
 public class GoToAddRequestPageCommand implements Command {
+
+    /** The logger. */
     private static final Logger logger = LogManager.getLogger();
 
     /**

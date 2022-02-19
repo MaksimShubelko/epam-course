@@ -6,11 +6,11 @@ import com.example.epamcourse.model.exception.ServiceException;
 import java.util.Optional;
 
 public interface CertificateService {
-    boolean addCertificate(Long applicantId) throws ServiceException;
+    void addCertificate(Long applicantId) throws ServiceException;
 
-    boolean updateCertificate(Long applicantId, double certificateMark) throws ServiceException;
+    void updateCertificate(Long applicantId, double certificateMark) throws ServiceException;
 
-    boolean deleteCertificate(Long applicantId) throws ServiceException;
+    void deleteCertificate(Long applicantId) throws ServiceException;
 
     Optional<Certificate> findCertificate(Long applicantId) throws ServiceException;
 }

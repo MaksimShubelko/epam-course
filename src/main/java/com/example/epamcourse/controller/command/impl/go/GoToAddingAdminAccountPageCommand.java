@@ -13,8 +13,9 @@ import static com.example.epamcourse.controller.command.PagePath.ADD_ADMIN_ACCOU
 import static com.example.epamcourse.controller.command.PagePath.ADD_ADMIN_ACCOUNT_PAGE_REDIRECT;
 
 /**
- * @author shubelko
- * @version 1.0
+ * class GoToAddingAdminAccountPageCommand
+ *
+ * @author M.Shubelko
  */
 public class GoToAddingAdminAccountPageCommand implements Command {
 
