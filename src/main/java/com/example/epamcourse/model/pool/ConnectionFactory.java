@@ -10,7 +10,16 @@ import java.sql.SQLException;
 
 import static com.example.epamcourse.model.pool.DatabasePropertyReader.*;
 
+/**
+ * class CommandException
+ *
+ * @author M.Shubelko
+ */
 public class ConnectionFactory {
+
+    /**
+     * The logger
+     */
     private static final Logger logger = LogManager.getLogger();
 
     static {
@@ -22,8 +31,17 @@ public class ConnectionFactory {
         }
     }
 
+    /**
+     * The private constructor
+     */
     private ConnectionFactory() {}
 
+    /**
+     * The creation of connection
+     *
+     * @return connection the connection
+     * @throws SQLException the SQLException
+     */
     static Connection createConnection() throws SQLException {
         return DriverManager.getConnection(DATABASE_URL, DATABASE_USERNAME, DATABASE_PASSWORD);
     }

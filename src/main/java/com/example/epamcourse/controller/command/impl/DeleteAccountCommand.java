@@ -24,7 +24,7 @@ import jakarta.servlet.http.HttpServletRequest;
  */
 public class DeleteAccountCommand implements Command {
 
-    /** The logger. */
+    /** The logger */
     private static final Logger logger = LogManager.getLogger();
 
     /**

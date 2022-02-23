@@ -8,7 +8,20 @@ import java.sql.SQLException;
 
 import static com.example.epamcourse.model.dao.TableColumn.*;
 
+/**
+ * class ApplicantResultSetHandler
+ *
+ * @author M.Shubelko
+ */
 public class ApplicantResultSetHandler implements ResultSetHandler<Applicant> {
+
+    /**
+     * Result to object
+     *
+     * @param resultSet the result set
+     * @return applicant the applicant
+     * @throws SQLException the SQLException
+     */
     @Override
     public Applicant resultToObject(ResultSet resultSet) throws SQLException {
         Applicant applicant = new Applicant.ApplicantBuilder()

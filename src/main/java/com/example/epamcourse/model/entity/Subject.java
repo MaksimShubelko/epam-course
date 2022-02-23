@@ -1,21 +1,35 @@
 package com.example.epamcourse.model.entity;
 
+/**
+ * class Subject
+ *
+ * @author M.Shubelko
+ */
 public class Subject extends BaseEntity {
     private Long subjectId;
     private Long applicantId;
     private Type subjectType;
     private Integer mark;
 
+    /**
+     * The public constructor
+     */
     public Subject() {
 
     }
 
+    /**
+     * The types of subjects
+     */
     public enum Type {
         MATH,
         PHYSIC,
         ENGLISH;
     }
 
+    /**
+     * The public constructor
+     */
     public Subject(Long subjectId, Long applicantId, Type subjectType, Integer mark) {
         this.subjectId = subjectId;
         this.applicantId = applicantId;
@@ -23,38 +37,84 @@ public class Subject extends BaseEntity {
         this.mark = mark;
     }
 
+    /**
+     * Get subject id
+     *
+     * @return subjectId the subject id
+     */
     public Long getSubjectId() {
         return subjectId;
     }
 
+    /**
+     * Set subject id
+     *
+     * @param subjectId the subject id
+     */
     public void setSubjectId(Long subjectId) {
         this.subjectId = subjectId;
     }
 
+    /**
+     * Get subject type
+     *
+     * @return subjectType the subject type
+     */
     public Type getSubjectType() {
         return subjectType;
     }
 
+    /**
+     * Set subject type
+     *
+     * @param subjectType the subject type
+     */
     public void setSubjectType(Type subjectType) {
         this.subjectType = subjectType;
     }
 
+    /**
+     * Get mark
+     *
+     * @return mark the mark
+     */
     public Integer getMark() {
         return mark;
     }
 
+    /**
+     * Get applicant id
+     *
+     * @return applicantId the applicant id
+     */
     public Long getApplicantId() {
         return applicantId;
     }
 
-    public void setApplicantId(Long applicant_id) {
-        this.applicantId = applicant_id;
+    /**
+     * Set applicant id
+     *
+     * @param applicantId the applicant id
+     */
+    public void setApplicantId(Long applicantId) {
+        this.applicantId = applicantId;
     }
 
+    /**
+     * Set mark
+     *
+     * @param mark the mark
+     */
     public void setMark(Integer mark) {
         this.mark = mark;
     }
 
+    /**
+     * The equals
+     *
+     * @param o the object
+     * @return equaling
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -65,6 +125,11 @@ public class Subject extends BaseEntity {
         return mark != null ? mark.equals(subject.mark) : subject.mark == null;
     }
 
+    /**
+     * The hashcode
+     *
+     * @return hashcode
+     */
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -77,6 +142,11 @@ public class Subject extends BaseEntity {
         return result;
     }
 
+    /**
+     * The toString
+     *
+     * @return string
+     */
     @Override
     public String toString() {
         StringBuilder stringData = new StringBuilder();

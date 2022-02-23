@@ -14,15 +14,51 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import static com.example.epamcourse.model.pool.DatabasePropertyReader.CONNECTION_POOL_SIZE;
 
+/**
+ * class ConnectionPool
+ *
+ * @author M.Shubelko
+ */
 public class ConnectionPool {
+
+    /**
+     * The logger
+     */
     private static final Logger logger = LogManager.getLogger();
+
+    /**
+     * The variable isCreated for monitoring the pool's state
+     */
     private static final AtomicBoolean isCreated = new AtomicBoolean(false);
+
+    /**
+     * The instance
+     */
     private static ConnectionPool instance;
-    private static ReentrantLock locker = new ReentrantLock(true);
-    private BlockingQueue<ProxyConnection> freeConnections;
-    private BlockingQueue<ProxyConnection> busyConnection;
+
+    /**
+     * The locker
+     */
+    private static final ReentrantLock locker = new ReentrantLock(true);
+
+    /**
+     * The queue of free connections
+     */
+    private final BlockingQueue<ProxyConnection> freeConnections;
+
+    /**
+     * The queue of busy connections
+     */
+    private final BlockingQueue<ProxyConnection> busyConnection;
+
+    /**
+     * The boolean destroyingPool is true, when pool is destroying
+     */
     private boolean destroyingPool;
 
+    /**
+     * The private constructor uses for pool creation
+     */
     private ConnectionPool() {
         freeConnections = new LinkedBlockingQueue<>(CONNECTION_POOL_SIZE);
         busyConnection = new LinkedBlockingQueue<>(CONNECTION_POOL_SIZE);
@@ -59,6 +95,11 @@ public class ConnectionPool {
         logger.log(Level.INFO, "Connection is successfully created");
     }
 
+    /**
+     * The getting of instance
+     *
+     * @return ConnectionPool the connection pool
+     */
     public static ConnectionPool getInstance() {
         if (!isCreated.get()) {
             locker.lock();
@@ -74,6 +115,11 @@ public class ConnectionPool {
         return instance;
     }
 
+    /**
+     * The getting of connection
+     *
+     * @return Connection the connection
+     */
     public Connection getConnection() {
         ProxyConnection connection = null;
         try {
@@ -86,6 +132,11 @@ public class ConnectionPool {
         return connection;
     }
 
+    /**
+     * The realisation of connection
+     *
+     * @return true when connection is realised
+     */
     public boolean releaseConnection(Connection connection) {
         boolean result = false;
         if (connection instanceof ProxyConnection && !destroyingPool && busyConnection.remove(connection)) {
@@ -102,6 +153,11 @@ public class ConnectionPool {
         return result;
     }
 
+    /**
+     * The destroying of pool
+     *
+     * @return true when pool is destroyed
+     */
     public void destroyPool() {
         destroyingPool = true;
         for (int i = 0; i < CONNECTION_POOL_SIZE; i++) {
@@ -117,10 +173,13 @@ public class ConnectionPool {
         deregisterDriver();
     }
 
+    /**
+     * The closing of connection
+     */
     private void closeConnection(BlockingQueue<ProxyConnection> connections) {
         while (!connections.isEmpty()) {
             try {
-                connections.take().reallyClose();
+                connections.take().realClose();
             } catch (SQLException e) {
                 logger.log(Level.ERROR, "Connection isn't close due to database access error.", e);
             } catch (InterruptedException e) {
@@ -130,6 +189,9 @@ public class ConnectionPool {
         }
     }
 
+    /**
+     * The deregistration of driver
+     */
     private void deregisterDriver() {
         DriverManager.getDrivers().asIterator().forEachRemaining(driver -> {
             try {

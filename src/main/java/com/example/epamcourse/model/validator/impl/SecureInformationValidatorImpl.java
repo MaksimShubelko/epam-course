@@ -2,28 +2,74 @@ package com.example.epamcourse.model.validator.impl;
 
 import com.example.epamcourse.model.validator.SecureInformationValidator;
 
+/**
+ * class SecureInformationValidatorImpl
+ *
+ * @author M.Shubelko
+ */
 public class SecureInformationValidatorImpl implements SecureInformationValidator {
-    private final static String NAME_REGEX = "^[А-ЯЁ][а-яё]*$";
-    private final static String SURNAME_REGEX = "^[А-ЯЁ][а-яё]*([-][А-ЯЁ][а-яё]*)?$";
-    private final static String LASTNAME_REGEX = "^[А-ЯЁ][а-яё]*$";
-    private static SecureInformationValidatorImpl instance = new SecureInformationValidatorImpl();
 
+    /**
+     * The constant NAME_REGEX
+     **/
+    private static final String NAME_REGEX = "^[А-ЯЁ][а-яё]*$";
+
+    /**
+     * The constant SURNAME_REGEX
+     **/
+    private static final String SURNAME_REGEX = "^[А-ЯЁ][а-яё]*([-][А-ЯЁ][а-яё]*)?$";
+
+    /**
+     * The constant LASTNAME_REGEX
+     **/
+    private static final String LASTNAME_REGEX = "^[А-ЯЁ][а-яё]*$";
+
+    /**
+     * The instance
+     */
+    private static SecureInformationValidator instance = new SecureInformationValidatorImpl();
+
+    /**
+     * The private constructor
+     */
     private SecureInformationValidatorImpl() {
     }
 
-    public static SecureInformationValidatorImpl getInstance() {
+    /**
+     * The getting of instance
+     *
+     * @return instance the instance
+     */
+    public static SecureInformationValidator getInstance() {
         return instance;
     }
 
+    /**
+     * The validation of name
+     *
+     * @param name the name
+     * @return true if name is valid
+     */
     public boolean isNameValid(String name) {
         return name != null && !name.isBlank() && name.matches(NAME_REGEX);
     }
 
+    /**
+     * The validation of surname
+     *
+     * @param surname the surname
+     * @return true if surname is valid
+     */
     public boolean isSurnameValid(String surname) {
         return surname != null && !surname.isBlank() && surname.matches(SURNAME_REGEX);
     }
 
-
+    /**
+     * The validation of lastname
+     *
+     * @param lastname the lastname
+     * @return true if lastname is valid
+     */
     public boolean isLastnameValid(String lastname) {
         return lastname != null && !lastname.isBlank() && lastname.matches(LASTNAME_REGEX);
     }

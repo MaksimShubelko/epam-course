@@ -13,9 +13,11 @@ import org.apache.logging.log4j.Logger;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
-import static com.example.epamcourse.model.dao.TableColumn.ROLE;
 import static com.example.epamcourse.model.dao.TableColumn.STATUS;
 
 /**
@@ -200,26 +202,6 @@ public class AccountDaoImpl implements AccountDao {
         }
 
         return accountOptional;
-    }
-
-    /**
-     * Find account role by id
-     *
-     * @param accountId the accountId
-     * @return role the role
-     * @throws DaoException the DaoException
-     */
-    @Override
-    public List<Map<String, Object>> getAccountRoleById(Long accountId) throws DaoException {
-        List<Map<String, Object>> role;
-        try {
-            role = jdbcTemplate.executeSelectSomeFields(FIND_ACCOUNT_ROLE_BY_ID, Set.of(ROLE), accountId);
-        } catch (TransactionException e) {
-            logger.log(Level.ERROR, "Error when getting account id = {} role. {}", accountId, e);
-            throw new DaoException("Error when getting account id = " + accountId + " role", e);
-        }
-
-        return role;
     }
 
     /**

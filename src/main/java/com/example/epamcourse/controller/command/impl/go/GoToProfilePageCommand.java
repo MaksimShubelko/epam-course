@@ -52,11 +52,11 @@ public class GoToProfilePageCommand implements Command {
                 request.setAttribute(RequestAttribute.IMAGE, image);
                 switch (account.getRole()) {
                     case ADMIN -> {
-                        Optional<Administrator> administratorOptional = administratorService.getAdministratorByAccountId(accountId);
+                        Optional<Administrator> administratorOptional = administratorService.findAdministratorByAccountId(accountId);
                         administratorOptional.ifPresent(administrator -> request.setAttribute(RequestAttribute.ADMINISTRATOR, administrator));
                     }
                     case APPLICANT -> {
-                        Optional<Applicant> applicantOptional = applicantService.getApplicantByAccountId(accountId);
+                        Optional<Applicant> applicantOptional = applicantService.findApplicantByAccountId(accountId);
                         applicantOptional.ifPresent(applicant -> request.setAttribute(RequestAttribute.ADMINISTRATOR, applicant));
                     }
                     default -> throw new IllegalArgumentException();

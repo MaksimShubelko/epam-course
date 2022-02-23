@@ -62,7 +62,7 @@ public class LoginCommand implements Command {
                         if (!accountService.isPersonalInformationExist(login)) {
                             router.setPage(APPLICANT_ADD_PERSONAL_INF);
                         } else {
-                            Long applicantId = applicantService.getApplicantIdByAccountId(accountId);
+                            Long applicantId = applicantService.findApplicantIdByAccountId(accountId);
                             session.setAttribute(SessionAttribute.APPLICANT_ID, applicantId);
                             router.setPage(MAIN_PAGE_APPLICANT_REDIRECT);
                         }

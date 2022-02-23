@@ -1,8 +1,8 @@
 package com.example.epamcourse.model.service.impl;
 
-import com.example.epamcourse.model.dao.ApplicantDao;
 import com.example.epamcourse.model.dao.FacultyDao;
-import com.example.epamcourse.model.dao.impl.*;
+import com.example.epamcourse.model.dao.impl.FacultyDaoImpl;
+import com.example.epamcourse.model.dao.impl.TransactionManager;
 import com.example.epamcourse.model.entity.Faculty;
 import com.example.epamcourse.model.exception.DaoException;
 import com.example.epamcourse.model.exception.ServiceException;
@@ -14,24 +14,58 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
+
+/**
+ * class FacultyServiceImpl
+ *
+ * @author M.Shubelko
+ */
 public class FacultyServiceImpl implements FacultyService {
+
+    /**
+     * The logger
+     */
     private static final Logger logger = LogManager.getLogger();
+
+    /**
+     * The instance
+     */
     private static final FacultyService instance = new FacultyServiceImpl();
+
+    /**
+     * The transaction manager
+     */
     private final TransactionManager transactionManager = TransactionManager.getInstance();
-    private final ApplicantDao applicantDao = ApplicantDaoImpl.getInstance();
+
+    /**
+     * The faculty dao
+     */
     private final FacultyDao facultyDao = FacultyDaoImpl.getInstance();
 
+    /**
+     * The getting of instance
+     *
+     * @return instance the instance
+     */
     public static FacultyService getInstance() {
         return instance;
     }
 
+    /**
+     * The private constructor
+     */
     private FacultyServiceImpl() {
     }
 
+    /**
+     * The finding of all faculties
+     *
+     * @return faculties the faculties
+     * @throws ServiceException the service exception
+     */
     @Override
     public List<Faculty> findAllFaculties() throws ServiceException {
         List<Faculty> faculties;
@@ -39,7 +73,7 @@ public class FacultyServiceImpl implements FacultyService {
             transactionManager.initTransaction();
             faculties = facultyDao.findAll();
             transactionManager.commit();
-        } catch (DaoException | TransactionException | SQLException e) {
+        } catch (DaoException | TransactionException e) {
             transactionManager.rollback();
             logger.log(Level.ERROR, "Error when finding all faculties.", e);
             throw new ServiceException("Error when finding faculties", e);
@@ -50,12 +84,19 @@ public class FacultyServiceImpl implements FacultyService {
         return faculties;
     }
 
+    /**
+     * The finding of faculty by id
+     *
+     * @param facultyId the faculty id
+     * @return facultyOptional the faculty optional
+     * @throws ServiceException the service exception
+     */
     @Override
     public Optional<Faculty> findFacultyById(Long facultyId) throws ServiceException {
-        Optional<Faculty> faculty;
+        Optional<Faculty> facultyOptional;
         try {
             transactionManager.initTransaction();
-            faculty = facultyDao.findEntityById(facultyId);
+            facultyOptional = facultyDao.findEntityById(facultyId);
             transactionManager.commit();
         } catch (DaoException | TransactionException e) {
             transactionManager.rollback();
@@ -65,9 +106,19 @@ public class FacultyServiceImpl implements FacultyService {
             transactionManager.endTransaction();
         }
 
-        return faculty;
+        return facultyOptional;
     }
 
+    /**
+     * The edition of faculty
+     *
+     * @param facultyId the faculty id
+     * @param facultyName the faculty name
+     * @param recruitmentPlanFree the recruitment plan free
+     * @param recruitmentPlanCanvas the recruitment plan canvas
+     * @return true if faculty is edited
+     * @throws ServiceException the service exception
+     */
     @Override
     public boolean editFaculty(Long facultyId, String facultyName, int recruitmentPlanFree, int recruitmentPlanCanvas) throws ServiceException {
         boolean isFacultyEdited = false;
@@ -101,14 +152,17 @@ public class FacultyServiceImpl implements FacultyService {
         return isFacultyEdited;
     }
 
+    /**
+     * The deleting of faculty
+     *
+     * @param facultyId the faculty id
+     * @throws ServiceException the service exception
+     */
     @Override
     public void deleteFaculty(Long facultyId) throws ServiceException {
-        boolean isFacultyDeleted;
-        Optional<Faculty> facultyOptional;
-        Faculty faculty;
         try {
             transactionManager.initTransaction();
-            isFacultyDeleted = facultyDao.delete(facultyId);
+            facultyDao.delete(facultyId);
             transactionManager.commit();
         } catch (DaoException | TransactionException e) {
             transactionManager.rollback();
@@ -120,11 +174,19 @@ public class FacultyServiceImpl implements FacultyService {
 
     }
 
+    /**
+     * The adding of faculty
+     *
+     * @param facultyName the faculty name
+     * @param recruitmentPlanFree the recruitment plan free
+     * @param recruitmentPlanCanvas the recruitment plan canvas
+     * @return true if faculty is added
+     * @throws ServiceException the service exception
+     */
     @Override
     public boolean addFaculty(String facultyName, int recruitmentPlanFree, int recruitmentPlanCanvas) throws ServiceException {
         boolean isFacultyAdded = false;
         FacultyValidator facultyValidatorImpl = FacultyValidatorImpl.getInstance();
-        Optional<Faculty> facultyOptional;
         Faculty faculty;
         try {
             transactionManager.initTransaction();
@@ -150,6 +212,13 @@ public class FacultyServiceImpl implements FacultyService {
         return isFacultyAdded;
     }
 
+    /**
+     * The finding of faculties
+     *
+     * @param currentPageNumber the current page number
+     * @return faculties the faculties
+     * @throws ServiceException the service exception
+     */
     @Override
     public List<Faculty> findFaculties(int currentPageNumber) throws ServiceException {
         List<Faculty> faculties;
@@ -168,7 +237,4 @@ public class FacultyServiceImpl implements FacultyService {
         }
         return faculties;
     }
-
-
-
 }

@@ -327,5 +327,4 @@ public class ApplicantDaoImpl implements ApplicantDao {
 
         return true;
     }
-
 }

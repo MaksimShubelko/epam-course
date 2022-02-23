@@ -9,13 +9,46 @@ import java.util.ResourceBundle;
 
 import static com.example.epamcourse.model.pool.DatabasePropertyKey.*;
 
+/**
+ * class DatabasePropertyReader
+ *
+ * @author M.Shubelko
+ */
 class DatabasePropertyReader {
+
+    /**
+     * The logger
+     */
     private static final Logger logger = LogManager.getLogger();
+
+    /**
+     * The DATABASE_PROPERTY_FILE
+     */
     private static final String DATABASE_PROPERTY_FILE = "database";
+
+    /**
+     * The DATABASE_DRIVER
+     */
     static final String DATABASE_DRIVER;
+
+    /**
+     * The DATABASE_USERNAME
+     */
     static final String DATABASE_USERNAME;
+
+    /**
+     * The DATABASE_PASSWORD
+     */
     static final String DATABASE_PASSWORD;
+
+    /**
+     * The CONNECTION_POOL_SIZE
+     */
     static final int CONNECTION_POOL_SIZE;
+
+    /**
+     * The DATABASE_URL
+     */
     static final String DATABASE_URL;
 
     static {

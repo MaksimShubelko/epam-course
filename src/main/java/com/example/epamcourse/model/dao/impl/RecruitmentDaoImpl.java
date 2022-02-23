@@ -9,7 +9,6 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -67,7 +66,7 @@ public class RecruitmentDaoImpl implements RecruitmentDao {
     }
 
     @Override
-    public List<Recruitment> findAll() throws DaoException, SQLException {
+    public List<Recruitment> findAll() throws DaoException {
         throw new UnsupportedOperationException();
     }
 

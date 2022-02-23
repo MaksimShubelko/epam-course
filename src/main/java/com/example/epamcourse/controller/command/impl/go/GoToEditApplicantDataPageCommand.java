@@ -44,7 +44,7 @@ public class GoToEditApplicantDataPageCommand implements Command {
             AccountService accountService = AccountServiceImpl.getInstance();
             Long accountId = (Long) request.getSession().getAttribute(SessionAttribute.ACCOUNT_ID);
             Long applicantId = (Long) request.getSession().getAttribute(SessionAttribute.APPLICANT_ID);
-            Optional<Applicant> applicantOptional = applicantService.getApplicantById(applicantId);
+            Optional<Applicant> applicantOptional = applicantService.findApplicantById(applicantId);
             Optional<Account> accountOptional = accountService.findAccountById(accountId);
             Applicant applicant = applicantOptional.orElseThrow(IllegalArgumentException::new);
             Account account = accountOptional.orElseThrow(IllegalArgumentException::new);

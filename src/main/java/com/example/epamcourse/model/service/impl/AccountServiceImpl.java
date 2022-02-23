@@ -25,89 +25,160 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * class AccountServiceImpl
+ *
+ * @author M.Shubelko
+ */
 public class AccountServiceImpl implements AccountService {
+
+    /**
+     * The logger
+     */
     private static final Logger logger = LogManager.getLogger();
+
+    /**
+     * The upload directory for images
+     */
     private static final String UPLOAD_DIR = "C:\\images\\";
-    private static final String stringParams = "data:image/jpeg;base64,";
-    private static final AccountServiceImpl instance = new AccountServiceImpl();
+
+    /**
+     * The string params for image
+     */
+    private static final String STRING_PARAMS = "data:image/jpeg;base64,";
+
+    /**
+     * The instance
+     */
+    private static final AccountService instance = new AccountServiceImpl();
+
+    /**
+     * The transaction manager
+     */
     private final TransactionManager transactionManager = TransactionManager.getInstance();
+
+    /**
+     * The account dao
+     */
     private final AccountDao accountDao = AccountDaoImpl.getInstance();
+
+    /**
+     * The applicant dao
+     */
     private final ApplicantDao applicantDao = ApplicantDaoImpl.getInstance();
+
+    /**
+     * The administrator dao
+     */
     private final AdministratorDao administratorDao = AdministratorDaoImpl.getInstance();
 
+    /**
+     * The private constructor
+     */
     private AccountServiceImpl() {
     }
 
-    public static AccountServiceImpl getInstance() {
+    /**
+     * The getting of instance
+     *
+     * @return instance the instance
+     */
+    public static AccountService getInstance() {
         return instance;
     }
 
+    /**
+     * The authentication
+     *
+     * @param login    the login
+     * @param password the password
+     * @return accountOptional the account optional
+     * @throws ServiceException the service exception
+     */
     @Override
     public Optional<Account> authenticate(String login, String password) throws ServiceException {
         AccountValidator validator = AccountValidatorImpl.getInstance();
-        Optional<Account> account = Optional.empty();
+        Optional<Account> accountOptional = Optional.empty();
 
         if (validator.isLoginValid(login) && validator.isPasswordValid(password)) {
             String hashPassword = HashGenerator.hashPassword(password);
             try {
                 transactionManager.initTransaction();
-                account = accountDao.findAccountByLoginAndPassword(login, hashPassword);
+                accountOptional = accountDao.findAccountByLoginAndPassword(login, hashPassword);
                 transactionManager.commit();
             } catch (DaoException | TransactionException e) {
-                logger.log(Level.ERROR, "Error when authenticating account with login {} and password {}. {}", login, password, e);
-                throw new ServiceException("Error when authenticating account with login " + login + " and password " + password, e);
+                logger.log(Level.ERROR, "Error when authenticating account", e);
+                throw new ServiceException("Error when authenticating account", e);
             } finally {
                 transactionManager.endTransaction();
             }
         }
 
-        return account;
+        return accountOptional;
     }
 
+    /**
+     * Checking the existing of account login
+     *
+     * @param login the login
+     * @return the isAccount present
+     * @throws ServiceException the service exception
+     */
     @Override
     public boolean isAccountLoginExist(String login) throws ServiceException {
-        Optional<Account> account;
+        Optional<Account> accountOptional;
 
         try {
             transactionManager.initTransaction();
-            account = accountDao.findAccountByLogin(login);
+            accountOptional = accountDao.findAccountByLogin(login);
             transactionManager.commit();
         } catch (DaoException | TransactionException e) {
             transactionManager.rollback();
-            logger.log(Level.ERROR, "Error when finding account with login {}. {}.", login, e);
-            throw new ServiceException("Error when finding account with login {}. {}" + login, e);
+            logger.log(Level.ERROR, "Error when finding account with login", e);
+            throw new ServiceException("Error when finding account with login", e);
         } finally {
             transactionManager.endTransaction();
         }
 
-        return account.isPresent();
+        return accountOptional.isPresent();
     }
 
+    /**
+     * Checking the existing of ip
+     *
+     * @param ip the ip
+     * @return the isAccount present
+     * @throws ServiceException the service exception
+     */
     @Override
     public boolean isIpPresent(String ip) throws ServiceException {
-        Optional<Account> account;
+        Optional<Account> accountOptional;
 
         try {
             transactionManager.initTransaction();
-            account = accountDao.findAccountByIp(ip);
+            accountOptional = accountDao.findAccountByIp(ip);
             transactionManager.commit();
         } catch (DaoException | TransactionException e) {
             transactionManager.rollback();
-            logger.log(Level.ERROR, "Error when finding account with login {}. {}.", ip, e);
-            throw new ServiceException("Error when finding account with login {}. {}" + ip, e);
+            logger.log(Level.ERROR, "Error when checking the presentation of ip", e);
+            throw new ServiceException("Error when checking the presentation of ip", e);
         } finally {
             transactionManager.endTransaction();
         }
 
-        return account.isPresent();
+        return accountOptional.isPresent();
     }
 
+    /**
+     * Checking the existing of if
+     *
+     * @param login the login
+     * @return image path
+     * @throws ServiceException the service exception
+     */
     @Override
     public String loadImage(String login) throws ServiceException {
         Optional<Account> accountOptional;
@@ -119,7 +190,7 @@ public class AccountServiceImpl implements AccountService {
                 String imagePath = accountOptional.get().getImagePath();
                 File image = new File(imagePath);
                 byte[] byteContent = Files.readAllBytes(image.toPath());
-                StringBuilder stringBuilderParams = new StringBuilder(stringParams);
+                StringBuilder stringBuilderParams = new StringBuilder(STRING_PARAMS);
                 byte[] encodingImg = Base64.encodeBase64(byteContent, false);
                 String imageString = StringUtils.newStringUtf8(encodingImg);
                 stringBuilderParams.append(imageString);
@@ -137,13 +208,25 @@ public class AccountServiceImpl implements AccountService {
         return newImage;
     }
 
+    /**
+     * The adding of account
+     *
+     * @param login              the login
+     * @param password           the password
+     * @param confirmingPassword the confirming password
+     * @param email              the email
+     * @param ip                 the ip
+     * @return true if account is added
+     * @throws ServiceException the service exception
+     */
     @Override
-    public boolean addAccount(String login, String password, String passwordCheck, String email, String ip) throws ServiceException {
+    public boolean addAccount(String login, String password,
+                              String confirmingPassword, String email,
+                              String ip) throws ServiceException {
         boolean isAccountAdded = false;
-        if (validateRegistrationData(login, password, passwordCheck, email)) {
+        if (validateRegistrationData(login, password, confirmingPassword, email)) {
             Account account = new Account.AccountBuilder()
                     .setLogin(login)
-                    .setPassword(password)
                     .setEmail(email)
                     .setIp(ip)
                     .setRole(Account.Role.APPLICANT)
@@ -156,8 +239,8 @@ public class AccountServiceImpl implements AccountService {
                 isAccountAdded = true;
             } catch (DaoException | TransactionException e) {
                 transactionManager.rollback();
-                logger.log(Level.ERROR, "Error when adding account with login {} and password {}, {}", login, password, e);
-                throw new ServiceException("Error when adding account with login " + login + " and password " + password, e);
+                logger.log(Level.ERROR, "Error when adding account ", e);
+                throw new ServiceException("Error when adding account", e);
             } finally {
                 transactionManager.endTransaction();
             }
@@ -166,16 +249,33 @@ public class AccountServiceImpl implements AccountService {
         return isAccountAdded;
     }
 
-    public boolean validateRegistrationData(String login, String password, String passwordCheck, String email) throws ServiceException {
+    /**
+     * The validation on account's data
+     *
+     * @param login              the login
+     * @param password           the password
+     * @param confirmingPassword the confirming password
+     * @param email              the email
+     * @return true if account's data is valid
+     * @throws ServiceException the service exception
+     */
+    public boolean validateRegistrationData(String login, String password,
+                                            String confirmingPassword, String email) throws ServiceException {
         boolean isDataValid;
         AccountValidator validator = AccountValidatorImpl.getInstance();
         isDataValid = (validator.isLoginValid(login)
                 && validator.isPasswordValid(password))
                 && !isAccountLoginExist(login)
-                && validator.passwordCheck(password, passwordCheck);
+                && validator.passwordCheck(password, confirmingPassword);
         return isDataValid;
     }
 
+    /**
+     * The updating of account
+     *
+     * @param account the account
+     * @throws ServiceException the service exception
+     */
     @Override
     public void updateAccount(Account account) throws ServiceException {
         try {
@@ -192,10 +292,20 @@ public class AccountServiceImpl implements AccountService {
 
     }
 
+    /**
+     * The adding of administrator
+     *
+     * @param login              the login
+     * @param password           the password
+     * @param email              the email
+     * @param confirmingPassword the confirming password
+     * @return true id admin is added
+     * @throws ServiceException the service exception
+     */
     @Override
-    public boolean addAdminAccount(String login, String password, String email, String passwordCheck) throws ServiceException {
+    public boolean addAdminAccount(String login, String password, String email, String confirmingPassword) throws ServiceException {
         boolean isAccountAdded = false;
-        if (validateRegistrationData(login, password, passwordCheck, email)) {
+        if (validateRegistrationData(login, password, confirmingPassword, email)) {
             Account account = new Account.AccountBuilder()
                     .setLogin(login)
                     .setPassword(password)
@@ -219,6 +329,13 @@ public class AccountServiceImpl implements AccountService {
         return isAccountAdded;
     }
 
+    /**
+     * The getting of account's status
+     *
+     * @param login the login
+     * @return accountStatus the account status
+     * @throws ServiceException the service exception
+     */
     @Override
     public String getAccountStatusByLogin(String login) throws ServiceException {
         String accountStatus;
@@ -236,6 +353,13 @@ public class AccountServiceImpl implements AccountService {
         return accountStatus;
     }
 
+    /**
+     * The finding of account by id
+     *
+     * @param accountId the account id
+     * @return accountOptional the account optional
+     * @throws ServiceException the service exception
+     */
     @Override
     public Optional<Account> findAccountById(Long accountId) throws ServiceException {
         Optional<Account> accountOptional;
@@ -254,14 +378,21 @@ public class AccountServiceImpl implements AccountService {
         return accountOptional;
     }
 
+    /**
+     * The getting of account id by login
+     *
+     * @param login the login
+     * @return accountId the accountId
+     * @throws ServiceException the serviceException
+     */
     @Override
     public Long getAccountIdByLogin(String login) throws ServiceException {
-        Optional<Account> account;
+        Optional<Account> accountOptional;
         Long accountId;
         try {
             transactionManager.initTransaction();
-            account = accountDao.findAccountByLogin(login);
-            accountId = account.orElseThrow(IllegalArgumentException::new).getAccountId();
+            accountOptional = accountDao.findAccountByLogin(login);
+            accountId = accountOptional.orElseThrow(IllegalArgumentException::new).getAccountId();
             transactionManager.commit();
         } catch (DaoException | TransactionException e) {
             transactionManager.rollback();
@@ -274,6 +405,13 @@ public class AccountServiceImpl implements AccountService {
         return accountId;
     }
 
+    /**
+     * The getting of account role by login
+     *
+     * @param login the login
+     * @return role the role
+     * @throws ServiceException the serviceException
+     */
     @Override
     public Account.Role getAccountRoleByLogin(String login) throws ServiceException {
         Account.Role role;
@@ -294,14 +432,18 @@ public class AccountServiceImpl implements AccountService {
         return role;
     }
 
+    /**
+     * The getting of account by account id
+     *
+     * @param accountId the account id
+     * @throws ServiceException the serviceException
+     */
     @Override
     public void deleteAccount(Long accountId) throws ServiceException {
-        boolean isAccountDeleted = false;
         try {
             transactionManager.initTransaction();
             accountDao.delete(accountId);
             transactionManager.commit();
-            isAccountDeleted = true;
         } catch (DaoException | TransactionException e) {
             transactionManager.rollback();
             logger.log(Level.ERROR, "Error when deleting account", e);
@@ -312,17 +454,18 @@ public class AccountServiceImpl implements AccountService {
 
     }
 
+    /**
+     * The uploading of image
+     *
+     * @param content  the content
+     * @param fileName the file name
+     * @param login    the login
+     * @throws ServiceException the service exception
+     */
     @Override
     public void uploadImage(InputStream content, String fileName, String login) throws ServiceException {
-        boolean isPersonalInformationPresent;
         try (content) {
             String imagePathString = UPLOAD_DIR + fileName;
-            Path imagePath = new File(imagePathString).toPath();
-            long bytes = Files.copy(
-                    content,
-                    imagePath,
-                    StandardCopyOption.REPLACE_EXISTING
-            );
             transactionManager.initTransaction();
             Optional<Account> accountOptional = accountDao.findAccountByLogin(login);
             Account account;
@@ -341,7 +484,13 @@ public class AccountServiceImpl implements AccountService {
         }
     }
 
-
+    /**
+     * The checking of existing personal information
+     *
+     * @param login the login
+     * @return true if the personal information is existing
+     * @throws ServiceException the service exception
+     */
     @Override
     public boolean isPersonalInformationExist(String login) throws ServiceException {
         boolean isPersonalInformationPresent;
@@ -363,7 +512,7 @@ public class AccountServiceImpl implements AccountService {
             transactionManager.commit();
         } catch (DaoException | TransactionException e) {
             transactionManager.rollback();
-            logger.log(Level.ERROR, "Error when finding personal information, {}", e);
+            logger.log(Level.ERROR, "Error when finding personal information", e);
             throw new ServiceException("Error when finding personal information", e);
         } finally {
             transactionManager.endTransaction();
@@ -372,6 +521,12 @@ public class AccountServiceImpl implements AccountService {
         return isPersonalInformationPresent;
     }
 
+    /**
+     * The finding of all accounts
+     *
+     * @return accounts the accounts
+     * @throws ServiceException the service exception
+     */
     @Override
     public List<Account> findAllAccounts() throws ServiceException {
         List<Account> accounts;
@@ -379,9 +534,9 @@ public class AccountServiceImpl implements AccountService {
             transactionManager.initTransaction();
             accounts = accountDao.findAll();
             transactionManager.commit();
-        } catch (DaoException | TransactionException | SQLException e) {
+        } catch (DaoException | TransactionException e) {
             transactionManager.rollback();
-            logger.log(Level.ERROR, "Error when finding account role by login, {}", e);
+            logger.log(Level.ERROR, "Error when finding account role by login,", e);
             throw new ServiceException("Error when finding account role by login", e);
         } finally {
             transactionManager.endTransaction();
@@ -390,6 +545,13 @@ public class AccountServiceImpl implements AccountService {
         return accounts;
     }
 
+    /**
+     * The finding of all account for page
+     *
+     * @param currentPageNumber the current page number
+     * @return account the accounts
+     * @throws ServiceException the service exception
+     */
     @Override
     public List<Account> findAccountsInPage(int currentPageNumber) throws ServiceException {
         List<Account> accounts;

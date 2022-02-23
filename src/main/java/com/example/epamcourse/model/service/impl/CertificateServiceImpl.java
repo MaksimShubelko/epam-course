@@ -11,6 +11,7 @@ import com.example.epamcourse.model.exception.DaoException;
 import com.example.epamcourse.model.exception.ServiceException;
 import com.example.epamcourse.model.exception.TransactionException;
 import com.example.epamcourse.model.service.CertificateService;
+import com.example.epamcourse.model.validator.CertificateValidator;
 import com.example.epamcourse.model.validator.impl.CertificateValidatorImpl;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -18,23 +19,61 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Optional;
 
+/**
+ * class CertificateServiceImpl
+ *
+ * @author M.Shubelko
+ */
 public class CertificateServiceImpl implements CertificateService {
+
+    /**
+     * The logger
+     */
     private static final Logger logger = LogManager.getLogger();
+
+    /**
+     * The instance
+     */
     private static final CertificateService instance = new CertificateServiceImpl();
+
+    /**
+     * The certificate dao
+     */
     private final CertificateDao certificateDao = CertificateDaoImpl.getInstance();
+
+    /**
+     * The applicant dao
+     */
     private final ApplicantDao applicantDao = ApplicantDaoImpl.getInstance();
+
+    /**
+     * The transaction manager
+     */
     private final TransactionManager transactionManager = TransactionManager.getInstance();
 
+    /**
+     * The getting of instance
+     *
+     * @return instance the instance
+     */
     public static CertificateService getInstance() {
         return instance;
     }
 
+    /**
+     * The private constructor
+     */
     private CertificateServiceImpl() {
     }
 
+    /**
+     * The adding of certificate
+     *
+     * @param applicantId the applicant id
+     * @throws ServiceException the service exception
+     */
     @Override
     public void addCertificate(Long applicantId) throws ServiceException {
-        boolean isCertificateAdded = false;
         Applicant applicant;
         try {
             transactionManager.initTransaction();
@@ -47,7 +86,6 @@ public class CertificateServiceImpl implements CertificateService {
                     applicant.setCertificateId(certificateId);
                     applicantDao.update(applicant);
                     transactionManager.commit();
-                    isCertificateAdded = true;
                 }
             }
         } catch (DaoException | TransactionException e) {
@@ -59,10 +97,16 @@ public class CertificateServiceImpl implements CertificateService {
         }
     }
 
+    /**
+     * The updating of certificate
+     *
+     * @param applicantId the applicant id
+     * @param certificateMark the certificate mark
+     * @throws ServiceException the service exception
+     */
     @Override
     public void updateCertificate(Long applicantId, double certificateMark) throws ServiceException {
-        boolean isCertificateUpdated = false;
-        CertificateValidatorImpl validator = CertificateValidatorImpl.getInstance();
+        CertificateValidator validator = CertificateValidatorImpl.getInstance();
         try {
             if (validator.isCertificateMarkValid(certificateMark)) {
                 transactionManager.initTransaction();
@@ -74,7 +118,6 @@ public class CertificateServiceImpl implements CertificateService {
                 Certificate certificate = new Certificate(certificateId, certificateMark);
                 certificateDao.update(certificate);
                 transactionManager.commit();
-                isCertificateUpdated = true;
             }
         } catch (DaoException | TransactionException e) {
             transactionManager.rollback();
@@ -85,13 +128,17 @@ public class CertificateServiceImpl implements CertificateService {
         }
     }
 
+    /**
+     * The deleting of certificate
+     *
+     * @param applicantId the applicant id
+     * @throws ServiceException the service exception
+     */
     @Override
     public void deleteCertificate(Long applicantId) throws ServiceException {
-        boolean isCertificateDeleted = false;
-        Optional<Certificate> certificate = Optional.empty();
         try {
             transactionManager.initTransaction();
-            isCertificateDeleted = certificateDao.delete(applicantId);
+            certificateDao.delete(applicantId);
             transactionManager.commit();
         } catch (DaoException | TransactionException e) {
             transactionManager.rollback();
@@ -102,16 +149,23 @@ public class CertificateServiceImpl implements CertificateService {
         }
     }
 
+    /**
+     * The finding of certificate
+     *
+     * @param applicantId the applicant id
+     * @return certificateOptional the certificateOptional
+     * @throws ServiceException the service exception
+     */
     @Override
     public Optional<Certificate> findCertificate(Long applicantId) throws ServiceException {
-        Optional<Certificate> certificate = Optional.empty();
+        Optional<Certificate> certificateOptional = Optional.empty();
         try {
             transactionManager.initTransaction();
             Optional<Applicant> applicant = applicantDao.findEntityById(applicantId);
-            Long certificateId = 0L;
+            Long certificateId;
             if (applicant.isPresent()) {
                 certificateId = applicant.get().getCertificateId();
-                certificate = certificateDao.findEntityById(certificateId);
+                certificateOptional = certificateDao.findEntityById(certificateId);
             }
             transactionManager.commit();
 
@@ -122,7 +176,7 @@ public class CertificateServiceImpl implements CertificateService {
         } finally {
             transactionManager.endTransaction();
         }
-        return certificate;
+        return certificateOptional;
     }
 
 }

@@ -9,7 +9,20 @@ import java.sql.SQLException;
 
 import static com.example.epamcourse.model.dao.TableColumn.*;
 
+/**
+ * class RecruitmentResultSetHandler
+ *
+ * @author M.Shubelko
+ */
 public class RecruitmentResultSetHandler implements ResultSetHandler<Recruitment> {
+
+    /**
+     * Result to object
+     *
+     * @param resultSet the result set
+     * @return recruitment the recruitment
+     * @throws SQLException the SQLException
+     */
     @Override
     public Recruitment resultToObject(ResultSet resultSet) throws SQLException {
         Recruitment recruitment = new Recruitment(

@@ -8,8 +8,20 @@ import java.sql.SQLException;
 
 import static com.example.epamcourse.model.dao.TableColumn.*;
 
+/**
+ * class SubjectResultSetHandler
+ *
+ * @author M.Shubelko
+ */
 public class SubjectResultSetHandler implements ResultSetHandler<Subject> {
 
+    /**
+     * Result to object
+     *
+     * @param resultSet the result set
+     * @return subject the subject
+     * @throws SQLException the SQLException
+     */
     @Override
     public Subject resultToObject(ResultSet resultSet) throws SQLException {
         Subject subject = new Subject(resultSet.getLong(SUBJECT_ID),

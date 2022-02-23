@@ -16,8 +16,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
 
-import static com.example.epamcourse.controller.command.RequestAttribute.FACULTIES;
-
 /**
  * class UpdateApplicantDataCommand
  *
@@ -48,7 +46,7 @@ public class UpdateApplicantDataCommand implements Command {
             String name = request.getParameter(RequestParameter.NAME);
             String surname = request.getParameter(RequestParameter.SURNAME);
             String lastname = request.getParameter(RequestParameter.LASTNAME);
-            if (applicantService.updateApplicantPersonalData(applicantId, name, surname, lastname)) {
+            if (applicantService.editApplicantPersonalInformation(applicantId, name, surname, lastname)) {
                 router.setPage(PagePath.MAIN_PAGE_APPLICANT_REDIRECT);
             }
         } catch (ServiceException e) {

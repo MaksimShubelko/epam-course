@@ -1,10 +1,8 @@
 package com.example.epamcourse.model.service.impl;
 
-import com.example.epamcourse.model.dao.AdministratorDao;
-import com.example.epamcourse.model.dao.ApplicantDao;
 import com.example.epamcourse.model.dao.BillDao;
-import com.example.epamcourse.model.dao.impl.*;
-import com.example.epamcourse.model.entity.Applicant;
+import com.example.epamcourse.model.dao.impl.BillDaoImpl;
+import com.example.epamcourse.model.dao.impl.TransactionManager;
 import com.example.epamcourse.model.entity.Bill;
 import com.example.epamcourse.model.exception.DaoException;
 import com.example.epamcourse.model.exception.ServiceException;
@@ -16,23 +14,58 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Optional;
 
+/**
+ * class AccountServiceImpl
+ *
+ * @author M.Shubelko
+ */
 public class BillServiceImpl implements BillService {
+
+    /**
+     * The logger
+     */
     private static final Logger logger = LogManager.getLogger();
-    private static final BillServiceImpl instance = new BillServiceImpl();
+
+    /**
+     * The instance
+     */
+    private static final BillService instance = new BillServiceImpl();
+
+    /**
+     * The transaction manager
+     */
     private final TransactionManager transactionManager = TransactionManager.getInstance();
+
+    /**
+     * The bill dao
+     */
     private final BillDao billDao = BillDaoImpl.getInstance();
-    private final ApplicantDao applicantDao = ApplicantDaoImpl.getInstance();
-    private final AdministratorDao administratorDao = AdministratorDaoImpl.getInstance();
 
+    /**
+     * The private constructor
+     */
+    private BillServiceImpl() {
+    }
 
-    public static BillServiceImpl getInstance() {
+    /**
+     * The getting of instance
+     *
+     * @return instance the instance
+     */
+    public static BillService getInstance() {
         return instance;
     }
 
+    /**
+     * The adding of bill
+     *
+     * @param applicantId the applicant id
+     * @return true if bill is added
+     * @throws ServiceException the service exception
+     */
     @Override
     public boolean addBill(Long applicantId) throws ServiceException {
         boolean isBillAdded = false;
-        Applicant applicant;
         try {
             transactionManager.initTransaction();
             Optional<Bill> billOptional = billDao.findBillByApplicantId(applicantId);
@@ -52,6 +85,14 @@ public class BillServiceImpl implements BillService {
         return isBillAdded;
     }
 
+    /**
+     * The updating of bill
+     *
+     * @param applicantId the applicant id
+     * @param facultyId the faculty id
+     * @return true if bill is updated
+     * @throws ServiceException the service exception
+     */
     @Override
     public boolean updateBill(Long applicantId, Long facultyId) throws ServiceException {
         boolean isBillUpdated = false;
@@ -75,10 +116,16 @@ public class BillServiceImpl implements BillService {
         return isBillUpdated;
     }
 
+    /**
+     * The deleting of bill
+     *
+     * @param applicantId the applicant id
+     * @return true if bill is deleted
+     * @throws ServiceException the service exception
+     */
     @Override
     public boolean deleteBill(Long applicantId) throws ServiceException {
         boolean isBillDeleted;
-        Applicant applicant;
         try {
             transactionManager.initTransaction();
             isBillDeleted = billDao.deleteBillByApplicantId(applicantId);
@@ -93,10 +140,16 @@ public class BillServiceImpl implements BillService {
         return isBillDeleted;
     }
 
+    /**
+     * The checking of bill's archiving
+     *
+     * @param applicantId the applicant id
+     * @return true if bill is updated
+     * @throws ServiceException the service exception
+     */
     @Override
     public boolean isBillArchive(Long applicantId) throws ServiceException {
         boolean isBillArchive;
-        Applicant applicant;
         try {
             transactionManager.initTransaction();
             isBillArchive = billDao.isBillArchive(applicantId);
@@ -111,7 +164,14 @@ public class BillServiceImpl implements BillService {
         return isBillArchive;
     }
 
-
+    /**
+     * The getting the count of bills in faculty
+     *
+     * @param isArchive the archiving
+     * @param facultyId the faculty id
+     * @return countOfBillsInFaculty the count of bills in faculty
+     * @throws ServiceException the service exception
+     */
     @Override
     public long getCountOfBillsInFaculty(Long facultyId, Boolean isArchive) throws ServiceException {
         long countOfBillsInFaculty;
@@ -129,6 +189,11 @@ public class BillServiceImpl implements BillService {
         return countOfBillsInFaculty;
     }
 
+    /**
+     * The restarting of recruitment
+     *
+     * @throws ServiceException the service exception
+     */
     @Override
     public void restartRecruitment() throws ServiceException {
         try {

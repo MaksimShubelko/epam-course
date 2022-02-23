@@ -3,21 +3,45 @@ package com.example.epamcourse.model.service.impl;
 import com.example.epamcourse.model.service.ApplicantFindingService;
 import com.example.epamcourse.model.service.ApplicantFindingType;
 
-import java.util.Map;
-
+/**
+ * class ApplicantFindingServiceImpl
+ *
+ * @author M.Shubelko
+ */
 public class ApplicantFindingServiceImpl implements ApplicantFindingService {
-    private static final ApplicantFindingServiceImpl instance = new ApplicantFindingServiceImpl();
 
+    /**
+     * The instance
+     */
+    private static final ApplicantFindingService instance = new ApplicantFindingServiceImpl();
+
+    /**
+     * The private constructor
+     */
     private ApplicantFindingServiceImpl() {
     }
 
-    public static ApplicantFindingServiceImpl getInstance() {
+    /**
+     * The getting of instance
+     *
+     * @return instance the instance
+     */
+    public static ApplicantFindingService getInstance() {
         return instance;
     }
 
+    /**
+     * The getting of count of applicants to skip
+     *
+     * @param recruitmentStatus the recruitment status
+     * @param recruitmentPlanCanvas the recruitment plan canvas
+     * @param recruitmentPlanFree the recruitment plan free
+     * @param countApplicants the count of applicants
+     * @return applicantsSkipDepOnRecruitStatus the applicants
+     * skip in dependency on recruit status
+     */
     @Override
     public int getCountOfApplicantsToSkip(String recruitmentStatus, int recruitmentPlanCanvas, int recruitmentPlanFree, int countApplicants) {
-        countApplicants = findTotalCountOfApplicants(recruitmentStatus, recruitmentPlanCanvas, recruitmentPlanFree, countApplicants);
         int applicantsSkipDepOnRecruitStatus = 0;
         switch (ApplicantFindingType.valueOf(recruitmentStatus.toUpperCase())) {
             case ALL:
@@ -36,13 +60,23 @@ public class ApplicantFindingServiceImpl implements ApplicantFindingService {
         return applicantsSkipDepOnRecruitStatus;
     }
 
+    /**
+     * The getting of count of applicants to take
+     *
+     * @param recruitmentStatus the recruitment status
+     * @param recruitmentPlanCanvas the recruitment plan canvas
+     * @param recruitmentPlanFree the recruitment plan free
+     * @param countApplicants the count of applicants
+     * @return applicantsSkipDepOnRecruitStatus the applicants
+     * skip in dependency on recruit status
+     */
     @Override
     public int getCountOfApplicantsToTake(String recruitmentStatus, int recruitmentPlanCanvas, int recruitmentPlanFree, int countApplicants) {
         countApplicants = findTotalCountOfApplicants(recruitmentStatus, recruitmentPlanCanvas, recruitmentPlanFree, countApplicants);
         int applicantsTakeDepOnRecruitStatus = 0;
         switch (ApplicantFindingType.valueOf(recruitmentStatus.toUpperCase())) {
             case ALL:
-                applicantsTakeDepOnRecruitStatus = (int) countApplicants;
+                applicantsTakeDepOnRecruitStatus = countApplicants;
                 break;
             case FREE:
                 applicantsTakeDepOnRecruitStatus = recruitmentPlanFree;
@@ -59,6 +93,16 @@ public class ApplicantFindingServiceImpl implements ApplicantFindingService {
         return applicantsTakeDepOnRecruitStatus;
     }
 
+    /**
+     * The getting the count of applicants
+     *
+     * @param recruitmentStatus the recruitment status
+     * @param recruitmentPlanCanvas the recruitment plan canvas
+     * @param recruitmentPlanFree the recruitment plan free
+     * @param countApplicants the count of applicants
+     * @return applicantsSkipDepOnRecruitStatus the applicants
+     * skip in dependency on recruit status
+     */
     @Override
     public int findTotalCountOfApplicants(String recruitmentStatus, int recruitmentPlanCanvas, int recruitmentPlanFree, int countApplicants) {
         switch (ApplicantFindingType.valueOf(recruitmentStatus.toUpperCase())) {

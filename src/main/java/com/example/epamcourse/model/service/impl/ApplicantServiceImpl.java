@@ -4,7 +4,6 @@ import com.example.epamcourse.model.dao.*;
 import com.example.epamcourse.model.dao.impl.*;
 import com.example.epamcourse.model.entity.Applicant;
 import com.example.epamcourse.model.entity.Faculty;
-import com.example.epamcourse.model.entity.Subject;
 import com.example.epamcourse.model.exception.DaoException;
 import com.example.epamcourse.model.exception.ServiceException;
 import com.example.epamcourse.model.exception.TransactionException;
@@ -23,27 +22,71 @@ import java.util.Optional;
 import static com.example.epamcourse.model.service.ApplicantFindingType.ALL;
 import static com.example.epamcourse.model.service.ApplicantFindingType.ARCHIVE;
 
+/**
+ * class ApplicantServiceImpl
+ *
+ * @author M.Shubelko
+ */
 public class ApplicantServiceImpl implements ApplicantService {
+
+    /**
+     * The logger
+     */
     private static final Logger logger = LogManager.getLogger();
+
+    /**
+     * The instance
+     */
     private static final ApplicantServiceImpl instance = new ApplicantServiceImpl();
+
+    /**
+     * The transaction manager
+     */
     private final TransactionManager transactionManager = TransactionManager.getInstance();
+
+    /**
+     * The applicant dao
+     */
     private final ApplicantDao applicantDao = ApplicantDaoImpl.getInstance();
-    private final SubjectDao subjectDao = SubjectDaoImpl.getInstance();
+
+    /**
+     * The bill dao
+     */
     private final BillDao billDao = BillDaoImpl.getInstance();
-    private final CertificateDao certificateDao = CertificateDaoImpl.getInstance();
+
+    /**
+     * The faculty dao
+     */
     private final FacultyDao facultyDao = FacultyDaoImpl.getInstance();
 
+    /**
+     * The private constructor
+     */
     private ApplicantServiceImpl() {
     }
 
+    /**
+     * The getting of instance
+     *
+     * @return instance the instance
+     */
     public static ApplicantServiceImpl getInstance() {
         return instance;
     }
 
+    /**
+     * The adding of applicant's personal information
+     *
+     * @param name the name
+     * @param surname the surname
+     * @param lastname the lastname
+     * @param accountId the account id
+     * @return true if applicant's personal information is added
+     * @throws ServiceException the service exception
+     */
     @Override
     public boolean addPersonalInformation(String name, String surname, String lastname, Long accountId) throws ServiceException {
         boolean isApplicantSecureInformationAdded = false;
-        SecureInformationValidator validator = SecureInformationValidatorImpl.getInstance();
         try {
             if (isApplicantSecureInformationValid(name, surname, lastname)) {
                 Applicant applicant = new Applicant();
@@ -67,15 +110,22 @@ public class ApplicantServiceImpl implements ApplicantService {
         return isApplicantSecureInformationAdded;
     }
 
+    /**
+     * The finding of applicant by account id
+     *
+     * @param accountId the account id
+     * @return applicantOptional the applicant optional
+     * @throws ServiceException the service exception
+     */
     @Override
-    public Long getApplicantIdByAccountId(Long accountId) throws ServiceException {
-        Optional<Applicant> applicant;
+    public Long findApplicantIdByAccountId(Long accountId) throws ServiceException {
+        Optional<Applicant> applicantOptional;
         Long applicantId = 0L;
         try {
             transactionManager.initTransaction();
-            applicant = applicantDao.findApplicantByAccountId(accountId);
-            if (applicant.isPresent()) {
-                applicantId = applicant.get().getApplicantId();
+            applicantOptional = applicantDao.findApplicantByAccountId(accountId);
+            if (applicantOptional.isPresent()) {
+                applicantId = applicantOptional.get().getApplicantId();
             }
             transactionManager.commit();
         } catch (DaoException | TransactionException e) {
@@ -88,16 +138,22 @@ public class ApplicantServiceImpl implements ApplicantService {
         return applicantId;
     }
 
+    /**
+     * The finding of applicants in faculty
+     *
+     * @param facultyId the faculty id
+     * @param currentPageNumber the current page number
+     * @return applicants the applicants
+     * @throws ServiceException the service exception
+     */
     @Override
     public List<Applicant> findApplicantsInFaculty(Long facultyId, int currentPageNumber) throws ServiceException {
         List<Applicant> applicants;
-        Long applicantId = 0L;
         try {
             int recordsPerPage = 5;
             transactionManager.initTransaction();
-            Optional<Faculty> faculty = facultyDao.findEntityById(facultyId);
             applicants = applicantDao
-                    .findApplicantsInOrderByMarkInFaculty(facultyId, (currentPageNumber - 1) * recordsPerPage,
+                    .findApplicantsInOrderByMarkInFaculty(facultyId, (long) (currentPageNumber - 1) * recordsPerPage,
                             recordsPerPage);
             transactionManager.commit();
         } catch (DaoException | TransactionException e) {
@@ -110,13 +166,21 @@ public class ApplicantServiceImpl implements ApplicantService {
         return applicants;
     }
 
+    /**
+     * The finding of applicant if faculty by faculty id and recruitment status
+     *
+     * @param facultyId the faculty id
+     * @param currentPageNumber the current page number
+     * @param recruitmentStatus the recruitment status
+     * @return applicants the applicants
+     * @throws ServiceException the service exception
+     */
     @Override
     public List<Applicant> findApplicantsByFacultyIdAndRecruitmentStatus(Long facultyId,
                                                                          int currentPageNumber,
                                                                          String recruitmentStatus) throws ServiceException {
         ApplicantFindingService applicantFindingService = ApplicantFindingServiceImpl.getInstance();
         List<Applicant> applicants = Collections.emptyList();
-        Long applicantId = 0L;
         boolean isArchive = false;
         try {
             if (ARCHIVE.name().equals(recruitmentStatus.toUpperCase())) {
@@ -137,7 +201,7 @@ public class ApplicantServiceImpl implements ApplicantService {
                         recruitmentPlanFree, recruitmentPlanCanvas, countApplicants);
                 applicants = applicantDao.findApplicantsInOrderByMarkInFacultyAndRecruitmentStatus(facultyId,
                         applicantsSkipDepOnRecruitStatus, applicantsTakeDepOnRecruitStatus,
-                        (currentPageNumber - 1) * recordsPerPage,
+                        (long) (currentPageNumber - 1) * recordsPerPage,
                         recordsPerPage, isArchive);
             }
             transactionManager.commit();
@@ -151,30 +215,40 @@ public class ApplicantServiceImpl implements ApplicantService {
         return applicants;
     }
 
+    /**
+     * The finding of applicant by id
+     *
+     * @param applicantId the applicant id
+     * @return administratorOptional the applicant optional
+     * @throws ServiceException the service exception
+     */
     @Override
-    public Optional<Applicant> getApplicantById(Long applicantId) throws ServiceException {
-        Optional<Applicant> applicant = Optional.empty();
+    public Optional<Applicant> findApplicantById(Long applicantId) throws ServiceException {
+        Optional<Applicant> applicantOptional;
         try {
             transactionManager.initTransaction();
-            applicant = applicantDao.findEntityById(applicantId);
-
-            if (applicant.isPresent()) {
-                applicantId = applicant.get().getApplicantId();
-            }
+            applicantOptional = applicantDao.findEntityById(applicantId);
             transactionManager.commit();
         } catch (DaoException | TransactionException e) {
             transactionManager.rollback();
-            logger.log(Level.ERROR, "Error when getting applicant id{}", e);
+            logger.log(Level.ERROR, "Error when getting applicant id", e);
             throw new ServiceException("Error when getting applicant id", e);
         } finally {
             transactionManager.endTransaction();
         }
-        return applicant;
+        return applicantOptional;
     }
 
+    /**
+     * The finding of applicant by account id
+     *
+     * @param accountId the account id
+     * @return applicantOptional the applicant optional
+     * @throws ServiceException the service exception
+     */
     @Override
-    public Optional<Applicant> getApplicantByAccountId(Long accountId) throws ServiceException {
-        Optional<Applicant> applicantOptional = Optional.empty();
+    public Optional<Applicant> findApplicantByAccountId(Long accountId) throws ServiceException {
+        Optional<Applicant> applicantOptional;
         try {
             transactionManager.initTransaction();
             applicantOptional = applicantDao.findApplicantByAccountId(accountId);
@@ -189,8 +263,15 @@ public class ApplicantServiceImpl implements ApplicantService {
         return applicantOptional;
     }
 
+    /**
+     * The updating of applicant's personal information
+     *
+     * @param applicantId the applicant id
+     * @param privilege the privilege
+     * @throws ServiceException the service exception
+     */
     @Override
-    public boolean updateApplicantPrivileges(Long applicantId, boolean privilege) throws ServiceException {
+    public void updateApplicantPrivileges(Long applicantId, boolean privilege) throws ServiceException {
         boolean isApplicantUpdated = false;
         Applicant applicant;
         try {
@@ -211,11 +292,18 @@ public class ApplicantServiceImpl implements ApplicantService {
             transactionManager.endTransaction();
         }
 
-        return isApplicantUpdated;
     }
 
+    /**
+     * The edition of applicant's personal information
+     *
+     * @param name the name
+     * @param surname the surname
+     * @param lastname the lastname
+     * @return true if applicant's personal information is edited
+     */
     @Override
-    public boolean updateApplicantPersonalData(Long applicantId, String name, String surname, String lastname) throws ServiceException {
+    public boolean editApplicantPersonalInformation(Long applicantId, String name, String surname, String lastname) throws ServiceException {
         boolean isApplicantUpdated = false;
         Applicant applicant;
         try {
@@ -243,44 +331,14 @@ public class ApplicantServiceImpl implements ApplicantService {
         return isApplicantUpdated;
     }
 
-    @Override
-    public boolean isSubjectsExist(Long applicantId) throws ServiceException {
-        List<Subject> subjects = Collections.emptyList();
-        try {
-            transactionManager.initTransaction();
-            subjects = subjectDao.findSubjectByApplicantId(applicantId);
-            transactionManager.commit();
-        } catch (DaoException | TransactionException e) {
-            transactionManager.rollback();
-            logger.log(Level.ERROR, "Error when checking existing of subjects", e);
-            throw new ServiceException("Error when checking existing of subjects", e);
-        } finally {
-            transactionManager.endTransaction();
-        }
-        return subjects.size() != 0;
-    }
-
-    @Override
-    public boolean isCertificateExist(Long applicantId) throws ServiceException {
-        Optional<Applicant> applicantOptional;
-        boolean isCertificatePresent = false;
-        try {
-            transactionManager.initTransaction();
-            applicantOptional = applicantDao.findEntityById(applicantId);
-            if (applicantOptional.isPresent()) {
-                isCertificatePresent = applicantOptional.get().getCertificateId() != null;
-            }
-            transactionManager.commit();
-        } catch (DaoException | TransactionException e) {
-            transactionManager.rollback();
-            logger.log(Level.ERROR, "Error when checking existing of certificate", e);
-            throw new ServiceException("Error when checking existing of certificate", e);
-        } finally {
-            transactionManager.endTransaction();
-        }
-        return isCertificatePresent;
-    }
-
+    /**
+     * The validation of applicant's personal information
+     *
+     * @param name the name
+     * @param surname the surname
+     * @param lastname the lastname
+     * @return true if applicant's personal information is validated
+     */
     public boolean isApplicantSecureInformationValid(String name, String surname, String lastname) {
         SecureInformationValidator validator = SecureInformationValidatorImpl.getInstance();
         return validator.isNameValid(name)

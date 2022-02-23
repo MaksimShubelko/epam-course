@@ -2,14 +2,27 @@ package com.example.epamcourse.model.dao.mapper.impl;
 
 import com.example.epamcourse.model.dao.mapper.ResultSetHandler;
 import com.example.epamcourse.model.entity.Account;
+import org.apache.logging.log4j.core.util.PasswordDecryptor;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static com.example.epamcourse.model.dao.TableColumn.*;
 
+/**
+ * class AccountResultSetHandler
+ *
+ * @author M.Shubelko
+ */
 public class AccountResultSetHandler implements ResultSetHandler<Account> {
 
+    /**
+     * Result to object
+     *
+     * @param resultSet the result set
+     * @return account the account
+     * @throws SQLException the SQLException
+     */
     @Override
     public Account resultToObject(ResultSet resultSet) throws SQLException {
         Account account = new Account.AccountBuilder()

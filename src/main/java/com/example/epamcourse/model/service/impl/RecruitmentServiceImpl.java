@@ -3,8 +3,6 @@ package com.example.epamcourse.model.service.impl;
 import com.example.epamcourse.model.dao.RecruitmentDao;
 import com.example.epamcourse.model.dao.impl.RecruitmentDaoImpl;
 import com.example.epamcourse.model.dao.impl.TransactionManager;
-import com.example.epamcourse.model.entity.Applicant;
-import com.example.epamcourse.model.entity.Bill;
 import com.example.epamcourse.model.entity.Recruitment;
 import com.example.epamcourse.model.exception.DaoException;
 import com.example.epamcourse.model.exception.ServiceException;
@@ -16,20 +14,51 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+/**
+ * class RecruitmentServiceImpl
+ *
+ * @author M.Shubelko
+ */
 public class RecruitmentServiceImpl implements RecruitmentService {
+
+    /**
+     * The logger
+     */
     private static final Logger logger = LogManager.getLogger();
+
+    /**
+     * The instance
+     */
     private static final RecruitmentService instance = new RecruitmentServiceImpl();
+
+    /**
+     * The transaction manager
+     */
     private final TransactionManager transactionManager = TransactionManager.getInstance();
+
+    /**
+     * The recruitment dao
+     */
     private final RecruitmentDao  recruitmentDao = RecruitmentDaoImpl.getInstance();
 
+    /**
+     * The getting of instance
+     *
+     * @return instance the instance
+     */
     public static RecruitmentService getInstance() {
         return instance;
     }
 
+    /**
+     * The checking of recruitment's activity
+     *
+     * @return true if recruitment is active
+     * @throws ServiceException the service exception
+     */
     @Override
     public boolean isRecruitmentActive() throws ServiceException {
         Recruitment recruitment;
@@ -57,6 +86,12 @@ public class RecruitmentServiceImpl implements RecruitmentService {
         return isRecruitmentActive;
     }
 
+    /**
+     * The finding of recruitment
+     *
+     * @return recruitment the recruitment
+     * @throws ServiceException the service exception
+     */
     @Override
     public Recruitment findRecruitment() throws ServiceException {
         Recruitment recruitment = null;
@@ -79,8 +114,15 @@ public class RecruitmentServiceImpl implements RecruitmentService {
         return recruitment;
     }
 
+    /**
+     * The updating of recruitment
+     *
+     * @param status the status
+     * @param finishRecruitment the finish recruitment
+     * @throws ServiceException the service exception
+     */
     @Override
-    public boolean updateRecruitment(boolean status, LocalDateTime finishRecruitment) throws ServiceException {
+    public void updateRecruitment(boolean status, LocalDateTime finishRecruitment) throws ServiceException {
         boolean isRecruitmentUpdated = false;
         try {
             transactionManager.initTransaction();
@@ -100,9 +142,14 @@ public class RecruitmentServiceImpl implements RecruitmentService {
         } finally {
             transactionManager.endTransaction();
         }
-        return isRecruitmentUpdated;
     }
 
+    /**
+     * The checking of recruitment's validating
+     *
+     * @param finishRecruitment the finish recruitment
+     * @return true if finish recruitment is valid
+     */
     @Override
     public boolean isFinishRecruitmentValid(LocalDateTime finishRecruitment) {
         RecruitmentValidator recruitmentValidator = RecruitmentValidatorImpl.getInstance();

@@ -48,7 +48,7 @@ public class AddApplicantSecureInformationCommand implements Command {
             if (applicantService.addPersonalInformation(name, surname, lastname, accountId)) {
                 List<Faculty> faculties = facultyService.findAllFaculties();
                 session.setAttribute(RequestAttribute.FACULTIES, faculties);
-                Long applicantId = applicantService.getApplicantIdByAccountId(accountId);
+                Long applicantId = applicantService.findApplicantIdByAccountId(accountId);
                 session.setAttribute(SessionAttribute.APPLICANT_ID, applicantId);
                 router.setPage(PagePath.MAIN_PAGE_APPLICANT);
             }

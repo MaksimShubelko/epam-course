@@ -8,7 +8,20 @@ import java.sql.SQLException;
 
 import static com.example.epamcourse.model.dao.TableColumn.*;
 
+/**
+ * class AdministratorResultSetHandler
+ *
+ * @author M.Shubelko
+ */
 public class AdministratorResultSetHandler implements ResultSetHandler<Administrator> {
+
+    /**
+     * Result to object
+     *
+     * @param resultSet the result set
+     * @return administrator the administrator
+     * @throws SQLException the SQLException
+     */
     @Override
     public Administrator resultToObject(ResultSet resultSet) throws SQLException {
         Administrator administrator = new Administrator.AdministratorBuilder()

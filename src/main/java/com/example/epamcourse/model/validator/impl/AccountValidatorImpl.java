@@ -4,30 +4,78 @@ import com.example.epamcourse.model.validator.AccountValidator;
 
 import java.util.Objects;
 
+/**
+ * class AccountValidatorImpl
+ *
+ * @author M.Shubelko
+ */
 public class AccountValidatorImpl implements AccountValidator {
-    private final static String LOGIN_REGEX = "^[a-z]+([-_]?[a-z0-9]+){0,2}$";
-    private final static String PASSWORD_REGEX = "(?=.*\\d)(?=.*\\p{Lower})(?=.*\\p{Upper})[\\d\\p{Alpha}]{8,30}";
-    private final static String EMAIL_REGEX = "^([a-z0-9_-]+\\.)*[a-z0-9_-]+@[a-z0-9_-]+(\\.[a-z0-9_-]+)*\\.[a-z]{2,6}$";
-    private static AccountValidatorImpl instance = new AccountValidatorImpl();
 
+    /**
+     * The constant LOGIN_REGEX
+     **/
+    private static final String LOGIN_REGEX = "^[a-z]+([-_]?[a-z0-9]+){0,2}$";
+
+    /**
+     * The constant PASSWORD_REGEX
+     **/
+    private static final String PASSWORD_REGEX = "(?=.*\\d)(?=.*\\p{Lower})(?=.*\\p{Upper})[\\d\\p{Alpha}]{8,30}";
+
+    /**
+     * The constant EMAIL_REGEX
+     **/
+    private static final String EMAIL_REGEX = "^([a-z0-9_-]+\\.)*[a-z0-9_-]+@[a-z0-9_-]+(\\.[a-z0-9_-]+)*\\.[a-z]{2,6}$";
+
+    /**
+     * The instance
+     */
+    private static final AccountValidator instance = new AccountValidatorImpl();
+
+    /**
+     * The private constructor
+     */
     private AccountValidatorImpl() {
     }
 
-    public static AccountValidatorImpl getInstance() {
+    /**
+     * The getting of instance
+     *
+     * @return instance the instance
+     */
+    public static AccountValidator getInstance() {
         return instance;
     }
 
+    /**
+     * The validation of login
+     *
+     * @param login the login
+     * @return true if login is valid
+     */
     public boolean isLoginValid(String login) {
 
         return login != null && !login.isBlank() && login.matches(LOGIN_REGEX);
     }
 
+    /**
+     * The validation of password
+     *
+     * @param password the password
+     * @return true if password is valid
+     */
     public boolean isPasswordValid(String password) {
         return password != null && !password.isBlank() && password.matches(PASSWORD_REGEX);
     }
 
-    public boolean passwordCheck(String password, String passwordChecker) {
-        return password.equals(passwordChecker);
+    /**
+     * The comparison of password and confirmingPassword
+     *
+     * @param password the password
+     * @param confirmingPassword the confirming password
+     * @return true if password and confirmingPassword the same
+     */
+    public boolean passwordCheck(String password, String confirmingPassword) {
+        return password.equals(confirmingPassword);
     }
 
     public boolean isEmailValid(String email) {
