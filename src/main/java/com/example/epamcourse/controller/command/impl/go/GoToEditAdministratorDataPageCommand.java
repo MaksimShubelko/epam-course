@@ -48,7 +48,6 @@ public class GoToEditAdministratorDataPageCommand implements Command {
             Optional<Account> accountOptional = accountService.findAccountById(accountId);
             Account account = accountOptional.orElseThrow(IllegalArgumentException::new);
             AdministratorService administratorService = AdministratorServiceImpl.getInstance();
-            Long administratorId = (Long) session.getAttribute(SessionAttribute.ADMINISTRATOR_ID);
             Optional<Administrator> administratorOptional = administratorService.findAdministratorByAccountId(accountId);
             Administrator administrator = administratorOptional.orElseThrow(IllegalArgumentException::new);
             String image = accountService.loadImage(account.getLogin());
