@@ -3,34 +3,34 @@
 
 <h2>User roles</h2>
 <h3>unauthorized user:</h3>
-can login
-can create an account
-can confirm email
-can change the locale
+can login</br>
+can create an account</br>
+can confirm email</br>
+can change the locale</br>
 
 <h3>Applicant:</h3>
 can logout</br>
-can change the locale
-can fill out a profile
-can edit profile
-can view statements
-can apply
-can pick up documents
-can apply to another faculty
-can edit marks in subjects and in the certificate
+can change the locale</br>
+can fill out a profile</br>
+can edit profile</br>
+can view statements</br>
+can apply</br>
+can pick up documents</br>
+can apply to another faculty</br>
+can edit marks in subjects and in the certificate</br>
 
 <h3>Administrator:</h3>
-can logout
-can change the locale
-can fill out a profile
-can edit your profile
-can view/edit/add faculties
-can view/block (by IP)/delete accounts
-can add administrators
-can view all profiles
-can search for applicants by faculties and their status in the admission campaign
-can manage the introductory campaign (status, end date)
-can do add all statements to the archive
-can send to applicants by mail
+can logout</br>
+can change the locale</br>
+can fill out a profile</br>
+can edit your profile</br>
+can view/edit/add faculties</br>
+can view/block (by IP)/delete accounts</br>
+can add administrators</br>
+can view all profiles</br>
+can search for applicants by faculties and their status in the admission campaign</br>
+can manage the introductory campaign (status, end date)</br>
+can do add all statements to the archive</br>
+can send to applicants by mail</br>
 
 ![Image alt](https://github.com/MaksimShubelko/epam-course/blob/master/Diagram_24_02_2022_16_29.jpeg)
