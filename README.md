@@ -30,7 +30,7 @@ can add administrators</br>
 can view all profiles</br>
 can search for applicants by faculties and their status in the admission campaign</br>
 can manage the introductory campaign (status, end date)</br>
-can do add all statements to the archive</br>
+can add all statements to the archive (restart recruitment)</br>
 can send to applicants by mail</br>
 
 ![Image alt](https://github.com/MaksimShubelko/epam-course/blob/master/Diagram_24_02_2022_16_29.jpeg)
