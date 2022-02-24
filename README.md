@@ -9,7 +9,7 @@ can confirm email
 can change the locale
 
 <h3>Applicant:</h3>
-can logout\n
+can logout</br>
 can change the locale
 can fill out a profile
 can edit profile
