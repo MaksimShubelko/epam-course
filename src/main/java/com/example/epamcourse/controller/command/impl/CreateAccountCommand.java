@@ -53,7 +53,7 @@ public class CreateAccountCommand implements Command {
                     session.setAttribute(SessionAttribute.MESSAGE, LocaleMessageKey.IP_PRESENT_ERROR);
                 } else {
                     if (accountService.validateRegistrationData(login, password, passwordCheck, email)) {
-                        router.setPage(PagePath.CONFIRM_EMAIL_PAGE); // todo
+                        router.setPage(PagePath.CONFIRM_EMAIL_PAGE);
                         MailingService mailingService = MailingServiceImpl.getInstance();
                         EmailCodeGenerator emailCodeGenerator = EmailCodeGeneratorImpl.getInstance();
                         int code = emailCodeGenerator.generateCode();

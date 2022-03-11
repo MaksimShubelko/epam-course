@@ -8,6 +8,7 @@
 <html>
 <head>
     <jsp:include page="../header.jsp"/>
+    <jsp:include page="/pages/admin/navbar_header.jsp"/>
     <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" type="text/css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/css/button.css" type="text/css" rel="stylesheet">
     <title><fmt:message key="edition.recruitment.title" bundle="${content}"/></title>
@@ -17,26 +18,12 @@
     <form class="needs-validation h-75" novalidate action="${pageContext.request.contextPath}/controller"
           method="get">
         <input type="hidden" name="command" value="edit_recruitment"/>
-        <div class="row bg-warning">
-            <div class="col-1 offset-sm-9 border border-success border-3">
-                <h6><a href="${pageContext.request.contextPath}/controller?command=go_to_edit_administrator_data">
-                    <fmt:message key="administrator.edit.data" bundle="${content}"/>
-                </a></h6>
-            </div>
-            <div class="col-1 border border-success border-3">
-                <h6>
-                    <a href="${pageContext.request.contextPath}/controller?command=logout">
-                        <fmt:message key="logout" bundle="${content}"/>
-                    </a>
-                </h6>
-            </div>
-        </div>
         <div class="offset-4 p-5 w-75">
             <div class="offset-3 p-4">
                 <h6><fmt:message key="admin.main.page.recruitment.update.welcome.message" bundle="${content}"/></h6>
             </div>
             <c:if test="${message != null}">
-                <h6 class="text-danger">
+                <h6 class="text-danger offset-3">
                     <fmt:message key="${message}" bundle="${content}"/>
                 </h6>
             </c:if>
@@ -45,7 +32,8 @@
                     <h6><fmt:message key="admin.main.page.recruitment.update.finish.date" bundle="${content}"/></h6>
                 </label>
                 <div class="col-6">
-                    <input type="datetime-local" name="finish_recruitment" pattern="^d{2}\\.d{2}\\.d{4}Td{2}:d{2}$"  value="${recruitment.getFinishRecruitment()}" required/>
+                    <input type="datetime-local" name="finish_recruitment" pattern="^d{2}\\.d{2}\\.d{4}Td{2}:d{2}$"
+                           value="${recruitment.getFinishRecruitment()}" required/>
                 </div>
             </div>
 
@@ -71,13 +59,18 @@
                 </div>
             </div>
 
-            <div class="row offset-3 p-4">
+            <div class="row offset-4 p-1">
                 <label class="col-8">
-                    <input type="submit" value="<fmt:message key="admin.main.page.recruitment.update.submit" bundle="${content}" />"
+                    <input type="submit"
+                           value="<fmt:message key="admin.main.page.recruitment.update.submit" bundle="${content}" />"
                            class="blubtn align-middle">
                 </label>
-            </div>
 
+                <a class="row col-8 ps-5"
+                   href="${pageContext.request.contextPath}/controller?command=go_to_administrator_main_page">
+                    <fmt:message key="btn.back" bundle="${content}"/>
+                </a>
+            </div>
         </div>
     </form>
 </div>

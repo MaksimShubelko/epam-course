@@ -55,7 +55,7 @@ public class PickUpDocumentsCommand implements Command {
                     certificateService.deleteCertificate(applicantId);
                     request.setAttribute(RequestAttribute.MESSAGE, LocaleMessageKey.PICK_UP_DOCUMENTS_SUCCESS);
                 } else {
-                    router.setPage(MAIN_PAGE_APPLICANT_REDIRECT); // todo
+                    router.setPage(MAIN_PAGE_APPLICANT_REDIRECT);
                     session.setAttribute(RequestAttribute.MESSAGE, LocaleMessageKey.ADD_REQUEST_ERROR);
                 }
             } else {

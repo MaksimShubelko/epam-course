@@ -36,28 +36,13 @@ public class ChangeAccountStatusCommand implements Command {
         AccountService accountService = AccountServiceImpl.getInstance();
         int page = Integer.parseInt(request.getParameter(RequestParameter.PAGE));
         Router router = new Router(PagePath.SHOW_ACCOUNTS_PAGE_REDIRECT + page);
-        router.setType(Router.RouterType.REDIRECT);
         try {
             Long accountId = Long.valueOf(request.getParameter(RequestParameter.ACCOUNT_ID));
             Optional<Account> accountOptional = accountService.findAccountById(accountId);
-            if (accountOptional.isPresent()) { // todo move to service
-                account = accountOptional.get();
-                switch (account.getStatus()) {
-                    case ACTIVE -> {
-                        account.setStatus(Account.Status.BLOCKED);
-                    }
-                    case BLOCKED -> {
-                        account.setStatus(Account.Status.ACTIVE);
-                    }
-                    default -> {
-                        throw new UnsupportedOperationException();
-                    }
-                }
-                accountService.updateAccount(account);
-            }
+            accountService.changeStatus(accountOptional);
         } catch (ServiceException e) {
-            logger.log(Level.ERROR, "Edition faculty failed", e);
-            throw new CommandException("Edition faculty failed", e);
+            logger.log(Level.ERROR, "Changing account status failed", e);
+            throw new CommandException("Changing account status failed", e);
         }
         return router;
     }

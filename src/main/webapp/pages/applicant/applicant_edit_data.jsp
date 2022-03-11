@@ -8,74 +8,69 @@
 <html>
 <head>
     <jsp:include page="../header.jsp"/>
+    <jsp:include page="/pages/applicant/navbar_header.jsp"/>
     <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" type="text/css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/css/button.css" type="text/css" rel="stylesheet">
     <title><fmt:message key="edition.applicant.data.title" bundle="${content}"/></title>
 </head>
 <body>
 <div>
-    <form class="container needs-validation h-75" enctype="multipart/form-data" novalidate
-          action="${pageContext.request.contextPath}/controller"
-          method="get">
+    <form class="needs-validation h-auto w-auto container" enctype="multipart/form-data" novalidate
+          action="${pageContext.request.contextPath}/controller" method="get">
         <input type="hidden" name="command" value="update_applicant_data"/>
-        <img class="h-50 offset-6 p-4" src="${img}">
-        <div class="row col-12">
-            <a class="offset-7" href="${pageContext.request.contextPath}/controller?command=go_to_upload_image_page">
-                <h6><fmt:message key="change.image" bundle="${content}"/></h6>
+        <div class="mx-auto d-block container__content">
+            <a href="${pageContext.request.contextPath}/controller?command=go_to_upload_image_page">
+                <img class="h-50 offset-5 pt-5 mt-4 p-5 border border-1 border-dark" src="${img}">
             </a>
-        </div>
-
-        <div class="offset-4 p-5 w-75">
-            <div class="offset-4">
-                <h6><fmt:message key="edit.applicant.data.welcome.message" bundle="${content}"/></h6>
-            </div>
-
-
-            <div class="row">
-                <label class="col-3 col-form-label">
-                    <h6><fmt:message key="secure.information.name" bundle="${content}"/></h6>
-                </label>
-                <div class="col-6">
-                    <input type="text" name="name" pattern="[А-ЯЁ][а-яё]+" value="${applicant.getFirstname()}"
-                           required/>
-                    <div class="invalid-feedback">
-                        <h6><fmt:message key="name.secure.information.format.error" bundle="${content}"/></h6>
+            <div class="offset-4 p-5 w-75">
+                <div class="offset-4 p-3">
+                    <h6><fmt:message key="edit.administrator.data.welcome.message" bundle="${content}"/></h6>
+                </div>
+                <div class="row">
+                    <label class="col-3 col-form-label">
+                        <h6><fmt:message key="secure.information.name" bundle="${content}"/></h6>
+                    </label>
+                    <div class="col-6">
+                        <input type="text" name="name" pattern="[А-ЯЁ][а-яё]+" value="${applicant.getFirstname()}"
+                               required/>
+                        <div class="invalid-feedback">
+                            <h6><fmt:message key="name.secure.information.format.error" bundle="${content}"/></h6>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="row">
-                <label class="col-3 col-form-label">
-                    <h6><fmt:message key="secure.information.surname" bundle="${content}"/></h6>
-                </label>
-                <div class="col-6">
-                    <input type="text" name="surname"
-                           pattern="[А-ЯЁ][а-яё]+([-][А-ЯЁ][а-яё]+)?" value="${applicant.getSurname()}" required>
-                    <div class="invalid-feedback">
-                        <h6><fmt:message key="surname.secure.information.format.error" bundle="${content}"/></h6>
+                <div class="row">
+                    <label class="col-3 col-form-label">
+                        <h6><fmt:message key="secure.information.surname" bundle="${content}"/></h6>
+                    </label>
+                    <div class="col-6">
+                        <input type="text" name="surname"
+                               pattern="[А-ЯЁ][а-яё]+([-][А-ЯЁ][а-яё]+)?" value="${applicant.getSurname()}"
+                               required>
+                        <div class="invalid-feedback">
+                            <h6><fmt:message key="surname.secure.information.format.error" bundle="${content}"/></h6>
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="row">
-                <label class="col-3 col-form-label">
-                    <h6><fmt:message key="secure.information.lastname" bundle="${content}"/></h6>
-                </label>
-                <div class="col-6">
-                    <input type="text" name="lastname" pattern="[А-ЯЁ][а-яё]+" value="${applicant.getLastname()}"
-                           required>
-                    <div class="invalid-feedback">
-                        <h6><fmt:message key="lastname.secure.information.format.error" bundle="${content}"/></h6>
+                <div class="row">
+                    <label class="col-3 col-form-label">
+                        <h6><fmt:message key="secure.information.lastname" bundle="${content}"/></h6>
+                    </label>
+                    <div class="col-6">
+                        <input type="text" name="lastname" pattern="[А-ЯЁ][а-яё]+"
+                               value="${applicant.getLastname()}"
+                               required>
+                        <div class="invalid-feedback">
+                            <h6><fmt:message key="lastname.secure.information.format.error" bundle="${content}"/></h6>
+                        </div>
                     </div>
                 </div>
-            </div>
-
-
-            <div class="row">
-                <div class="col-10 offset-4 p-1">
-                    <input type="submit"
-                           value="<fmt:message key="edit.applicant.data.button" bundle="${content}" />"
-                           class="blubtn align-middle"/>
+                <div class="row">
+                    <div class="col-10 offset-4 p-1">
+                        <input type="submit"
+                               value="<fmt:message key="edit.applicant.data.button" bundle="${content}" />"
+                               class="blubtn align-middle"/>
+                    </div>
                 </div>
             </div>
         </div>

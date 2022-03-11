@@ -39,7 +39,7 @@ public class AddApplicantSecureInformationCommand implements Command {
         String name = request.getParameter(RequestParameter.NAME);
         String surname = request.getParameter(RequestParameter.SURNAME);
         String lastname = request.getParameter(RequestParameter.LASTNAME);
-        Long accountId = (Long) request.getSession().getAttribute(SessionAttribute.ACCOUNT_ID);
+        Long accountId = (Long) session.getAttribute(SessionAttribute.ACCOUNT_ID);
         ApplicantService applicantService = ApplicantServiceImpl.getInstance();
         FacultyService facultyService = FacultyServiceImpl.getInstance();
         Router router = new Router(PagePath.MAIN_PAGE_APPLICANT_REDIRECT);

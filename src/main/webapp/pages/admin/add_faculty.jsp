@@ -8,6 +8,7 @@
 <html>
 <head>
     <jsp:include page="../header.jsp"/>
+    <jsp:include page="/pages/admin/navbar_header.jsp"/>
     <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" type="text/css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/css/button.css" type="text/css" rel="stylesheet">
     <title><fmt:message key="adding.faculty.title" bundle="${content}"/></title>
@@ -17,25 +18,18 @@
     <form class="needs-validation h-75" novalidate name="loginForm"
           action="${pageContext.request.contextPath}/controller" method="get">
         <input type="hidden" name="command" value="add_faculty"/>
-        <div class="row bg-warning">
-            <div class="col-1 offset-sm-9 border border-success border-3">
-                <h6><a href="${pageContext.request.contextPath}/controller?command=go_to_edit_administrator_data">
-                    <fmt:message key="administrator.edit.data" bundle="${content}"/>
-                </a></h6>
-            </div>
-            <div class="col-1 border border-success border-3">
-                <h6>
-                    <a href="${pageContext.request.contextPath}/controller?command=logout">
-                        <fmt:message key="logout" bundle="${content}"/>
-                    </a>
-                </h6>
-            </div>
-        </div>
         <div class="p-5 offset-3">
             <div class="offset-4 p-3">
                 <h6>
                     <fmt:message key="add.faculty.page" bundle="${content}"/>
                 </h6>
+            </div>
+            <div class="offset-3 p-3">
+                <c:if test="${message != null}">
+                    <h6 class="text-danger">
+                        <fmt:message key="${message}" bundle="${content}"/>
+                    </h6>
+                </c:if>
             </div>
 
             <div class="row offset-1">
@@ -92,7 +86,7 @@
                     <input type="submit" value="<fmt:message key="add.faculty.page.add" bundle="${content}" />"
                            class="blubtn align-middle">
                 </label>
-                <a class="p-4" href="${pageContext.request.contextPath}/pages/admin/main_page_administrator.jsp">
+                <a class="row col-8 ps-5" href="${pageContext.request.contextPath}/controller?command=go_to_administrator_main_page">
                     <fmt:message key="btn.back" bundle="${content}"/>
                 </a>
             </div>

@@ -54,6 +54,4 @@ public interface ApplicantDao extends BaseDao<Applicant> {
      */
     Optional<Applicant> findApplicantByAccountId(Long id) throws DaoException;
 
-    public Optional<Applicant> findApplicantByLogin(String login) throws DaoException;
-
 }

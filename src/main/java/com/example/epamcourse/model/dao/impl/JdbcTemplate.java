@@ -52,7 +52,7 @@ public class JdbcTemplate<T extends BaseEntity> {
     /**
      * Execute select query
      *
-     * @param sqlQuery the query
+     * @param sqlQuery   the query
      * @param parameters the parameters
      * @return list the list of data
      * @throws TransactionException the TransactionException
@@ -78,7 +78,7 @@ public class JdbcTemplate<T extends BaseEntity> {
     /**
      * Execute select query for object
      *
-     * @param sqlQuery the query
+     * @param sqlQuery   the query
      * @param parameters the parameters
      * @return object the object
      * @throws TransactionException the TransactionException
@@ -97,44 +97,35 @@ public class JdbcTemplate<T extends BaseEntity> {
     }
 
     /**
-     * Execute select query for list
+     * Execute select count
      *
-     * @param sql the query
-     * @param columnNames the column names
+     * @param sql        the query
      * @param parameters the parameters
      * @return object the object
      * @throws TransactionException the TransactionException
      */
-    public List<Map<String, Object>> executeSelectForList(String sql, Set<String> columnNames, Object... parameters) throws TransactionException { // todo
+    public int executeSelectCountQuery(String sql,
+                                       Object... parameters) throws TransactionException {
         Connection connection = transactionManager.getConnection();
-        List<Map<String, Object>> extractedValues = new ArrayList<>();
+        int count = 0;
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             setParametersInPreparedStatement(statement, parameters);
             ResultSet resultSet = statement.executeQuery();
-
-            while (resultSet.next()) {
-                Map<String, Object> rowValues = new HashMap<>();
-                T entity = resultSetHandler.resultToObject(resultSet);
-                String key = entity.getClass().getSimpleName().toLowerCase();
-                rowValues.put(key, entity);
-                for (String name : columnNames) {
-                    rowValues.put(name, resultSet.getObject(name));
-                }
-                extractedValues.add(rowValues);
-            }
-
+            resultSet.next();
+            count = resultSet.getInt(1);
+            resultSet.close();
         } catch (SQLException e) {
             logger.log(Level.ERROR, "Database error. Elements wasn't extracted.");
         }
-        return extractedValues;
+        return count;
     }
 
     /**
      * Execute select some fields
      *
-     * @param sql the query
+     * @param sql         the query
      * @param columnNames the column names
-     * @param parameters the parameters
+     * @param parameters  the parameters
      * @return object the object
      * @throws TransactionException the TransactionException
      */
@@ -164,7 +155,7 @@ public class JdbcTemplate<T extends BaseEntity> {
     /**
      * Execute update/delete fields
      *
-     * @param sqlQuery the query
+     * @param sqlQuery   the query
      * @param parameters the parameters
      * @return true the true
      * @throws TransactionException the TransactionException
@@ -185,7 +176,7 @@ public class JdbcTemplate<T extends BaseEntity> {
     /**
      * Execute insert query
      *
-     * @param sqlQuery the query
+     * @param sqlQuery   the query
      * @param parameters the parameters
      * @return object the object
      * @throws TransactionException the TransactionException
@@ -210,55 +201,9 @@ public class JdbcTemplate<T extends BaseEntity> {
     }
 
     /**
-     * Execute fields calculation
-     *
-     * @param sqlQuery the query
-     * @param parameters the parameters
-     * @return object the object
-     * @throws TransactionException the TransactionException
-     */
-    public Number selectFieldsCalculation(String sqlQuery, String columnName, Object... parameters) throws TransactionException {
-        Number totalValue = null;
-
-        Connection connection = transactionManager.getConnection();
-        try (PreparedStatement statement = connection.prepareStatement(sqlQuery)) {
-            setParametersInPreparedStatement(statement, parameters);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                totalValue = (Number) resultSet.getObject(columnName);
-            }
-        } catch (SQLException e) {
-            logger.log(Level.ERROR, "Error when finding value. {}", e.getMessage());
-            throw new TransactionException("Error when finding value.", e);
-        }
-
-        return totalValue;
-    }
-
-    /**
-     * Execute insert batch arguments
-     *
-     * @param sql the query
-     * @param batchArguments the batch arguments
-     * @throws TransactionException the TransactionException
-     */
-    public void insertBatch(String sql, List<Object[]> batchArguments) throws TransactionException {
-        Connection connection = transactionManager.getConnection();
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            for (Object[] sqlArgument : batchArguments) {
-                setParametersInPreparedStatement(statement, sqlArgument);
-                statement.addBatch();
-            }
-            statement.executeBatch();
-        } catch (SQLException e) {
-            logger.log(Level.ERROR, "Failed to insert batch data. A database access error occurs", e);
-        }
-    }
-
-    /**
      * Set parameters in prepared statement
      *
-     * @param statement the prepared statement
+     * @param statement  the prepared statement
      * @param parameters the parameters
      * @throws TransactionException the TransactionException
      */

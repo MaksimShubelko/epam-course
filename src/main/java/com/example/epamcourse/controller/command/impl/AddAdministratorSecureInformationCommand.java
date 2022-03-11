@@ -7,6 +7,7 @@ import com.example.epamcourse.model.service.AccountService;
 import com.example.epamcourse.model.service.AdministratorService;
 import com.example.epamcourse.model.service.impl.AccountServiceImpl;
 import com.example.epamcourse.model.service.impl.AdministratorServiceImpl;
+import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -32,10 +33,11 @@ public class AddAdministratorSecureInformationCommand implements Command {
      */
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
+        HttpSession session = request.getSession();
         String name = request.getParameter(RequestParameter.NAME);
         String surname = request.getParameter(RequestParameter.SURNAME);
         String lastname = request.getParameter(RequestParameter.LASTNAME);
-        Long accountId = (Long) request.getSession().getAttribute(SessionAttribute.ACCOUNT_ID);
+        Long accountId = (Long) session.getAttribute(SessionAttribute.ACCOUNT_ID);
         AdministratorService administratorService = AdministratorServiceImpl.getInstance();
         Router router = new Router(PagePath.ADMIN_ADD_PERSONAL_INF);
         try {

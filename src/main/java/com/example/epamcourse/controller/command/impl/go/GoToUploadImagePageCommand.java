@@ -41,6 +41,7 @@ public class GoToUploadImagePageCommand implements Command {
     public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
         Router router = new Router(PagePath.UPLOAD_IMAGE);
+        router.setType(Router.RouterType.REDIRECT);
         try {
             AccountService accountService = AccountServiceImpl.getInstance();
             Long accountId = (Long) session.getAttribute(SessionAttribute.ACCOUNT_ID);
@@ -54,6 +55,7 @@ public class GoToUploadImagePageCommand implements Command {
             logger.error("Error when go to the upload image page" + e);
             throw new CommandException("Error when go to the upload image page", e);
         }
+        session.setAttribute(SessionAttribute.CURRENT_PAGE, PagePath.UPLOAD_IMAGE_REDIRECT);
         return router;
     }
 }

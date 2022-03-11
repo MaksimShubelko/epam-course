@@ -25,6 +25,15 @@ public interface AccountDao extends BaseDao<Account> {
     Optional<Account> findAccountByLogin(String login) throws DaoException;
 
     /**
+     * Get count of accounts by login
+     *
+     * @param login the login
+     * @return T extends BaseEntity
+     * @throws DaoException the DaoException
+     */
+    int getCountOfAccountsByLogin(String login) throws DaoException;
+
+    /**
      * Find an account by ip
      *
      * @param ip the ip
@@ -74,4 +83,12 @@ public interface AccountDao extends BaseDao<Account> {
      * @throws DaoException the DaoException
      */
     Long add(Account account, String password) throws DaoException;
+
+    /**
+     * The getting of count tof accounts
+     *
+     * @return the count of accounts
+     * @throws DaoException the DaoException
+     */
+    int getCountOfAccounts() throws DaoException;
 }

@@ -104,7 +104,7 @@ public final class PagePath {
     public static final String EDIT_ADMINISTRATOR_DATA = "/pages/admin/administrator_edit_data.jsp";
 
     /** The constant SHOW_FACULTIES_REDIRECT **/
-    public static final String SHOW_FACULTIES_REDIRECT = "/controller?command=go_to_show_faculties";
+    public static final String SHOW_FACULTIES_REDIRECT = "/controller?command=go_to_show_faculties&page=";
 
     /** The constant GO_TO_SHOW_APPLICANTS_REDIRECT **/
     public static final String GO_TO_SHOW_APPLICANTS_REDIRECT = "/controller?command=go_to_show_applicants";
@@ -126,6 +126,13 @@ public final class PagePath {
 
     /** The constant SENDER_EMAIL_PAGE_REDIRECT **/
     public static final String SENDER_EMAIL_PAGE_REDIRECT = "/controller?command=go_to_sender_page";
+
+    /** The constant UPLOAD_IMAGE_REDIRECT **/
+    public static final String UPLOAD_IMAGE_REDIRECT = "/controller?command=go_to_upload_image_page";
+
+    /** The constant MAIN_PAGE_ADMINISTRATOR_REDIRECT **/
+    public static final String MAIN_PAGE_ADMINISTRATOR_REDIRECT = "/controller?command=go_to_administrator_main_page";
+    public static final String SHOW_FACULTIES_PAGE_REDIRECT = "/controller?command=go_to_show_faculties";
 
     /**
      * private constructor

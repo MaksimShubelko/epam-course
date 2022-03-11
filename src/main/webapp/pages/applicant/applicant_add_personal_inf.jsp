@@ -70,6 +70,9 @@
                            value="<fmt:message key="add.secure.information" bundle="${content}" />"
                            class="blubtn align-middle"/>
                 </div>
+                <a class="col-8 offset-5 p-1 row" href="${pageContext.request.contextPath}/controller?command=logout">
+                    <fmt:message key="btn.back" bundle="${content}"/>
+                </a>
             </div>
         </div>
     </form>

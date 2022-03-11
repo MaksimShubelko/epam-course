@@ -183,6 +183,7 @@ public class ApplicantServiceImpl implements ApplicantService {
         List<Applicant> applicants = Collections.emptyList();
         boolean isArchive = false;
         try {
+            recruitmentStatus = recruitmentStatus != null ? recruitmentStatus : ALL.name();
             if (ARCHIVE.name().equals(recruitmentStatus.toUpperCase())) {
                 isArchive = true;
                 recruitmentStatus = ALL.name();
@@ -194,7 +195,7 @@ public class ApplicantServiceImpl implements ApplicantService {
                 Faculty faculty = facultyOptional.get();
                 int recruitmentPlanFree = faculty.getRecruitmentPlanFree();
                 int recruitmentPlanCanvas = faculty.getRecruitmentPlanCanvas();
-                int countApplicants = billDao.findAllBillsByFacultyId(facultyId, isArchive).size();
+                int countApplicants = billDao.getCountOfBillsInFaculty(facultyId, isArchive);
                 int applicantsSkipDepOnRecruitStatus = applicantFindingService.getCountOfApplicantsToSkip(recruitmentStatus,
                         recruitmentPlanFree, recruitmentPlanCanvas, countApplicants);
                 int applicantsTakeDepOnRecruitStatus = applicantFindingService.getCountOfApplicantsToTake(recruitmentStatus,
@@ -310,6 +311,7 @@ public class ApplicantServiceImpl implements ApplicantService {
             transactionManager.initTransaction();
             Optional<Applicant> applicantOptional = applicantDao.findEntityById(applicantId);
             if (applicantOptional.isPresent()) {
+                System.out.println("Applicant is present");
                 if (isApplicantSecureInformationValid(name, surname, lastname)) {
                     applicant = applicantOptional.get();
                     applicant.setFirstname(name);
@@ -341,6 +343,9 @@ public class ApplicantServiceImpl implements ApplicantService {
      */
     public boolean isApplicantSecureInformationValid(String name, String surname, String lastname) {
         SecureInformationValidator validator = SecureInformationValidatorImpl.getInstance();
+        System.out.println(validator.isNameValid(name));
+        System.out.println(validator.isLastnameValid(lastname));
+        System.out.println(validator.isSurnameValid(surname));
         return validator.isNameValid(name)
                 && validator.isLastnameValid(lastname)
                 && validator.isSurnameValid(surname);

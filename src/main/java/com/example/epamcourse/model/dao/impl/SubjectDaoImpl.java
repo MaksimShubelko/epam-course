@@ -126,13 +126,11 @@ public class SubjectDaoImpl implements SubjectDao {
      */
     @Override
     public boolean delete(Long id) throws DaoException {
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(DELETE_SUBJECTS_BY_APPLICANT_ID)) {
-            statement.setLong(1, id);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            logger.log(Level.ERROR, "Error when deleting subject with Id {}.", id);
-            throw new DaoException("Error when deleting subject with Id " + id, e);
+        try {
+            jdbcTemplate.executeUpdateDeleteFields(DELETE_SUBJECTS_BY_APPLICANT_ID, id);
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when deleting subject", e);
+            throw new DaoException("Error when deleting subject", e);
         }
 
         return true;

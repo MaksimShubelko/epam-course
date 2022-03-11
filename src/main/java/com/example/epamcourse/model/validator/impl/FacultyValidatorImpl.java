@@ -51,7 +51,7 @@ public class FacultyValidatorImpl implements FacultyValidator {
      * @return true if faculty name is valid
      */
     public boolean isFacultyNameValid(String facultyName) {
-        return facultyName.matches(FACULTY_NAME_REGEX);
+        return facultyName != null && facultyName.matches(FACULTY_NAME_REGEX);
     }
 
     /**

@@ -38,6 +38,7 @@ public class SendEmailCodeCommand implements Command {
     public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
         AccountService accountService = AccountServiceImpl.getInstance();
+        MailingService mailingService = MailingServiceImpl.getInstance();
         String login = (String) session.getAttribute(RequestParameter.LOGIN);
         String password = (String) session.getAttribute(RequestParameter.PASSWORD);
         String passwordCheck = (String) session.getAttribute(RequestParameter.PASSWORD_CHECK);
@@ -51,6 +52,9 @@ public class SendEmailCodeCommand implements Command {
         if (codeActual == codeExpected) {
             try {
                 if (accountService.addAccount(login, password, passwordCheck, email, ip)) {
+                    String title = EmailMessages.MESSAGE_HEAD;
+                    String message = EmailMessages.MESSAGE_BODY_LOGIN_PASSWORD.formatted(login, password);
+                    mailingService.sendMessage(message, title, email);
                     router.setPage(PagePath.LOGIN);
                 }
             } catch (ServiceException e) {

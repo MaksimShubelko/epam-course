@@ -23,4 +23,31 @@ public interface FacultyDao extends BaseDao<Faculty> {
      */
     List<Faculty> findFacultiesPage(int facultiesSkip, int facultiesGet) throws DaoException;
 
+
+    /**
+     * The getting of count of faculties
+     *
+     * @return the count of faculties
+     * @throws DaoException the DaoException
+     */
+    int getCountOfFaculties() throws DaoException;
+
+    /**
+     * The getting of count of faculties
+     *
+     * @param name the faculty name
+     * @param facultyId the facultyId
+     * @return true if faculty with name ia exist
+     * @throws DaoException the DaoException
+     */
+    int isFacultyNameExist(String name, long facultyId) throws DaoException;
+
+    /**
+     * The getting of count of faculties
+     *
+     * @param name the faculty name
+     * @return true if faculty with name ia exist
+     * @throws DaoException the DaoException
+     */
+    int isFacultyNameExist(String name) throws DaoException;
 }

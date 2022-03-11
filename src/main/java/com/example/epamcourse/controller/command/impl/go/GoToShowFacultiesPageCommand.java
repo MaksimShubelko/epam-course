@@ -44,7 +44,8 @@ public class GoToShowFacultiesPageCommand implements Command {
         FacultyService facultyService = FacultyServiceImpl.getInstance();
         session.setAttribute(SessionAttribute.CURRENT_PAGE, PagePath.SHOW_FACULTIES_REDIRECT);
         try {
-            long noOfPages = (long) Math.ceil(facultyService.findAllFaculties().size() * 1.0 / recordsPerPage);
+            System.out.println(facultyService.getCountOfFaculties());
+            long noOfPages = (long) Math.ceil(facultyService.getCountOfFaculties() * 1.0 / recordsPerPage);
             if (request.getParameter(RequestParameter.PAGE) != null) {
                 page = Integer.parseInt(request.getParameter(RequestParameter.PAGE));
             }

@@ -135,13 +135,11 @@ public class AdministratorDaoImpl implements AdministratorDao {
      */
     @Override
     public boolean delete(Long id) throws DaoException {
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(DELETE_ADMINISTRATOR)) {
-            statement.setLong(1, id);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            logger.log(Level.ERROR, "Error when deleting administrator with Id {}. {}", id, e);
-            throw new DaoException("Error when deleting administrator with Id " + id, e);
+        try {
+            jdbcTemplate.executeUpdateDeleteFields(DELETE_ADMINISTRATOR, id);
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when deleting administrator", e);
+            throw new DaoException("Error when deleting administrator", e);
         }
 
         return true;

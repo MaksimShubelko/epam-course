@@ -130,13 +130,11 @@ public class CertificateDaoImpl implements CertificateDao {
      */
     @Override
     public boolean delete(Long id) throws DaoException {
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(DELETE_CERTIFICATE)) {
-            statement.setLong(1, id);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            logger.log(Level.ERROR, "Error when deleting certificate with id {}. {}", id, e);
-            throw new DaoException("Error when deleting certificate with id " + id, e);
+        try {
+            jdbcTemplate.executeUpdateDeleteFields(DELETE_CERTIFICATE, id);
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when deleting certificate", e);
+            throw new DaoException("Error when deleting certificate", e);
         }
 
         return true;

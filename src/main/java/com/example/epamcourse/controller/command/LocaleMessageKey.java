@@ -36,5 +36,8 @@ public final class LocaleMessageKey {
 
     /** The constant MESSAGE_ERROR **/
     public static final String MESSAGE_ERROR = "message.error";
+
+    /** The constant FACULTY_WITH_NAME_EXIST_ERROR **/
+    public static final String FACULTY_NAME_EXIST_ERROR = "faculty.name.exist.error";
 }
 

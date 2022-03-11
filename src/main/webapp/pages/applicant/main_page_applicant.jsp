@@ -8,40 +8,13 @@
     <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" type="text/css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/css/button.css" type="text/css" rel="stylesheet">
     <jsp:include page="../header.jsp"/>
+    <jsp:include page="/pages/applicant/navbar_header.jsp"/>
     <title><fmt:message key="applicant.main.page.title" bundle="${content}"/></title>
 </head>
 <body>
 <form name="applicantPage" action="${pageContext.request.contextPath}/controller" method="get"
       class="h-75">
     <input type="hidden" name="command" value="show_requests_command">
-
-    <div class="row border bg-warning">
-        <div class="col-2">
-            <fmt:message key="applicant.mail.page.recruitment.status" bundle="${content}"/>
-        </div>
-        <div class="col-2">
-            ${recruitment.getRecruitmentStatus()}
-        </div>
-        <div class="col-2">
-            <fmt:message key="applicant.mail.page.recruitment.finish.time" bundle="${content}"/>
-        </div>
-        <div class="col-2">
-            ${recruitment.getFinishRecruitment()}
-        </div>
-
-        <div class="col-1 offset-1 border border-success border-3">
-            <a href="${pageContext.request.contextPath}/controller?command=go_to_edit_applicant_data">
-                <fmt:message key="applicant.edit.data" bundle="${content}"/>
-            </a>
-        </div>
-        <div class="col-1 border border-success border-3">
-            <h6>
-                <a href="${pageContext.request.contextPath}/controller?command=logout">
-                    <fmt:message key="logout" bundle="${content}"/>
-                </a>
-            </h6>
-        </div>
-    </div>
     <div class="p-2">
         <div>
             <div class="row">

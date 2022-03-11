@@ -8,10 +8,10 @@ package com.example.epamcourse.model.validator;
 public interface CertificateValidator {
 
     /**
-     * The validation of subject mark
+     * The validation of certificate mark
      *
-     * @param subjectMark the subject mark
-     * @return true if subject's mark is valid
+     * @param certificateMark the certificate mark
+     * @return true if certificate's mark is valid
      */
-    boolean isCertificateMarkValid(double subjectMark);
+    boolean isCertificateMarkValid(double certificateMark);
 }

@@ -20,7 +20,7 @@ public final class SessionAttribute {
     public static final String SESSION_LOCALE = "locale";
 
     /** The constant CURRENT_PAGE **/
-    public static final String CURRENT_PAGE = "page";
+    public static final String CURRENT_PAGE = "current_page";
 
     /** The constant EXCEPTION **/
     public static final String EXCEPTION = "exception";
@@ -69,6 +69,9 @@ public final class SessionAttribute {
 
     /** The constant MESSAGE **/
     public static final String MESSAGE = "message";
+
+    /** The constant PAGE **/
+    public static final String PAGE = "page";
 
 
     /**

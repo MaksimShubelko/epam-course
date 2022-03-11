@@ -15,7 +15,7 @@
 
 <body>
 
-<div class="container" >
+<div class="container">
     <h1><fmt:message key="error.oops" bundle="${content}"/></h1>
 
     <table class="table table-bordered">
@@ -54,10 +54,10 @@
 
     <h4>
         <a href="${pageContext.request.contextPath}/controller?command=to_main_page&actual_page=1" class="link-primary">
-            <fmt:message key="error.back" bundle="${content}/>
+            <fmt:message key="error.back" bundle="${content}"/>
         </a>
     </h4>
 </div>
-    <c:remove var="exception" scope="session"/>
+</div>
 </body>
 </html>

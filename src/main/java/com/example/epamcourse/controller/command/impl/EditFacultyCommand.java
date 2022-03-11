@@ -37,15 +37,18 @@ public class EditFacultyCommand implements Command {
         FacultyService facultyService = FacultyServiceImpl.getInstance();
         Router router = new Router(PagePath.EDIT_FACULTY_PAGE);
         try {
-            Long applicantId = (Long) request.getSession().getAttribute(SessionAttribute.APPLICANT_ID);
             List<Faculty> faculties = facultyService.findAllFaculties();
             request.setAttribute(RequestAttribute.FACULTIES, faculties);
             Long facultyId = Long.valueOf(request.getParameter(RequestParameter.FACULTY_ID));
             String facultyName = request.getParameter(RequestParameter.FACULTY_NAME);
             int recruitmentPlanFree = Integer.parseInt(request.getParameter(RequestParameter.RECRUITMENT_PLAN_FREE));
             int recruitmentPlanCanvas = Integer.parseInt(request.getParameter(RequestParameter.RECRUITMENT_PLAN_CANVAS));
-            if (facultyService.editFaculty(facultyId, facultyName, recruitmentPlanFree, recruitmentPlanCanvas)) {
-                router.setPage(PagePath.MAIN_PAGE_ADMINISTRATOR);
+            if (facultyService.isFacultyNameExist(facultyName, facultyId)) {
+                request.setAttribute(RequestAttribute.MESSAGE, LocaleMessageKey.FACULTY_NAME_EXIST_ERROR);
+            } else{
+                if (facultyService.editFaculty(facultyId, facultyName, recruitmentPlanFree, recruitmentPlanCanvas)) {
+                    router.setPage(PagePath.SHOW_FACULTIES_PAGE_REDIRECT);
+                }
             }
         } catch (ServiceException e) {
             logger.log(Level.ERROR, "Edition faculty failed", e);

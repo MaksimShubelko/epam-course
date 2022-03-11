@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -23,7 +24,9 @@ import java.util.Objects;
  */
 public class GoToShowApplicantsPageCommand implements Command {
 
-    /** The logger. */
+    /**
+     * The logger.
+     */
     private static final Logger logger = LogManager.getLogger();
 
     /**
@@ -53,12 +56,10 @@ public class GoToShowApplicantsPageCommand implements Command {
             if (!Objects.equals(request.getParameter(RequestParameter.FACULTY_ID), null)) {
                 facultyId = Long.parseLong(request.getParameter(RequestParameter.FACULTY_ID));
             }
-            if (!Objects.equals(request.getParameter(RequestParameter.RECRUITMENT_STATUS), null)) {
-                recruitmentStatus = request.getParameter(RequestParameter.RECRUITMENT_STATUS);
-            }
-            if (request.getParameter(RequestParameter.PAGE) != null) {
-                page = Integer.parseInt(request.getParameter(RequestParameter.PAGE));
-            }
+            System.out.println(facultyId);
+            recruitmentStatus = request.getParameter(RequestParameter.RECRUITMENT_STATUS);
+            page = request.getParameter(RequestParameter.PAGE) != null
+                    ? Integer.parseInt(request.getParameter(RequestParameter.PAGE)) : page;
             List<Applicant> applicants = applicantService.findApplicantsByFacultyIdAndRecruitmentStatus(facultyId, page,
                     recruitmentStatus);
             long countOfApplicants = applicants.size();

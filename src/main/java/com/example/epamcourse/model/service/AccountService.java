@@ -76,27 +76,16 @@ public interface AccountService {
      */
     boolean validateRegistrationData(String login, String password, String confirmingPassword, String email) throws ServiceException;
 
-
-    /**
-     * The updating of account
-     *
-     * @param account the account
-     * @throws ServiceException the service exception
-     */
-    void updateAccount(Account account) throws ServiceException;
-
-
     /**
      * The adding of administrator
      *
      * @param login the login
      * @param password the password
-     * @param email the email
      * @param confirmingPassword the confirming password
      * @return true if administrator is added
      * @throws ServiceException the service exception
      */
-    boolean addAdminAccount(String login, String password, String email, String confirmingPassword) throws ServiceException;
+    boolean addAdminAccount(String login, String password, String confirmingPassword) throws ServiceException;
 
     /**
      * The getting of account's status by login
@@ -154,14 +143,6 @@ public interface AccountService {
     boolean isPersonalInformationExist(String login) throws ServiceException;
 
     /**
-     * The finding of all accounts
-     *
-     * @return the accounts
-     * @throws ServiceException the service exception
-     */
-    List<Account> findAllAccounts() throws ServiceException;
-
-    /**
      * The finding of accounts for page
      *
      * @param page the page
@@ -177,5 +158,31 @@ public interface AccountService {
      * @throws ServiceException the service exception
      */
     void deleteAccount(Long accountId) throws ServiceException;
+
+    /**
+     * The changing of account status
+     *
+     * @param accountOptional the account optional
+     * @throws ServiceException the service exception
+     */
+    void changeStatus(Optional<Account> accountOptional) throws ServiceException;
+
+
+    /**
+     * The getting of count of accounts
+     *
+     * @return the count of accounts
+     * @throws ServiceException the service exception
+     */
+    int getCountOfAccount() throws ServiceException;
+
+    /**
+     * The getting of count of accounts with login
+     *
+     * @param login the login
+     * @return the count of accounts wil login
+     * @throws ServiceException the service exception
+     */
+    int getCountOfAccountsByLogin(String login) throws ServiceException;
 
 }

@@ -14,12 +14,12 @@ public class AccountValidatorImpl implements AccountValidator {
     /**
      * The constant LOGIN_REGEX
      **/
-    private static final String LOGIN_REGEX = "^[a-z]+([-_]?[a-z0-9]+){0,2}$";
+    private static final String LOGIN_REGEX = "^[a-zA-Z][a-zA-Z0-9-_]{3,10}$";
 
     /**
      * The constant PASSWORD_REGEX
      **/
-    private static final String PASSWORD_REGEX = "(?=.*\\d)(?=.*\\p{Lower})(?=.*\\p{Upper})[\\d\\p{Alpha}]{8,30}";
+    private static final String PASSWORD_REGEX = "^(?=.*\\d)(?=.*\\p{Lower})(?=.*\\p{Upper})[\\d\\p{Alpha}]{6,15}$";
 
     /**
      * The constant EMAIL_REGEX
@@ -54,7 +54,7 @@ public class AccountValidatorImpl implements AccountValidator {
      */
     public boolean isLoginValid(String login) {
 
-        return login != null && !login.isBlank() && login.matches(LOGIN_REGEX);
+        return login != null && login.matches(LOGIN_REGEX);
     }
 
     /**

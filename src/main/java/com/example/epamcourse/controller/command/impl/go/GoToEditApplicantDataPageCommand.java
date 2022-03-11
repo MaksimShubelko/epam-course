@@ -49,6 +49,7 @@ public class GoToEditApplicantDataPageCommand implements Command {
             Applicant applicant = applicantOptional.orElseThrow(IllegalArgumentException::new);
             Account account = accountOptional.orElseThrow(IllegalArgumentException::new);
             String image = accountService.loadImage(account.getLogin());
+            session.setAttribute(SessionAttribute.IMAGE, image);
             session.setAttribute(SessionAttribute.ACCOUNT, account);
             session.setAttribute(SessionAttribute.IMAGE, image);
             session.setAttribute(SessionAttribute.APPLICANT, applicant);

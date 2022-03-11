@@ -8,6 +8,8 @@
 <html>
 <head>
     <jsp:include page="../header.jsp"/>
+    <jsp:include page="/pages/admin/navbar_header.jsp"/>
+    <jsp:include page="/pages/admin/navbar_action.jsp"/>
     <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" type="text/css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/css/button.css" type="text/css" rel="stylesheet">
     <title><fmt:message key="edition.faculty.title" bundle="${content}"/></title>
@@ -18,27 +20,19 @@
           action="${pageContext.request.contextPath}/controller" method="get">
         <input type="hidden" name="command" value="edit_faculty"/>
         <input type="hidden" name="faculty_id" value="${faculty.getFacultyId()}">
-        <div class="row bg-warning">
-            <div class="col-1 offset-sm-9 border border-success border-3">
-                <h6><a href="${pageContext.request.contextPath}/controller?command=go_to_edit_administrator_data">
-                    <fmt:message key="administrator.edit.data" bundle="${content}"/>
-                </a></h6>
-            </div>
-            <div class="col-1 border border-success border-3">
-                <h6>
-                    <a href="${pageContext.request.contextPath}/controller?command=logout">
-                        <fmt:message key="logout" bundle="${content}"/>
-                    </a>
-                </h6>
-            </div>
-        </div>
         <div class="p-5 offset-3">
             <div class="offset-4 p-3">
                 <h6>
                     <fmt:message key="edit.faculty.page" bundle="${content}"/>
                 </h6>
             </div>
-
+            <div class="offset-3 p-3">
+                <c:if test="${message != null}">
+                    <h6 class="text-danger">
+                        <fmt:message key="${message}" bundle="${content}"/>
+                    </h6>
+                </c:if>
+            </div>
             <div class="row offset-1">
                 <label class="col-4 col-form-label">
                     <h6>
@@ -46,7 +40,8 @@
                     </h6>
                 </label>
                 <div class="col-8">
-                    <input type="text" name="faculty_name" pattern="^[A-ЯЁ]([а-яё]+\s?)+$" value="${faculty.getFacultyName()}" required>
+                    <input type="text" name="faculty_name" pattern="^[A-ЯЁ]([а-яё]+\s?)+$"
+                           value="${faculty.getFacultyName()}" required>
                     <div class="invalid-feedback">
                         <h6>
                             <fmt:message key="faculty.name.error" bundle="${content}"/>
@@ -94,10 +89,13 @@
                     <input type="submit" value="<fmt:message key="edit.faculty.page.edit" bundle="${content}" />"
                            class="blubtn align-middle">
                 </label>
+                <a href="${pageContext.request.contextPath}/controller?command=go_to_show_faculties&page=${page}"
+                   class="row col-8 ps-5">
+                    <fmt:message key="btn.back" bundle="${content}"/>
+                </a>
             </div>
         </div>
     </form>
-
 </div>
 <script src="${pageContext.request.contextPath}/js/validation.js"></script>
 </body>

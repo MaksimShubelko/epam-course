@@ -33,13 +33,13 @@ public class CertificateValidatorImpl implements CertificateValidator {
     }
 
     /**
-     * The validation of subject mark
+     * The validation of certificate mark
      *
-     * @param subjectMark the subject mark
-     * @return true if subject mark is valid
+     * @param certificateMark the certificate mark
+     * @return true if certificate's mark is valid
      */
-    public boolean isCertificateMarkValid(double subjectMark) {
-        boolean isValid = Double.toString(subjectMark)
+    public boolean isCertificateMarkValid(double certificateMark) {
+        boolean isValid = Double.toString(certificateMark)
                 .matches(MARK_REGEX);
         return isValid;
     }

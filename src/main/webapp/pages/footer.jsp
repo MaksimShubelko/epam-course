@@ -12,7 +12,7 @@
 </head>
 
 <body>
-<div class="h-25 d-flex justify-content-center container__content bg-opacity-50 bg-success">
+<div class="h-25 container__content d-flex justify-content-center bg-opacity-50 bg-success">
    <h6>
        <ctg:footer-tag/>
    </h6>

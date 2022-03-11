@@ -8,6 +8,8 @@
 <html>
 <head>
     <jsp:include page="../header.jsp"/>
+    <jsp:include page="/pages/admin/navbar_header.jsp"/>
+    <jsp:include page="/pages/admin/navbar_action.jsp"/>
     <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" type="text/css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/css/button.css" type="text/css" rel="stylesheet">
     <title><fmt:message key="profile.title" bundle="${content}"/></title>
@@ -17,7 +19,6 @@
     <form class="container needs-validation h-75" novalidate action="${pageContext.request.contextPath}/controller"
           method="get">
         <img class="h-50 offset-6 p-4" src="${img}">
-
         <div class="offset-4 p-5 w-75">
             <div class="offset-4">
                 <h6><fmt:message key="profile.welcome.message" bundle="${content}"/></h6>

@@ -15,14 +15,14 @@
     <form class="container needs-validation h-75" novalidate action="${pageContext.request.contextPath}/controller"
           method="get">
         <input type="hidden" name="command" value="create_account"/>
-        <div class="offset-5">
+        <div class="row col-8 offset-4 p-lg-5 container__content">
             <label class="form-label offset-1">
                 <h6>
                     <fmt:message key="registration.welcome.message" bundle="${content}"/>
                 </h6>
             </label>
             <c:if test="${message != null}">
-                <h6 class="text-danger">
+                <h6 class="text-danger offset-1">
                     <fmt:message key="${message}" bundle="${content}"/>
                 </h6>
             </c:if>
@@ -97,12 +97,16 @@
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-sm-4 offset-sm-2">
+            <div class="row offset-4 p-1">
+                <div class="col-8">
                     <h6>
-                        <input type="submit" value="<fmt:message key="sing.up" bundle="${content}"/>" class="blubtn">
+                        <input type="submit" value="<fmt:message key="sing.up" bundle="${content}"/>"
+                               class="blubtn align-middle col-8">
                     </h6>
                 </div>
+                <a class="row col-8 ps-5" href="${pageContext.request.contextPath}/controller?command=go_to_login_page">
+                    <fmt:message key="btn.back" bundle="${content}"/>
+                </a>
             </div>
         </div>
     </form>

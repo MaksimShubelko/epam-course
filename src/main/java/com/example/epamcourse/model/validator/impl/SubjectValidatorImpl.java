@@ -8,6 +8,7 @@ import com.example.epamcourse.model.validator.SubjectValidator;
  * @author M.Shubelko
  */
 public class SubjectValidatorImpl implements SubjectValidator {
+    private static final String SUBJECT_MARK_REGEX = "^[1-9][0-9]|100$";
 
     /**
      * The constant MIN_SUBJECT_MARK
@@ -47,7 +48,7 @@ public class SubjectValidatorImpl implements SubjectValidator {
      * @return true if subject mark is valid
      */
     public boolean isSubjectMarkValid(int subjectMark) {
-        return subjectMark >= MIN_SUBJECT_MARK && subjectMark <= MAX_SUBJECT_MARK;
+        return Integer.toString(subjectMark).matches(SUBJECT_MARK_REGEX);
     }
 
 }

@@ -69,4 +69,31 @@ public interface FacultyService {
      * @throws ServiceException the service exception
      */
     List<Faculty> findFaculties(int currentPageNumber) throws ServiceException;
+
+    /**
+     * The getting of count of faculties
+     *
+     * @return the count of faculties
+     * @throws ServiceException the service exception
+     */
+    int getCountOfFaculties() throws ServiceException;
+
+    /**
+     * The getting of count of faculties
+     *
+     * @param name the faculty name
+     * @param facultyId the faculty id
+     * @return true if faculty with name is exist
+     * @throws ServiceException the service exception
+     */
+    boolean isFacultyNameExist(String name, long facultyId) throws ServiceException;
+
+    /**
+     * The getting of count of faculties
+     *
+     * @param name the faculty name
+     * @return true if faculty with name is exist
+     * @throws ServiceException the service exception
+     */
+    boolean isFacultyNameExist(String name) throws ServiceException;
 }

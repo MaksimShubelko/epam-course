@@ -87,6 +87,12 @@ public class BillDaoImpl implements BillDao {
             WHERE archive = 0
             """;
 
+    private static final String SELECT_COUNT_OF_BILLS_BY_FACULTY_ID = """
+            SELECT COUNT(bill_id)
+            FROM bills
+            WHERE faculty_id = ? AND archive = ?
+            """;
+
     /**
      * The private constructor
      */
@@ -273,11 +279,10 @@ public class BillDaoImpl implements BillDao {
     /**
      * Change all bill's status to archive
      *
-     * @return true the true
      * @throws DaoException the DaoException
      */
     @Override
-    public boolean changeStatusToArchive() throws DaoException {
+    public void changeStatusToArchive() throws DaoException {
         try {
             jdbcTemplate.executeUpdateDeleteFields(DELETE_BILLS);
         } catch (TransactionException e) {
@@ -285,6 +290,17 @@ public class BillDaoImpl implements BillDao {
             throw new DaoException("Error when updating all bills", e);
         }
 
-        return true;
+    }
+
+    @Override
+    public int getCountOfBillsInFaculty(Long facultyId, boolean isArchive) throws DaoException {
+        int count;
+        try {
+            count = jdbcTemplate.executeSelectCountQuery(SELECT_COUNT_OF_BILLS_BY_FACULTY_ID, facultyId, isArchive);
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when finding faculties", e);
+            throw new DaoException("Error when finding all faculties", e);
+        }
+        return count;
     }
 }

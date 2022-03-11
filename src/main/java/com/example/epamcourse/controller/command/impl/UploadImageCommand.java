@@ -34,7 +34,6 @@ public class UploadImageCommand implements Command {
     public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
         AccountService accountService = AccountServiceImpl.getInstance();
-        String pagePath = (String) session.getAttribute(RequestAttribute.PAGE);
         Router router;
         try {
             String login = (String) session.getAttribute(SessionAttribute.LOGIN);
@@ -47,10 +46,12 @@ public class UploadImageCommand implements Command {
             router.setType(Router.RouterType.REDIRECT);
             InputStream inputStream = (InputStream) request.getAttribute(RequestAttribute.IMAGE_INPUT_STREAM);
             String fileName = (String) request.getAttribute(RequestAttribute.IMAGE_NAME);
-            accountService.uploadImage(inputStream, fileName, login);
+            if (fileName != null && !fileName.isBlank()) {
+                accountService.uploadImage(inputStream, fileName, login);
+            }
         } catch (ServiceException e) {
-            logger.error("Try to execute UploadImageCommand was failed" + e);
-            throw new CommandException("Try to execute UploadImageCommand was failed", e);
+            logger.error("Uploading image was failed" + e);
+            throw new CommandException("Uploading image was failed", e);
         }
 
         return router;

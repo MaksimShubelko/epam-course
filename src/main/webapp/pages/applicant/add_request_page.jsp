@@ -7,29 +7,16 @@
 <html>
 <head>
     <jsp:include page="../header.jsp"/>
+    <jsp:include page="/pages/applicant/navbar_header.jsp"/>
     <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" type="text/css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/css/button.css" type="text/css" rel="stylesheet">
     <title><fmt:message key="adding.request.title" bundle="${content}"/></title>
 </head>
 <body>
 <div>
-    <form name="loginForm" class="needs-validation w-75 h-100" novalidate
+    <form name="loginForm" class="needs-validation m-auto h-auto h-100" novalidate
           action="${pageContext.request.contextPath}/controller" method="get">
         <input type="hidden" name="command" value="add_request"/>
-        <div class="row bg-warning">
-            <div class="col-1 offset-sm-9 border border-success border-3">
-                <h6><a href="${pageContext.request.contextPath}/controller?command=go_to_edit_administrator_data">
-                    <fmt:message key="administrator.edit.data" bundle="${content}"/>
-                </a></h6>
-            </div>
-            <div class="col-1 border border-success border-3">
-                <h6>
-                    <a href="${pageContext.request.contextPath}/controller?command=logout">
-                        <fmt:message key="logout" bundle="${content}"/>
-                    </a>
-                </h6>
-            </div>
-        </div>
         <div class="row offset-sm-2">
             <div class="col-6">
                 <h6>
@@ -99,10 +86,14 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-6 offset-5">
+        <div class="row offset-1 p-1 pb-5">
+            <div class="col-6 offset-5 pb-1">
                 <input type="submit"
                        value="<fmt:message key="add.request.page.submit" bundle="${content}"/>">
+                <a class="row col-8 ps-5"
+                   href="${pageContext.request.contextPath}/controller?command=go_to_main_page_applicant">
+                    <fmt:message key="btn.back" bundle="${content}"/>
+                </a>
             </div>
         </div>
     </form>

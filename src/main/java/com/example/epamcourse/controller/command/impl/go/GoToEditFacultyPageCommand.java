@@ -40,6 +40,7 @@ public class GoToEditFacultyPageCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         Router router = new Router(PagePath.EDIT_FACULTY_PAGE);
+        int page = Integer.parseInt(request.getParameter(RequestParameter.PAGE));
         router.setType(Router.RouterType.REDIRECT);
         try {
             FacultyService facultyService = FacultyServiceImpl.getInstance();
@@ -47,10 +48,11 @@ public class GoToEditFacultyPageCommand implements Command {
             Long facultyId = Long.valueOf(request.getParameter(RequestParameter.FACULTY_ID));
             Optional<Faculty> facultyOptional = facultyService.findFacultyById(facultyId);
             facultyOptional.ifPresent(faculty -> session.setAttribute(SessionAttribute.FACULTY, faculty));
+            session.setAttribute(SessionAttribute.PAGE, page);
             session.setAttribute(SessionAttribute.CURRENT_PAGE, PagePath.EDIT_FACULTY_REDIRECT + facultyId);
         } catch (ServiceException e) {
-            logger.log(Level.ERROR, "Edition applicant's data failed.", e);
-            throw new CommandException("Edition applicant's data failed.", e);
+            logger.log(Level.ERROR, "Edition faculty's data failed.", e);
+            throw new CommandException("Edition faculty's data failed.", e);
         }
         return router;
     }

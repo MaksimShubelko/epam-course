@@ -179,26 +179,6 @@ public class ApplicantDaoImpl implements ApplicantDao {
     }
 
     /**
-     * Find applicant by login
-     *
-     * @param login the login
-     * @return applicantOptional the applicantOptional
-     * @throws DaoException the DaoException
-     */
-    @Override
-    public Optional<Applicant> findApplicantByLogin(String login) throws DaoException {
-        Optional<Applicant> applicant;
-        try {
-            applicant = jdbcTemplate.executeSelectQueryForObject(FIND_APPLICANT_BY_ACCOUNT_LOGIN, login);
-        } catch (TransactionException e) {
-            logger.log(Level.ERROR, "Error when getting applicant by login {} {}", login, e);
-            throw new DaoException("Error when getting applicant by login " + login, e);
-        }
-
-        return applicant;
-    }
-
-    /**
      * Find applicant by account id
      *
      * @param id the id
@@ -266,13 +246,11 @@ public class ApplicantDaoImpl implements ApplicantDao {
      */
     @Override
     public boolean delete(Long id) throws DaoException {
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(DELETE_APPLICANT)) {
-            statement.setLong(1, id);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            logger.log(Level.ERROR, "Error when deleting applicant with Id {}. {}", id, e);
-            throw new DaoException("Error when applicant with Id " + id, e);
+        try {
+            jdbcTemplate.executeUpdateDeleteFields(DELETE_APPLICANT, id);
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when deleting applicant", e);
+            throw new DaoException("Error when deleting applicant", e);
         }
 
         return true;

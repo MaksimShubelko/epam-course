@@ -237,4 +237,76 @@ public class FacultyServiceImpl implements FacultyService {
         }
         return faculties;
     }
+
+    /**
+     * The getting of count of faculties
+     *
+     * @return countOfFaculties the count of faculties
+     * @throws ServiceException the service exception
+     */
+    @Override
+    public int getCountOfFaculties() throws ServiceException {
+        int countOfFaculties;
+        try {
+            transactionManager.initTransaction();
+            countOfFaculties = facultyDao.getCountOfFaculties();
+            transactionManager.commit();
+        } catch (DaoException | TransactionException e) {
+            transactionManager.rollback();
+            logger.log(Level.ERROR, "Error when getting of count of faculties faculties", e);
+            throw new ServiceException("Error when getting of count of faculties faculties", e);
+        } finally {
+            transactionManager.endTransaction();
+        }
+        return countOfFaculties;
+    }
+
+    /**
+     * The checking of existing of faculty with name
+     *
+     * @param name the faculty name
+     * @param facultyId the faculty id
+     * @return true if faculty with name is exist
+     * @throws ServiceException the service exception
+     */
+    @Override
+    public boolean isFacultyNameExist(String name, long facultyId) throws ServiceException {
+        int countOfFaculties;
+        try {
+            transactionManager.initTransaction();
+            countOfFaculties = facultyDao.isFacultyNameExist(name, facultyId);
+            transactionManager.commit();
+        } catch (DaoException | TransactionException e) {
+            transactionManager.rollback();
+            logger.log(Level.ERROR, "Error when getting of count of faculties", e);
+            throw new ServiceException("Error when getting of count of faculties", e);
+        } finally {
+            transactionManager.endTransaction();
+        }
+        return countOfFaculties != 0;
+    }
+
+    /**
+     * The checking of existing of faculty with name
+     *
+     * @param name the faculty name
+     * @return true if faculty with name is exist
+     * @throws ServiceException the service exception
+     */
+    @Override
+    public boolean isFacultyNameExist(String name) throws ServiceException {
+        int countOfFaculties;
+        try {
+            transactionManager.initTransaction();
+            countOfFaculties = facultyDao.isFacultyNameExist(name);
+            transactionManager.commit();
+        } catch (DaoException | TransactionException e) {
+            transactionManager.rollback();
+            logger.log(Level.ERROR, "Error when getting of count of faculties", e);
+            throw new ServiceException("Error when getting of count of faculties", e);
+        } finally {
+            transactionManager.endTransaction();
+        }
+        return countOfFaculties != 0;
+    }
 }

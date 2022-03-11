@@ -32,13 +32,24 @@ public class MailingServiceImpl implements MailingService {
     /**
      * The instance
      */
-    private static final MailingService instance = new MailingServiceImpl();
+    private static MailingService instance;
+
+    static {
+        try {
+            instance = new MailingServiceImpl();
+        } catch (ServiceException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * The private constructor
      */
-    private MailingServiceImpl() {
+    private MailingServiceImpl() throws ServiceException {
+        session = createSession();
     }
+
+    private static Session session;
 
     /**
      * The getting of instance
@@ -61,7 +72,6 @@ public class MailingServiceImpl implements MailingService {
     public void sendMessage(String messageText, String messageTitle, String sendTo) throws ServiceException {
         final String password = "utdcxpekipbsumsx";
         try {
-            Session session = createSession();
             MimeMessage message = new MimeMessage(session);
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(sendTo));
             message.setSubject(messageTitle);
@@ -70,7 +80,7 @@ public class MailingServiceImpl implements MailingService {
             transport.connect(null, password);
             transport.sendMessage(message, message.getAllRecipients());
             transport.close();
-        } catch (MessagingException | IOException e) {
+        } catch (MessagingException e) {
             logger.log(Level.ERROR, "Error when sent email", e);
             throw new ServiceException("Error when sent email", e);
         }
@@ -81,12 +91,17 @@ public class MailingServiceImpl implements MailingService {
      * The creation of session for sender
      *
      * @return session the session
-     * @throws IOException the IOE exception
+     * @throws ServiceException the service exception
      */
-    public Session createSession() throws IOException {
+    public Session createSession() throws ServiceException {
         FilePropertyReader filePropertyReader = new FilePropertyReaderImpl();
         Properties props = System.getProperties();
-        props.load(filePropertyReader.fileReadProperty());
+        try {
+            props.load(filePropertyReader.fileReadProperty());
+        } catch (IOException e) {
+            logger.log(Level.ERROR, "Error when creation session", e);
+            throw new ServiceException("Error when creation session", e);
+        }
         return Session.getDefaultInstance(props);
     }
 

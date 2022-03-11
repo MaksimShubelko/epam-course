@@ -177,7 +177,7 @@ public class BillServiceImpl implements BillService {
         long countOfBillsInFaculty;
         try {
             transactionManager.initTransaction();
-            countOfBillsInFaculty = billDao.findAllBillsByFacultyId(facultyId, isArchive).size();
+            countOfBillsInFaculty = billDao.getCountOfBillsInFaculty(facultyId, isArchive);
             transactionManager.commit();
         } catch (DaoException | TransactionException e) {
             transactionManager.rollback();

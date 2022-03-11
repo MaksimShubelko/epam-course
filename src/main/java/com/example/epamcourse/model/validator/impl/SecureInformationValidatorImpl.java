@@ -12,17 +12,17 @@ public class SecureInformationValidatorImpl implements SecureInformationValidato
     /**
      * The constant NAME_REGEX
      **/
-    private static final String NAME_REGEX = "^[А-ЯЁ][а-яё]*$";
+    private static final String NAME_REGEX = "^[А-ЯЁ][а-яё]{2,15}$";
 
     /**
      * The constant SURNAME_REGEX
      **/
-    private static final String SURNAME_REGEX = "^[А-ЯЁ][а-яё]*([-][А-ЯЁ][а-яё]*)?$";
+    private static final String SURNAME_REGEX = "^[А-ЯЁ][а-яё]{5,15}(-[А-ЯЁ][а-яё]{5,15})?$";
 
     /**
      * The constant LASTNAME_REGEX
      **/
-    private static final String LASTNAME_REGEX = "^[А-ЯЁ][а-яё]*$";
+    private static final String LASTNAME_REGEX = "^[А-ЯЁ][а-яё]{5,25}$";
 
     /**
      * The instance
@@ -51,7 +51,7 @@ public class SecureInformationValidatorImpl implements SecureInformationValidato
      * @return true if name is valid
      */
     public boolean isNameValid(String name) {
-        return name != null && !name.isBlank() && name.matches(NAME_REGEX);
+        return name != null && name.matches(NAME_REGEX);
     }
 
     /**

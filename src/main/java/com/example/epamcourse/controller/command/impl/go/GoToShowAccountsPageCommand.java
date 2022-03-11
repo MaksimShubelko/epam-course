@@ -45,7 +45,7 @@ public class GoToShowAccountsPageCommand implements Command {
         Router router = new Router(SHOW_ACCOUNTS_PAGE);
         AccountService accountService = AccountServiceImpl.getInstance();
         try {
-            long noOfPages = (long) Math.ceil(accountService.findAllAccounts().size() * 1.0 / recordsPerPage);
+            long noOfPages = (long) Math.ceil(accountService.getCountOfAccount() * 1.0 / recordsPerPage);
             if (request.getParameter(RequestParameter.PAGE) != null) {
                 page = Integer.parseInt(request.getParameter(RequestParameter.PAGE));
             }

@@ -5,14 +5,10 @@ import com.example.epamcourse.model.dao.mapper.impl.FacultyResultSetHandler;
 import com.example.epamcourse.model.entity.Faculty;
 import com.example.epamcourse.model.exception.DaoException;
 import com.example.epamcourse.model.exception.TransactionException;
-import com.example.epamcourse.model.pool.ConnectionPool;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,11 +54,21 @@ public class FacultyDaoImpl implements FacultyDao {
             LIMIT ?, ?
             """;
 
+    private static final String SELECT_COUNT_OF_FACULTIES = """
+            SELECT COUNT(faculty_id) 
+            FROM faculties
+            """;
 
-    private static final String FIND_FACULTY_BY_NAME = """
-            SELECT faculty_id, faculty_name, 
-            recruitment_plan_free, recruitment_plan_canvas
-            WHERE faculty_id = ?
+    private static final String SELECT_COUNT_OF_FACULTIES_WITH_NAME_AND_ID = """
+            SELECT COUNT(faculty_id)
+            FROM faculties
+            WHERE faculty_name = ? AND NOT faculty_id = ?
+            """;
+
+    private static final String SELECT_COUNT_OF_FACULTIES_WITH_NAME = """
+            SELECT COUNT(faculty_id)
+            FROM faculties
+            WHERE faculty_name = ?
             """;
 
     private static final String DELETE_FACULTY = """
@@ -139,6 +145,61 @@ public class FacultyDaoImpl implements FacultyDao {
     }
 
     /**
+     *
+     * @return
+     * @throws DaoException the DaoException
+     */
+    @Override
+    public int getCountOfFaculties() throws DaoException {
+        int count;
+        try {
+            count = jdbcTemplate.executeSelectCountQuery(SELECT_COUNT_OF_FACULTIES);
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when finding faculties", e);
+            throw new DaoException("Error when finding all faculties", e);
+        }
+        return count;
+    }
+
+    /**
+     * The checking of existing of faculties with name
+     *
+     * @param name the faculty name
+     * @return countOfFaculties the count of faculties with name
+     * @throws DaoException the DaoException
+     */
+    @Override
+    public int isFacultyNameExist(String name, long facultyId) throws DaoException {
+        int countOfFaculties;
+        try {
+            countOfFaculties = jdbcTemplate.executeSelectCountQuery(SELECT_COUNT_OF_FACULTIES_WITH_NAME_AND_ID, name, facultyId);
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when finding count of faculties with name", e);
+            throw new DaoException("Error when finding count of faculties with name", e);
+        }
+        return countOfFaculties;
+    }
+
+    /**
+     * The checking of existing of faculties with name
+     *
+     * @param name the faculty name
+     * @return countOfFaculties the count of faculties with name
+     * @throws DaoException the DaoException
+     */
+    @Override
+    public int isFacultyNameExist(String name) throws DaoException {
+        int countOfFaculties;
+        try {
+            countOfFaculties = jdbcTemplate.executeSelectCountQuery(SELECT_COUNT_OF_FACULTIES_WITH_NAME, name);
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when finding count of faculties with name", e);
+            throw new DaoException("Error when finding count of faculties with name", e);
+        }
+        return countOfFaculties;
+    }
+
+    /**
      * Find faculty by id
      *
      * @param id the id
@@ -167,12 +228,11 @@ public class FacultyDaoImpl implements FacultyDao {
      */
     @Override
     public boolean delete(Long id) throws DaoException {
-        try (Connection connection = ConnectionPool.getInstance().getConnection(); PreparedStatement statement = connection.prepareStatement(DELETE_FACULTY)) {
-            statement.setLong(1, id);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            logger.log(Level.ERROR, "Error when deleting faculty with Id {}. {}", id, e);
-            throw new DaoException("Error when faculty with Id " + id, e);
+        try {
+            jdbcTemplate.executeUpdateDeleteFields(DELETE_FACULTY, id);
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when deleting faculty", e);
+            throw new DaoException("Error when deleting faculty", e);
         }
 
         return true;

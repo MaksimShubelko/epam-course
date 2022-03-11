@@ -5,14 +5,10 @@ import com.example.epamcourse.model.dao.mapper.impl.AccountResultSetHandler;
 import com.example.epamcourse.model.entity.Account;
 import com.example.epamcourse.model.exception.DaoException;
 import com.example.epamcourse.model.exception.TransactionException;
-import com.example.epamcourse.model.pool.ConnectionPool;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -110,9 +106,15 @@ public class AccountDaoImpl implements AccountDao {
             VALUE (?, ?, ?, ?, ?)
             """;
 
-    private static final String UPDATE_PASSWORD = """
-            UPDATE accounts SET password = ?
-            WHERE account_id = ?
+    private static final String SELECT_COUNT_ACCOUNTS = """
+            SELECT COUNT(account_id)
+            FROM accounts
+            """;
+
+    private static final String SELECT_COUNT_ACCOUNTS_BY_LOGIN = """
+            SELECT COUNT(account_id)
+            FROM accounts
+            WHERE login = ?
             """;
 
     /**
@@ -160,6 +162,26 @@ public class AccountDaoImpl implements AccountDao {
         }
 
         return accountOptional;
+    }
+
+    /**
+     * Get count of accounts by login
+     *
+     * @param login the login
+     * @return T extends BaseEntity
+     * @throws DaoException the DaoException
+     */
+    @Override
+    public int getCountOfAccountsByLogin(String login) throws DaoException {
+        int countOfAccountsWithLogin;
+        try {
+            countOfAccountsWithLogin = jdbcTemplate.executeSelectCountQuery(SELECT_COUNT_ACCOUNTS_BY_LOGIN, login);
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when finding account with login {}.", login);
+            throw new DaoException("Error when finding account with login " + login, e);
+        }
+
+        return countOfAccountsWithLogin;
     }
 
     /**
@@ -272,13 +294,11 @@ public class AccountDaoImpl implements AccountDao {
      */
     @Override
     public boolean delete(Long id) throws DaoException {
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(DELETE_ACCOUNT)) {
-            statement.setLong(1, id);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            logger.log(Level.ERROR, "Error when deleting account with Id {}. {}", id, e);
-            throw new DaoException("Error when account with Id " + id, e);
+        try {
+            jdbcTemplate.executeUpdateDeleteFields(DELETE_ACCOUNT, id);
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when deleting account.", e);
+            throw new DaoException("Error when deleting account", e);
         }
 
         return true;
@@ -335,6 +355,18 @@ public class AccountDaoImpl implements AccountDao {
         }
 
         return accountId;
+    }
+
+    @Override
+    public int getCountOfAccounts() throws DaoException {
+        int count;
+        try {
+            count = jdbcTemplate.executeSelectCountQuery(SELECT_COUNT_ACCOUNTS);
+        } catch (TransactionException e) {
+            logger.log(Level.ERROR, "Error when finding faculties", e);
+            throw new DaoException("Error when finding all faculties", e);
+        }
+        return count;
     }
 
 

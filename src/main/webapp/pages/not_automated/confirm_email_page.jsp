@@ -12,11 +12,11 @@
 </head>
 <body>
 <div>
-    <form class="needs-validation h-75" novalidate action="${pageContext.request.contextPath}/controller"
+    <form class="needs-validation h-75 container" novalidate action="${pageContext.request.contextPath}/controller"
           method="get">
-        <div class="offset-5 p-5">
+        <div class="offset-1 p-5 container__content">
             <input type="hidden" name="command" value="confirm_email"/>
-            <label class="form-label offset-1">
+            <label class="form-label">
                 <h6>
                     <fmt:message key="confirm.email.enter.code" bundle="${content}"/>
                 </h6>
@@ -41,7 +41,7 @@
             </div>
 
             <div class="row">
-                <div class="col-5 offset-2 p-3">
+                <div class="col-5 p-3">
                     <input type="submit" value="<fmt:message key="sing.up.submit.code" bundle="${content}"/>" class="blubtn">
                 </div>
             </div>

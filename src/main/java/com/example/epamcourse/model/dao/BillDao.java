@@ -50,5 +50,19 @@ public interface BillDao extends BaseDao<Bill> {
      */
     List<Bill> findAllBillsByFacultyId(Long facultyId, Boolean isArchive) throws DaoException;
 
-    boolean changeStatusToArchive() throws DaoException;
+    /**
+     * The changing of status to archive
+     *
+     * @throws DaoException the DaoException
+     */
+    void changeStatusToArchive() throws DaoException;
+
+    /**
+     * The getting of count of bills in faculty
+     *
+     * @param facultyId the faculty id
+     * @return the count of bills in faculty
+     * @throws DaoException the DaoException
+     */
+    int getCountOfBillsInFaculty(Long facultyId, boolean isArchive) throws DaoException;
 }
