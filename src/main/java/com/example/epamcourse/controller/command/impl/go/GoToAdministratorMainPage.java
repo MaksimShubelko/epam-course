@@ -14,9 +14,8 @@ public class GoToAdministratorMainPage implements Command {
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
-        session.setAttribute(SessionAttribute.CURRENT_PAGE, MAIN_PAGE_ADMINISTRATOR_REDIRECT);
         Router router = new Router(MAIN_PAGE_ADMINISTRATOR);
-
+        session.setAttribute(SessionAttribute.CURRENT_PAGE, MAIN_PAGE_ADMINISTRATOR_REDIRECT);
         return router;
     }
 }

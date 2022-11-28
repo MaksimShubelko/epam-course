@@ -17,9 +17,7 @@
         <junit.version>5.7.1</junit.version>
     </properties>
 
-
     <dependencies>
-
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>

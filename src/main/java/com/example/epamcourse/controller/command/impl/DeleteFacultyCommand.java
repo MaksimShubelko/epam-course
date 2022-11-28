@@ -40,6 +40,7 @@ public class DeleteFacultyCommand implements Command {
         try {
             Long facultyId = Long.valueOf(request.getParameter(RequestParameter.FACULTY_ID));
             facultyService.deleteFaculty(facultyId);
+            session.setAttribute(SessionAttribute.MESSAGE_RESULT, LocaleMessageKey.FACULTY_DELETED);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, "Deleting faculty failed", e);
             throw new CommandException("Deleting faculty failed", e);

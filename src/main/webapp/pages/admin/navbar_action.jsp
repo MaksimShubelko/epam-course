@@ -7,7 +7,7 @@
 <head>
     <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" type="text/css" rel="stylesheet">
 </head>
-<body>
+<body class="font-comforta">
 <form action="${pageContext.request.contextPath}/controller" method="get">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -72,7 +72,7 @@
                     <div class="input-group p-1">
                         <div class="input-group-prepend">
                             <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"
-                                    aria-haspopup="true" aria-expanded="false">Dropdown
+                                    aria-haspopup="true" aria-expanded="false"><fmt:message key="admin.main.page.recruitment" bundle="${content}"/>
                             </button>
                             <div class="dropdown-menu">
                                 <a class="dropdown-item"

@@ -29,7 +29,6 @@ public class GoToLoginPageCommand implements Command {
         HttpSession session = request.getSession();
         session.setAttribute(SessionAttribute.CURRENT_PAGE, LOGIN_REDIRECT);
         Router router = new Router(LOGIN);
-        router.setType(Router.RouterType.REDIRECT);
         return router;
     }
 }

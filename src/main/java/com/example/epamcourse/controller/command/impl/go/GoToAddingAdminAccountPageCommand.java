@@ -29,9 +29,8 @@ public class GoToAddingAdminAccountPageCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
-        session.setAttribute(SessionAttribute.CURRENT_PAGE, ADD_ADMIN_ACCOUNT_PAGE_REDIRECT);
         Router router = new Router(ADD_ADMIN_ACCOUNT_PAGE);
-        router.setType(Router.RouterType.REDIRECT);
+        session.setAttribute(SessionAttribute.CURRENT_PAGE, ADD_ADMIN_ACCOUNT_PAGE_REDIRECT);
         return router;
     }
 }

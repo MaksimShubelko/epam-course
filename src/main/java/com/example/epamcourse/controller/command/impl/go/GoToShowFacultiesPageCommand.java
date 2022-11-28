@@ -14,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+
 import java.util.List;
 
 import static com.example.epamcourse.controller.command.PagePath.SHOW_FACULTIES_PAGE;
@@ -25,7 +26,9 @@ import static com.example.epamcourse.controller.command.PagePath.SHOW_FACULTIES_
  */
 public class GoToShowFacultiesPageCommand implements Command {
 
-    /** The logger. */
+    /**
+     * The logger.
+     */
     private static final Logger logger = LogManager.getLogger();
 
     /**
@@ -37,18 +40,15 @@ public class GoToShowFacultiesPageCommand implements Command {
      */
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        final int recordsPerPage = 5;
-        int page = 1;
+        int page;
         HttpSession session = request.getSession();
+        final int recordsPerPage = (int) session.getAttribute(SessionAttribute.ROW_AMOUNT);
         Router router = new Router(SHOW_FACULTIES_PAGE);
         FacultyService facultyService = FacultyServiceImpl.getInstance();
         session.setAttribute(SessionAttribute.CURRENT_PAGE, PagePath.SHOW_FACULTIES_REDIRECT);
         try {
-            System.out.println(facultyService.getCountOfFaculties());
             long noOfPages = (long) Math.ceil(facultyService.getCountOfFaculties() * 1.0 / recordsPerPage);
-            if (request.getParameter(RequestParameter.PAGE) != null) {
-                page = Integer.parseInt(request.getParameter(RequestParameter.PAGE));
-            }
+            page = (int) session.getAttribute(SessionAttribute.PAGE);
             List<Faculty> faculties = facultyService.findFaculties(page);
             request.setAttribute(RequestAttribute.FACULTIES, faculties);
             request.setAttribute(RequestAttribute.PAGE, page);

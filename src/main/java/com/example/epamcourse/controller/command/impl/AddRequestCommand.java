@@ -38,6 +38,7 @@ public class AddRequestCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         Router router = new Router(PagePath.MAIN_PAGE_APPLICANT_REDIRECT);
+        router.setType(Router.RouterType.REDIRECT);
         HttpSession session = request.getSession();
         FacultyService facultyService = FacultyServiceImpl.getInstance();
         BillService billService = BillServiceImpl.getInstance();
@@ -58,6 +59,7 @@ public class AddRequestCommand implements Command {
             subjectService.updateSubject(applicantId, mathMark, physicMark, englishMark);
             applicantService.updateApplicantPrivileges(applicantId, privilege);
             billService.updateBill(applicantId, facultyId);
+            session.setAttribute(SessionAttribute.MESSAGE_RESULT, LocaleMessageKey.DOCUMENTS_SUBMITTED);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, "Adding request failed.", e);
             throw new CommandException("Adding request failed", e);

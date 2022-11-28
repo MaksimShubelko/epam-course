@@ -53,10 +53,10 @@ public class PickUpDocumentsCommand implements Command {
                     billService.deleteBill(applicantId);
                     subjectService.deleteSubjects(applicantId);
                     certificateService.deleteCertificate(applicantId);
-                    request.setAttribute(RequestAttribute.MESSAGE, LocaleMessageKey.PICK_UP_DOCUMENTS_SUCCESS);
+                    session.setAttribute(SessionAttribute.MESSAGE_RESULT, LocaleMessageKey.DOCUMENTS_TAKEN_AWAY);
                 } else {
                     router.setPage(MAIN_PAGE_APPLICANT_REDIRECT);
-                    session.setAttribute(RequestAttribute.MESSAGE, LocaleMessageKey.ADD_REQUEST_ERROR);
+                    session.setAttribute(SessionAttribute.MESSAGE, LocaleMessageKey.ADD_REQUEST_ERROR);
                 }
             } else {
                 router.setPage(MAIN_PAGE_APPLICANT_REDIRECT);

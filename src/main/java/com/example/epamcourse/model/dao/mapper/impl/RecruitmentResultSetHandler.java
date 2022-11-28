@@ -6,6 +6,7 @@ import com.example.epamcourse.model.entity.Recruitment;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.format.DateTimeFormatter;
 
 import static com.example.epamcourse.model.dao.TableColumn.*;
 
@@ -28,10 +29,8 @@ public class RecruitmentResultSetHandler implements ResultSetHandler<Recruitment
         Recruitment recruitment = new Recruitment(
                 resultSet.getLong(RECRUITMENT_ID),
                 resultSet.getBoolean(RECRUITMENT_STATUS),
-                resultSet.getDate(RECRUITMENT_FINISHING_DATE)
-                        .toLocalDate()
-                        .atStartOfDay()
-        );
+                resultSet.getTimestamp(RECRUITMENT_FINISHING_DATE)
+                        .toLocalDateTime());
 
         return recruitment;
     }

@@ -245,7 +245,7 @@ public class ProxyConnection implements Connection {
     /**
      * The creation of statement
      *
-     * @param resultSetType        the result set type
+     * @param resultSetType        the result set subjectType
      * @param resultSetConcurrency the result set concurrency
      * @return the statement
      * @throws SQLException the SQL exception
@@ -259,7 +259,7 @@ public class ProxyConnection implements Connection {
      * The preparing of statement
      *
      * @param sql                  the sql
-     * @param resultSetType        the result set type
+     * @param resultSetType        the result set subjectType
      * @param resultSetConcurrency the result set concurrency
      * @return the prepared statement
      * @throws SQLException the SQL exception
@@ -273,7 +273,7 @@ public class ProxyConnection implements Connection {
      * The preparing of call
      *
      * @param sql                  the sql
-     * @param resultSetType        the result set type
+     * @param resultSetType        the result set subjectType
      * @param resultSetConcurrency the result set concurrency
      * @return the callable statement
      * @throws SQLException the SQL exception
@@ -284,9 +284,9 @@ public class ProxyConnection implements Connection {
     }
 
     /**
-     * The getting of type map
+     * The getting of subjectType map
      *
-     * @return the type map
+     * @return the subjectType map
      * @throws SQLException the SQL exception
      */
     @Override
@@ -295,7 +295,7 @@ public class ProxyConnection implements Connection {
     }
 
     /**
-     * The setting of type map
+     * The setting of subjectType map
      *
      * @param map the map
      * @throws SQLException the SQL exception
@@ -375,7 +375,7 @@ public class ProxyConnection implements Connection {
     /**
      * The creation of statement
      *
-     * @param resultSetType        the result set type
+     * @param resultSetType        the result set subjectType
      * @param resultSetConcurrency the result set concurrency
      * @param resultSetHoldability the result set holdability
      * @return the statement
@@ -390,7 +390,7 @@ public class ProxyConnection implements Connection {
      * The preparing of statement
      *
      * @param sql                  the sql
-     * @param resultSetType        the result set type
+     * @param resultSetType        the result set subjectType
      * @param resultSetConcurrency the result set concurrency
      * @param resultSetHoldability the result set holdability
      * @return the prepared statement
@@ -405,7 +405,7 @@ public class ProxyConnection implements Connection {
      * The preparing of call
      *
      * @param sql                  the sql
-     * @param resultSetType        the result set type
+     * @param resultSetType        the result set subjectType
      * @param resultSetConcurrency the result set concurrency
      * @param resultSetHoldability the result set holdability
      * @return the callable statement
@@ -560,7 +560,7 @@ public class ProxyConnection implements Connection {
     /**
      * The creation of array of
      *
-     * @param typeName the type name
+     * @param typeName the subjectType name
      * @param elements the elements
      * @return the array
      * @throws SQLException the SQL exception
@@ -573,7 +573,7 @@ public class ProxyConnection implements Connection {
     /**
      * The creation of struct
      *
-     * @param typeName   the type name
+     * @param typeName   the subjectType name
      * @param attributes the attributes
      * @return the struct
      * @throws SQLException the SQL exception
@@ -712,7 +712,7 @@ public class ProxyConnection implements Connection {
     /**
      * The unwrapping
      *
-     * @param <T>   the generic type
+     * @param <T>   the generic subjectType
      * @param iface the iface
      * @return the t
      * @throws SQLException the SQL exception

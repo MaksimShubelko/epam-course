@@ -6,20 +6,20 @@ package com.example.epamcourse.model.entity;
  * @author M.Shubelko
  */
 public class Applicant extends BaseEntity {
-    private Long applicantId;
-    private Long accountId;
-    private Boolean isBeneficiary = false;
-    private Long certificateId;
+    private long applicantId;
+    private boolean isBeneficiary;
+    private long certificateId;
     private String firstname;
     private String lastname;
     private String surname;
+    private long accountId;
 
     /**
      * The public constructor
      */
-    public Applicant(Long applicantId, Long accountId,
-                     Boolean isBeneficiary,
-                     String firstname, String lastname, String surname, Long certificateId) {
+    public Applicant(long applicantId, long accountId,
+                     boolean isBeneficiary,
+                     String firstname, String lastname, String surname, long certificateId) {
         this.applicantId = applicantId;
         this.accountId = accountId;
         this.isBeneficiary = isBeneficiary;
@@ -166,14 +166,16 @@ public class Applicant extends BaseEntity {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
+        if (o == null) return false;
         if (!(o instanceof Applicant)) return false;
         Applicant applicant = (Applicant) o;
-        if (accountId != null ? !accountId.equals(applicant.accountId) : applicant.accountId != null) return false;
-        if (isBeneficiary != null ? !isBeneficiary.equals(applicant.isBeneficiary) : applicant.isBeneficiary != null)
-            return false;
+        if (applicantId != applicant.applicantId) return false;
+        if (isBeneficiary != applicant.isBeneficiary) return false;
+        if (certificateId != applicant.certificateId) return false;
         if (firstname != null ? !firstname.equals(applicant.firstname) : applicant.firstname != null) return false;
         if (lastname != null ? !lastname.equals(applicant.lastname) : applicant.lastname != null) return false;
-        return surname != null ? surname.equals(applicant.surname) : applicant.surname == null;
+        if (surname != null ? !surname.equals(applicant.surname) : applicant.surname != null) return false;
+        return accountId == applicant.accountId;
     }
 
     /**
@@ -189,9 +191,8 @@ public class Applicant extends BaseEntity {
         result = prime * result + ((surname == null) ? 0 : surname.hashCode());
         result = prime * result + ((lastname == null) ? 0 : lastname.hashCode());
         result = prime * result + ((firstname == null) ? 0 : firstname.hashCode());
-        result = prime * result + ((accountId == null) ? 0 : accountId.hashCode());
-        result = prime * result + ((isBeneficiary == null) ? 0 : isBeneficiary.hashCode());
-        //result = prime * result + ((totalMarkSubjects == null) ? 0 : totalMarkSubjects.hashCode());
+        result = prime * result + Long.hashCode(accountId);
+        result = prime * result + Long.hashCode(certificateId);
         return result;
     }
 
@@ -204,20 +205,13 @@ public class Applicant extends BaseEntity {
     public String toString() {
         StringBuilder stringData = new StringBuilder();
         stringData.append("Applicant{")
-                .append("applicantId=")
-                .append(applicantId)
-                .append(", account_id=")
-                .append(accountId)
-                .append(", isBeneficiary=")
-                .append(isBeneficiary)
-                .append(", firstname=")
-                .append(firstname)
-                .append(", surname='")
-                .append(surname)
-                .append(", lastname='")
-                .append(lastname)
-                .append(", certificateId='")
-                .append(certificateId)
+                .append("applicantId=").append(applicantId)
+                .append(", account_id=").append(accountId)
+                .append(", isBeneficiary=").append(isBeneficiary)
+                .append(", firstname=").append(firstname)
+                .append(", surname='").append(surname)
+                .append(", lastname='").append(lastname)
+                .append(", certificateId='").append(certificateId)
                 .append('}');
         return stringData.toString();
     }
@@ -226,14 +220,7 @@ public class Applicant extends BaseEntity {
      * static class ApplicantBuilder
      */
     public static class ApplicantBuilder {
-
-        private Long applicantId;
-        private Long accountId;
-        private Boolean isBeneficiary;
-        private Long certificateId;
-        private String firstname;
-        private String lastname;
-        private String surname;
+        private Applicant applicant = new Applicant();
 
         /**
          * Set applicant id
@@ -242,7 +229,7 @@ public class Applicant extends BaseEntity {
          * @return AdministratorBuilder
          */
         public Applicant.ApplicantBuilder setApplicantId(Long applicantId) {
-            this.applicantId = applicantId;
+            applicant.setApplicantId(applicantId);
             return this;
         }
 
@@ -253,7 +240,7 @@ public class Applicant extends BaseEntity {
          * @return ApplicantBuilder
          */
         public Applicant.ApplicantBuilder setFirstname(String firstname) {
-            this.firstname = firstname;
+            applicant.setFirstname(firstname);
             return this;
         }
 
@@ -264,7 +251,7 @@ public class Applicant extends BaseEntity {
          * @return ApplicantBuilder
          */
         public Applicant.ApplicantBuilder setLastname(String lastname) {
-            this.lastname = lastname;
+            applicant.setLastname(lastname);
             return this;
         }
 
@@ -275,7 +262,7 @@ public class Applicant extends BaseEntity {
          * @return ApplicantBuilder
          */
         public Applicant.ApplicantBuilder setSurname(String surname) {
-            this.surname = surname;
+            applicant.setSurname(surname);
             return this;
         }
 
@@ -286,7 +273,7 @@ public class Applicant extends BaseEntity {
          * @return ApplicantBuilder
          */
         public Applicant.ApplicantBuilder setAccountId(Long accountId) {
-            this.accountId = accountId;
+            applicant.setAccountId(accountId);
             return this;
         }
 
@@ -297,7 +284,7 @@ public class Applicant extends BaseEntity {
          * @return ApplicantBuilder
          */
         public Applicant.ApplicantBuilder setBeneficiary(Boolean isBeneficiary) {
-            this.isBeneficiary = isBeneficiary;
+            applicant.setBeneficiary(isBeneficiary);
             return this;
         }
 
@@ -308,7 +295,7 @@ public class Applicant extends BaseEntity {
          * @return ApplicantBuilder
          */
         public Applicant.ApplicantBuilder setCertificateId(Long certificateId) {
-            this.certificateId = certificateId;
+            applicant.setCertificateId(certificateId);
             return this;
         }
 
@@ -318,8 +305,7 @@ public class Applicant extends BaseEntity {
          * @return Applicant
          */
         public Applicant createApplicant() {
-            return new Applicant(applicantId, accountId, isBeneficiary,
-                    firstname, lastname, surname, certificateId);
+            return applicant;
         }
     }
 }

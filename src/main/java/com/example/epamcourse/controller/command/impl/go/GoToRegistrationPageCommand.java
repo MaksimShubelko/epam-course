@@ -26,9 +26,8 @@ public class GoToRegistrationPageCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) {
         HttpSession session = request.getSession();
-        session.setAttribute(SessionAttribute.CURRENT_PAGE, CREATION_ACCOUNT_REDIRECT);
         Router router = new Router(CREATION_ACCOUNT);
-        router.setType(Router.RouterType.REDIRECT);
+        session.setAttribute(SessionAttribute.CURRENT_PAGE, CREATION_ACCOUNT_REDIRECT);
         return router;
     }
 }

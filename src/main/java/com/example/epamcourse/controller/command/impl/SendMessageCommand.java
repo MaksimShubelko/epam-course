@@ -39,9 +39,8 @@ public class SendMessageCommand implements Command {
         MailingService mailingService = MailingServiceImpl.getInstance();
         try {
             if (!(title.isBlank() || message.isBlank())) {
+                session.setAttribute(SessionAttribute.MESSAGE_RESULT, LocaleMessageKey.MESSAGE_SEND);
                 mailingService.sendMessage(message, title, email);
-            } else {
-                request.setAttribute(RequestAttribute.MESSAGE, LocaleMessageKey.MESSAGE_ERROR);
             }
         } catch (ServiceException e) {
             logger.log(Level.ERROR, "Sending message failed", e);

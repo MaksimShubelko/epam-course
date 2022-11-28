@@ -6,15 +6,15 @@ package com.example.epamcourse.model.entity;
  * @author M.Shubelko
  */
 public class Bill extends BaseEntity {
-    private Long billId;
-    private Long facultyId;
-    private Long applicantId;
-    private Boolean archive;
+    private long billId;
+    private long facultyId;
+    private long applicantId;
+    private boolean archive;
 
     /**
      * The public constructor
      */
-    public Bill(Long billId, Long facultyId, Long applicantId, Boolean archive) {
+    public Bill(long billId, long facultyId, long applicantId, boolean archive) {
         this.billId = billId;
         this.applicantId = applicantId;
         this.facultyId = facultyId;
@@ -91,11 +91,13 @@ public class Bill extends BaseEntity {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
+        if (o == null) return false;
         if (!(o instanceof Bill)) return false;
         Bill bill = (Bill) o;
-        if (archive != null ? !archive.equals(bill.archive) : bill.archive != null) return false;
-        if (facultyId != null ? !facultyId.equals(bill.facultyId) : bill.facultyId != null) return false;
-        return (applicantId != null ? !applicantId.equals(bill.applicantId) : bill.applicantId != null);
+        if (billId != bill.billId) return false;
+        if (facultyId != bill.facultyId) return false;
+        if (applicantId != bill.applicantId) return false;
+        return archive != bill.archive;
     }
 
     /**
@@ -108,10 +110,9 @@ public class Bill extends BaseEntity {
         final int prime = 31;
         int result = 1;
         result = prime * result + Long.hashCode(billId);
-        result = prime * result + ((applicantId == null) ? 0 : applicantId.hashCode());
+        result = prime * result + Long.hashCode(facultyId);
+        result = prime * result + Long.hashCode(applicantId);
         result = prime * result + Boolean.hashCode(archive);
-        result = prime * result + ((facultyId == null) ? 0 : facultyId.hashCode());
-
         return result;
     }
 

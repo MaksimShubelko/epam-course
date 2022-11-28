@@ -28,7 +28,6 @@ public class GoToExceptionPageCommand implements Command {
         HttpSession session = request.getSession();
         session.setAttribute(SessionAttribute.CURRENT_PAGE, EXCEPTION_ERROR_REDIRECT);
         Router router = new Router(EXCEPTION_ERROR_PAGE);
-        router.setType(Router.RouterType.REDIRECT);
         return router;
     }
 }

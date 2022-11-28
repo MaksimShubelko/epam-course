@@ -26,7 +26,6 @@ public class SessionListener implements HttpSessionListener {
         session.setAttribute(SessionAttribute.SESSION_LOCALE, DEFAULT_LOCALE);
         session.setAttribute(SessionAttribute.ROW_AMOUNT, ROW_AMOUNT);
 
-
     }
 
 }

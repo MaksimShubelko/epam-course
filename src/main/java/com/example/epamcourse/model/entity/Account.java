@@ -6,10 +6,9 @@ package com.example.epamcourse.model.entity;
  * @author M.Shubelko
  */
 public class Account extends BaseEntity {
-    private Long accountId;
+    private long accountId;
     private String login;
     private String email;
-    private String password;
     private Role role;
     private Status status;
     private String ip;
@@ -43,10 +42,12 @@ public class Account extends BaseEntity {
         this.login = login;
         this.email = email;
         this.role = role;
-        this.password = password;
         this.status = status;
         this.ip = ip;
         this.imagePath = imagePath;
+    }
+
+    public Account() {
     }
 
     /**
@@ -83,24 +84,6 @@ public class Account extends BaseEntity {
      */
     public String getImagePath() {
         return imagePath;
-    }
-
-    /**
-     * Get image path
-     *
-     * @return imagePath the image path
-     */
-    public String getPassword() {
-        return password;
-    }
-
-    /**
-     * Set password
-     *
-     * @param password  the password
-     */
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     /**
@@ -202,13 +185,17 @@ public class Account extends BaseEntity {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
+        if (o == null) return false;
         if (!(o instanceof Account)) return false;
         Account account = (Account) o;
-        if (imagePath != null ? !imagePath.equals(account.imagePath) : account.imagePath != null) return false;
+        if (accountId != account.accountId) return false;
         if (login != null ? !login.equals(account.login) : account.login != null) return false;
+        if (imagePath != null ? !imagePath.equals(account.imagePath) : account.imagePath != null) return false;
         if (role != null ? !role.equals(account.role) : account.role != null) return false;
         if (status != null ? status.equals(account.status) : account.status != null) return false;
-        return email != null ? email.equals(account.email) : account.email == null;
+        if (ip != null ? !ip.equals(account.ip) : account.ip != null) return false;
+        return (imagePath != null ? !imagePath.equals(account.imagePath) : account.imagePath != null);
+
     }
 
     /**
@@ -222,9 +209,11 @@ public class Account extends BaseEntity {
         int result = 1;
         result = prime * result + Long.hashCode(accountId);
         result = prime * result + ((login == null) ? 0 : login.hashCode());
-        result = prime * result + ((imagePath == null) ? 0 : imagePath.hashCode());
         result = prime * result + ((email == null) ? 0 : email.hashCode());
+        result = prime * result + ((role == null) ? 0 : role.hashCode());
         result = prime * result + ((status == null) ? 0 : status.hashCode());
+        result = prime * result + ((ip == null) ? 0 : ip.hashCode());
+        result = prime * result + ((imagePath == null) ? 0 : imagePath.hashCode());
         return result;
     }
 
@@ -237,20 +226,13 @@ public class Account extends BaseEntity {
     public String toString() {
         StringBuilder stringData = new StringBuilder();
         stringData.append("Account{")
-                .append("accountId=")
-                .append(accountId)
-                .append(", login='")
-                .append(login)
-                .append(", email='")
-                .append(email)
-                .append(", role=")
-                .append(role)
-                .append(", status=")
-                .append(status)
-                .append(", imagePath=")
-                .append(imagePath)
-                .append(", ip=")
-                .append(ip)
+                .append("accountId=").append(accountId)
+                .append(", login='").append(login)
+                .append(", email='").append(email)
+                .append(", role=").append(role)
+                .append(", status=").append(status)
+                .append(", imagePath=").append(imagePath)
+                .append(", ip=").append(ip)
                 .append('}');
         return stringData.toString();
     }
@@ -259,15 +241,7 @@ public class Account extends BaseEntity {
      * static class AccountBuilder
      */
     public static class AccountBuilder {
-
-        private Long accountId;
-        private String login;
-        private String email;
-        private String password;
-        private Role role;
-        private Status status;
-        private String ip;
-        private String imagePath;
+        private Account account = new Account();
 
         /**
          * Set account id
@@ -276,21 +250,9 @@ public class Account extends BaseEntity {
          * @return AccountBuilder
          */
         public AccountBuilder setAccountId(Long accountId) {
-            this.accountId = accountId;
+            account.setAccountId(accountId);
             return this;
         }
-
-        /**
-         * Set password
-         *
-         * @param password the password
-         * @return AccountBuilder
-         */
-        public AccountBuilder setPassword(String password) {
-            this.password = password;
-            return this;
-        }
-
 
         /**
          * Set login
@@ -299,7 +261,7 @@ public class Account extends BaseEntity {
          * @return AccountBuilder
          */
         public AccountBuilder setLogin(String login) {
-            this.login = login;
+            account.setLogin(login);
             return this;
         }
 
@@ -310,7 +272,7 @@ public class Account extends BaseEntity {
          * @return AccountBuilder
          */
         public AccountBuilder setEmail(String email) {
-            this.email = email;
+            account.setEmail(email);
             return this;
         }
 
@@ -321,7 +283,7 @@ public class Account extends BaseEntity {
          * @return AccountBuilder
          */
         public AccountBuilder setRole(Role role) {
-            this.role = role;
+            account.setRole(role);
             return this;
         }
 
@@ -332,7 +294,7 @@ public class Account extends BaseEntity {
          * @return AccountBuilder
          */
         public AccountBuilder setStatus(Status status) {
-            this.status = status;
+            account.setStatus(status);
             return this;
         }
 
@@ -343,7 +305,7 @@ public class Account extends BaseEntity {
          * @return AccountBuilder
          */
         public AccountBuilder setIp(String ip) {
-            this.ip = ip;
+            account.setIp(ip);
             return this;
         }
 
@@ -354,7 +316,7 @@ public class Account extends BaseEntity {
          * @return AccountBuilder
          */
         public AccountBuilder setImagePath(String imagePath) {
-            this.imagePath = imagePath;
+            account.setImagePath(imagePath);
             return this;
         }
 
@@ -364,10 +326,7 @@ public class Account extends BaseEntity {
          * @return Account
          */
         public Account createAccount() {
-            return new Account(accountId, login,
-                    email, password,
-                    role, status,
-                    ip, imagePath);
+            return account;
         }
 
     }

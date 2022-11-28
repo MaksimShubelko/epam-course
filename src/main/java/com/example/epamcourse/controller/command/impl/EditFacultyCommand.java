@@ -8,12 +8,14 @@ import com.example.epamcourse.model.service.ApplicantService;
 import com.example.epamcourse.model.service.FacultyService;
 import com.example.epamcourse.model.service.impl.ApplicantServiceImpl;
 import com.example.epamcourse.model.service.impl.FacultyServiceImpl;
+import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.List;
+
+import java.util.*;
 
 /**
  * class EditFacultyCommand
@@ -36,6 +38,8 @@ public class EditFacultyCommand implements Command {
     public Router execute(HttpServletRequest request) throws CommandException {
         FacultyService facultyService = FacultyServiceImpl.getInstance();
         Router router = new Router(PagePath.EDIT_FACULTY_PAGE);
+        router.setType(Router.RouterType.REDIRECT);
+        HttpSession session = request.getSession();
         try {
             List<Faculty> faculties = facultyService.findAllFaculties();
             request.setAttribute(RequestAttribute.FACULTIES, faculties);
@@ -44,9 +48,10 @@ public class EditFacultyCommand implements Command {
             int recruitmentPlanFree = Integer.parseInt(request.getParameter(RequestParameter.RECRUITMENT_PLAN_FREE));
             int recruitmentPlanCanvas = Integer.parseInt(request.getParameter(RequestParameter.RECRUITMENT_PLAN_CANVAS));
             if (facultyService.isFacultyNameExist(facultyName, facultyId)) {
-                request.setAttribute(RequestAttribute.MESSAGE, LocaleMessageKey.FACULTY_NAME_EXIST_ERROR);
+                session.setAttribute(SessionAttribute.MESSAGE, LocaleMessageKey.FACULTY_NAME_EXIST_ERROR);
             } else{
                 if (facultyService.editFaculty(facultyId, facultyName, recruitmentPlanFree, recruitmentPlanCanvas)) {
+                    session.setAttribute(SessionAttribute.MESSAGE_RESULT, LocaleMessageKey.FACULTY_EDITED);
                     router.setPage(PagePath.SHOW_FACULTIES_PAGE_REDIRECT);
                 }
             }

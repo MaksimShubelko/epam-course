@@ -310,7 +310,6 @@ public class AccountServiceImpl implements AccountService {
         if (validateRegistrationData(login, password, confirmingPassword)) {
             Account account = new Account.AccountBuilder()
                     .setLogin(login)
-                    .setPassword(password)
                     .setRole(Account.Role.ADMIN)
                     .createAccount();
             String hashPassword = HashGenerator.hashPassword(password);

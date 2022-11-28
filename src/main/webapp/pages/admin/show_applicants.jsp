@@ -10,68 +10,55 @@
     <jsp:include page="/pages/admin/navbar_header.jsp"/>
     <jsp:include page="/pages/admin/navbar_action.jsp"/>
     <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" type="text/css" rel="stylesheet">
-    <link href="${pageContext.request.contextPath}/css/button.css" type="text/css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/css/main.css" type="text/css" rel="stylesheet">
     <title><fmt:message key="show.applicants.title" bundle="${content}"/></title>
 </head>
-<body>
-<form class="needs-validation h-75" novalidate action="${pageContext.request.contextPath}/controller" method="get"
-      class="h-75">
+<body class="font-comforta">
+<form class="h-75 container" action="${pageContext.request.contextPath}/controller" method="get">
     <input type="hidden" name="command" value="go_to_show_applicants">
-
-    <div class="d-flex justify-content-start p-3 w-100">
-        <div class="custom-control custom-radio p-3 col-1">
-            <input type="radio" id="archive" value="archive" name="recruitment_status" class="custom-control-input">
-            <label class="custom-control-label" for="archive">
+    <div class="d-flex row justify-content-center rounded-1 pt-3 pb-3 ps-5 ms-2 me-2 border border-5 border-dark">
+        <div class="col-4">
+            <div class="custom-radio p-1">
+                <input type="radio" id="archive" value="archive" name="recruitment_status">
                 <fmt:message key="admin.main.page.applicants.archive" bundle="${content}"/>
-            </label>
-        </div>
-        <div class="custom-control custom-radio p-3 col-1">
-            <input type="radio" id="all" value="all" name="recruitment_status" class="custom-control-input" checked>
-            <label class="custom-control-label" for="all">
+            </div>
+            <div class="custom-radio p-1">
+                <input type="radio" id="all" value="all" name="recruitment_status">
                 <fmt:message key="admin.main.page.applicants.all" bundle="${content}"/>
-            </label>
-        </div>
-        <div class="custom-control custom-radio p-3 col-1">
-            <input type="radio" id="free" value="free" name="recruitment_status" class="custom-control-input">
-            <label class="custom-control-label" for="free">
+            </div>
+            <div class="custom-radio p-1">
+                <input type="radio" id="free" value="free" name="recruitment_status">
                 <fmt:message key="admin.main.page.applicants.free" bundle="${content}"/>
-            </label>
-        </div>
-        <div class="custom-control custom-radio p-3 col-1">
-            <input type="radio" id="canvas" value="canvas" name="recruitment_status" class="custom-control-input">
-            <label class="custom-control-label" for="canvas">
+            </div>
+            <div class="custom-radio p-1">
+                <input type="radio" id="canvas" value="canvas" name="recruitment_status">
                 <fmt:message key="admin.main.page.applicants.canvas" bundle="${content}"/>
-            </label>
-        </div>
-        <div class="custom-control custom-radio p-3 col-1">
-            <input type="radio" id="not_received" value="not_received" name="recruitment_status"
-                   class="custom-control-input">
-            <label class="custom-control-label" for="not_received">
+            </div>
+            <div class="custom-radio p-1">
+                <input type="radio" id="not_received" value="not_received" name="recruitment_status">
                 <fmt:message key="admin.main.page.applicants.not.received" bundle="${content}"/>
-            </label>
+            </div>
         </div>
-        <div class="col-5 p-3 offset-1">
+        <div class="col-5 pt-4 mt-2">
             <select class="form-select" name="faculty_id" required>
                 <c:forEach var="faculty" items="${faculties}" varStatus="loop">
                     <option value="${faculty.getFacultyId()}">${faculty.getFacultyName()}</option>
                 </c:forEach>
             </select>
         </div>
-        <div class="input-group h-25 w-25 p-3 col-1">
+        <div class="input-group h-25 w-25 pt-4 mt-2 col-1">
             <div class="input-group-append">
                 <input class="btn btn-success"
                        value="<fmt:message key="admin.main.page.applicants.search" bundle="${content}"/>" type="submit">
             </div>
         </div>
     </div>
-    </div>
 
     <c:if test="${countPages > 0}">
-
-        <div class="col-8 pb-1">
-            <table class="table table-bordered table-sm">
-                <tr>
-                    <th><fmt:message key="admin.main.page.applicants.number" bundle="${content}"/></th>
+        <div class="container__content pt-2">
+            <table class="table table-bordered table-responsive-lg">
+                <tr class="text-center text-uppercase col-3 text-nowrap">
+                    <th class="text-center"><fmt:message key="admin.main.page.applicants.number" bundle="${content}"/></th>
                     <th><fmt:message key="admin.main.page.applicants.login" bundle="${content}"/></th>
                     <th><fmt:message key="admin.main.page.applicants.email" bundle="${content}"/></th>
                     <th><fmt:message key="admin.main.page.applicants.certificate" bundle="${content}"/></th>
@@ -86,68 +73,68 @@
 
                 <c:forEach var="applicant" items="${applicants}" varStatus="loop">
                     <tr>
-                        <td>${loop.index + 1 + (currentPage - 1) * 5}</td>
+                        <td class="text-center">${loop.index + 1 + (currentPage - 1) * 5}</td>
                         <c:if test="${accounts.get(loop.index).getAccountId() == applicant.getAccountId()}">
                             <td>${accounts.get(loop.index).getLogin()}</td>
                             <td>${accounts.get(loop.index).getEmail()}</td>
-                            <td>${certificates.get(loop.index).getTotalMark()}</td>
+                            <td class="text-center">${certificates.get(loop.index).getTotalMark()}</td>
                         </c:if>
                         <c:forEach var="subject" items="${subjects.get(loop.index)}" varStatus="loop">
-                            <td>${subject.getMark()}</td>
+                            <td class="text-center">${subject.getMark()}</td>
                         </c:forEach>
                         <td>${applicant.getFirstname()}</td>
                         <td>${applicant.getSurname()}</td>
                         <td>${applicant.getLastname()}</td>
                         <td>
-                            <a href="${pageContext.request.contextPath}/controller?command=go_to_sender_page&email=${accounts.get(loop.index).getEmail()}&page=${currentPage}">
-                                Send message
+                            <a class="text-nowrap" href="${pageContext.request.contextPath}/controller?command=go_to_sender_page&email=${accounts.get(loop.index).getEmail()}&page=${currentPage}">
+                                <fmt:message key="admin.main.page.applicants.messaging" bundle="${content}"/>
                             </a>
                         </td>
 
                     </tr>
                 </c:forEach>
             </table>
-            <div class="offset-sm-1">
-                <div class="row w-75">
-                    <div class="col-3">
-                        <c:if test="${currentPage != 1}">
-                            <td>
-                                <a href="${pageContext.request.contextPath}/controller?command=go_to_show_applicants&page=${currentPage - 1}&faculty_id=${faculty_id}">
-                                    <fmt:message key="pagination.previous.page" bundle="${content}"/>
-                                </a>
-                            </td>
-                        </c:if>
-                    </div>
-
-                    <div class="col-6">
-                        <table border="1" cellpadding="5" cellspacing="5">
-                            <tr>
-                                <c:forEach begin="1" end="${countPages}" var="i">
-                                    <c:choose>
-                                        <c:when test="${currentPage eq i}">
-                                            <td>${i}</td>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <td>
-                                                <a href="${pageContext.request.contextPath}/controller?command=go_to_show_applicants&page=${i}&faculty_id=${faculty_id}">${i}</a>
-                                            </td>
-                                        </c:otherwise>
-                                    </c:choose>
-                                </c:forEach>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="col-3">
-                        <c:if test="${currentPage lt countPages}">
-                            <td>
-                                <a href="${pageContext.request.contextPath}/controller?command=go_to_show_applicants&page=${currentPage + 1}&faculty_id=${faculty_id}">
-                                    <fmt:message key="pagination.next.page" bundle="${content}"/></a>
-                                </a>
-                            </td>
-                        </c:if>
-                    </div>
-                </div>
-            </div>
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    <c:if test="${currentPage != 1}">
+                        <li class="page-item">
+                            <a class="page-link"
+                               href="${pageContext.request.contextPath}/controller?command=command=go_to_show_applicants&page=${currentPage - 1}"
+                               aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                                <span class="sr-only"><fmt:message key="pagination.previous.page"
+                                                                   bundle="${content}"/></span>
+                            </a>
+                        </li>
+                    </c:if>
+                    <c:forEach begin="1" end="${countPages}" var="i">
+                        <c:choose>
+                            <c:when test="${currentPage eq i}">
+                                <li class="page-item">
+                                    <a class="page-link">${i}</a>
+                                </li>
+                            </c:when>
+                            <c:otherwise>
+                                <li class="page-item">
+                                    <a class="page-link"
+                                       href="${pageContext.request.contextPath}/controller?command=command=go_to_show_applicants&page=${i}">${i}</a>
+                                </li>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:forEach>
+                    <c:if test="${currentPage lt countPages}">
+                        <li class="page-item">
+                            <a class="page-link"
+                               href="${pageContext.request.contextPath}/controller?command=command=go_to_show_applicants&page=${currentPage + 1}"
+                               aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                                <span class="sr-only"><fmt:message key="pagination.next.page"
+                                                                   bundle="${content}"/></span>
+                            </a>
+                        </li>
+                    </c:if>
+                </ul>
+            </nav>
         </div>
     </c:if>
 </form>

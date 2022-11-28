@@ -41,16 +41,14 @@ public class AddApplicantSecureInformationCommand implements Command {
         String lastname = request.getParameter(RequestParameter.LASTNAME);
         Long accountId = (Long) session.getAttribute(SessionAttribute.ACCOUNT_ID);
         ApplicantService applicantService = ApplicantServiceImpl.getInstance();
-        FacultyService facultyService = FacultyServiceImpl.getInstance();
         Router router = new Router(PagePath.MAIN_PAGE_APPLICANT_REDIRECT);
         router.setType(Router.RouterType.REDIRECT);
         try {
             if (applicantService.addPersonalInformation(name, surname, lastname, accountId)) {
-                List<Faculty> faculties = facultyService.findAllFaculties();
-                session.setAttribute(RequestAttribute.FACULTIES, faculties);
+                session.setAttribute(SessionAttribute.MESSAGE_RESULT, LocaleMessageKey.PROFILE_CREATED);
                 Long applicantId = applicantService.findApplicantIdByAccountId(accountId);
                 session.setAttribute(SessionAttribute.APPLICANT_ID, applicantId);
-                router.setPage(PagePath.MAIN_PAGE_APPLICANT);
+                router.setPage(PagePath.MAIN_PAGE_APPLICANT_REDIRECT);
             }
         } catch (ServiceException e) {
             logger.log(Level.ERROR, "Adding administrator secure information failed.", e);

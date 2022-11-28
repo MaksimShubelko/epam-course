@@ -72,6 +72,7 @@ public final class SessionAttribute {
 
     /** The constant PAGE **/
     public static final String PAGE = "page";
+    public static final String MESSAGE_RESULT = "message_success";
 
 
     /**

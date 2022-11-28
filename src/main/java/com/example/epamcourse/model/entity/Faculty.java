@@ -6,17 +6,17 @@ package com.example.epamcourse.model.entity;
  * @author M.Shubelko
  */
 public class Faculty extends BaseEntity {
-    private Long facultyId;
+    private long facultyId;
     private String facultyName;
-    private Integer recruitmentPlanFree;
-    private Integer recruitmentPlanCanvas;
+    private int recruitmentPlanFree;
+    private int recruitmentPlanCanvas;
 
     /**
      * The public constructor
      */
-    public Faculty(Long facultyId,
-                   String facultyName, Integer recruitmentPlanFree,
-                   Integer recruitmentPlanCanvas) {
+    public Faculty(long facultyId,
+                   String facultyName, int recruitmentPlanFree,
+                   int recruitmentPlanCanvas) {
         this.facultyId = facultyId;
         this.facultyName = facultyName;
         this.recruitmentPlanFree = recruitmentPlanFree;
@@ -111,13 +111,13 @@ public class Faculty extends BaseEntity {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
+        if (o == null) return false;
         if (!(o instanceof Faculty)) return false;
         Faculty faculty = (Faculty) o;
-        if (recruitmentPlanFree != null ? !recruitmentPlanFree.equals(faculty.recruitmentPlanFree) : faculty.recruitmentPlanFree != null)
-            return false;
-        if (recruitmentPlanCanvas != null ? !recruitmentPlanCanvas.equals(faculty.recruitmentPlanCanvas) : faculty.recruitmentPlanCanvas != null)
-            return false;
-        return facultyName != null ? facultyName.equals(faculty.facultyName) : faculty.facultyName == null;
+        if (facultyId != faculty.facultyId) return false;
+        if (facultyName != null ? !facultyName.equals(faculty.facultyName) : faculty.facultyName != null) return false;
+        if (recruitmentPlanFree == faculty.recruitmentPlanFree) return false;
+        return recruitmentPlanCanvas == faculty.recruitmentPlanCanvas;
     }
 
     /**
@@ -131,10 +131,9 @@ public class Faculty extends BaseEntity {
         int result = 1;
         result = prime * result + Long.hashCode(facultyId);
         result = prime * result + ((facultyName == null) ? 0 : facultyName.hashCode());
-        result = prime * result + ((recruitmentPlanFree == null) ? 0 : recruitmentPlanFree.hashCode());
-        result = prime * result + ((recruitmentPlanCanvas == null) ? 0 : recruitmentPlanCanvas.hashCode());
-        result = prime * result + ((facultyId == null) ? 0 : facultyId.hashCode());
-        return prime;
+        result = prime * result + Integer.hashCode(recruitmentPlanFree);
+        result = prime * result + Integer.hashCode(recruitmentPlanCanvas);
+        return result;
     }
 
     /**
@@ -162,11 +161,7 @@ public class Faculty extends BaseEntity {
      * static class FacultyBuilder
      */
     public static class FacultyBuilder {
-
-        private Long facultyId;
-        private String facultyName;
-        private Integer recruitmentPlanFree;
-        private Integer recruitmentPlanCanvas;
+        private Faculty faculty = new Faculty();
 
         /**
          * Set faculty id
@@ -175,7 +170,7 @@ public class Faculty extends BaseEntity {
          * @return FacultyBuilder
          */
         public Faculty.FacultyBuilder setFacultyId(Long facultyId) {
-            this.facultyId = facultyId;
+            faculty.setFacultyId(facultyId);
             return this;
         }
 
@@ -186,7 +181,7 @@ public class Faculty extends BaseEntity {
          * @return FacultyBuilder
          */
         public Faculty.FacultyBuilder setFacultyName(String facultyName) {
-            this.facultyName = facultyName;
+            faculty.setFacultyName(facultyName);
             return this;
         }
 
@@ -197,7 +192,7 @@ public class Faculty extends BaseEntity {
          * @return FacultyBuilder
          */
         public Faculty.FacultyBuilder setRecruitmentPlanFree(Integer recruitmentPlanFree) {
-            this.recruitmentPlanFree = recruitmentPlanFree;
+            faculty.setRecruitmentPlanFree(recruitmentPlanFree);
             return this;
         }
 
@@ -208,7 +203,7 @@ public class Faculty extends BaseEntity {
          * @return FacultyBuilder
          */
         public Faculty.FacultyBuilder setRecruitmentPlanCanvas(Integer recruitmentPlanCanvas) {
-            this.recruitmentPlanCanvas = recruitmentPlanCanvas;
+            faculty.setRecruitmentPlanCanvas(recruitmentPlanCanvas);
             return this;
         }
 
@@ -218,9 +213,7 @@ public class Faculty extends BaseEntity {
          * @return Faculty
          */
         public Faculty createFaculty() {
-            return new Faculty(facultyId,
-                    facultyName, recruitmentPlanFree,
-                    recruitmentPlanCanvas);
+            return faculty;
         }
     }
 

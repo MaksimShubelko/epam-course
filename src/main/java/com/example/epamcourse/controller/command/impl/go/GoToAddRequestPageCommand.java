@@ -68,12 +68,10 @@ public class GoToAddRequestPageCommand implements Command {
                 router.setPage(MAIN_PAGE_APPLICANT_REDIRECT);
                 session.setAttribute(RequestAttribute.MESSAGE, LocaleMessageKey.RECRUITMENT_NOT_STARTED);
             }
-
         } catch (ServiceException e) {
-            logger.log(Level.ERROR, "Go to request page failed. {}", e);
+            logger.log(Level.ERROR, "Go to request page failed.", e);
             throw new CommandException("Go to request page failed", e);
         }
-        router.setType(Router.RouterType.REDIRECT);
         return router;
     }
 }

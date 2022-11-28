@@ -114,7 +114,6 @@ public class ApplicantFindingServiceImpl implements ApplicantFindingService {
             case CANVAS:
                 countApplicants = recruitmentPlanFree + recruitmentPlanCanvas > countApplicants
                         ? countApplicants - recruitmentPlanFree : recruitmentPlanCanvas;
-
                 break;
             case NOT_RECEIVED:
                 countApplicants = recruitmentPlanFree + recruitmentPlanCanvas > countApplicants ?

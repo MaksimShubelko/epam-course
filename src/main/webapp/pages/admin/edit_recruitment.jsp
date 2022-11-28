@@ -10,66 +10,77 @@
     <jsp:include page="../header.jsp"/>
     <jsp:include page="/pages/admin/navbar_header.jsp"/>
     <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" type="text/css" rel="stylesheet">
-    <link href="${pageContext.request.contextPath}/css/button.css" type="text/css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/css/main.css" type="text/css" rel="stylesheet">
     <title><fmt:message key="edition.recruitment.title" bundle="${content}"/></title>
 </head>
-<body>
+<body class="font-comforta">
 <div>
-    <form class="needs-validation h-75" novalidate action="${pageContext.request.contextPath}/controller"
-          method="get">
+    <form class="needs-validation container h-auto pt-5 pb-5 col-8 justify-content-center" novalidate
+          action="${pageContext.request.contextPath}/controller"
+          method="post">
         <input type="hidden" name="command" value="edit_recruitment"/>
-        <div class="offset-4 p-5 w-75">
-            <div class="offset-3 p-4">
+        <div class="row w-100 container__content col-8 border-1 offset-3 shadow-lg p-3 mb-5 bg-body rounded border-dark border border-2 bg-opacity-50 rounded-3">
+            <label class="align-content-center text-center pe-1 text-uppercase">
                 <h6><fmt:message key="admin.main.page.recruitment.update.welcome.message" bundle="${content}"/></h6>
-            </div>
+            </label>
             <c:if test="${message != null}">
-                <h6 class="text-danger offset-3">
+                <h6 class="text-danger">
                     <fmt:message key="${message}" bundle="${content}"/>
                 </h6>
+                ${pageContext.request.getSession().removeAttribute("message")}
             </c:if>
-            <div class="row">
-                <label class="col-3 col-form-label">
-                    <h6><fmt:message key="admin.main.page.recruitment.update.finish.date" bundle="${content}"/></h6>
-                </label>
-                <div class="col-6">
-                    <input type="datetime-local" name="finish_recruitment" pattern="^d{2}\\.d{2}\\.d{4}Td{2}:d{2}$"
+
+            <div class="pt-1">
+
+                <div class="row">
+                    <label class="col-sm-2 col-form-label">
+                        <h6><fmt:message key="admin.main.page.recruitment.update.finish.date" bundle="${content}"/></h6>
+                    </label>
+                    <label for="date" class="col-4 offset-2 pe-5">
+
+                    </label>
+                    <input type="datetime-local" id="date" name="finish_recruitment" pattern="^d{2}\\.d{2}\\.d{4}Td{2}:d{2}$"
                            value="${recruitment.getFinishRecruitment()}" required/>
                 </div>
-            </div>
 
-            <div class="row">
-                <label class="col-3 col-form-label">
-                    <h6>
-                        <fmt:message key="admin.main.page.recruitment.update.status" bundle="${content}"/>
-                    </h6>
-                </label>
-                <select class="custom-select col-4" name="recruitment_status" required>
-                    <option value="true">true</option>
-                    <option value="false">false</option>
-                </select>
-            </div>
-            <div class="row">
-                <div class="col-3">
-                    <h6>
-                        <fmt:message key="admin.main.page.recruitment.update.restart.recruitment" bundle="${content}"/>
-                    </h6>
+                <div class="row pt-3">
+                    <label class="col-sm-2 col-form-label">
+                        <h6>
+                            <fmt:message key="admin.main.page.recruitment.update.status" bundle="${content}"/>
+                        </h6>
+                    </label>
+                    <label for="status" class="col-4 offset-2 pe-5">
+
+                    </label>
+                    <select id="status" class="custom-select" name="recruitment_status" required>
+                        <option value="true">true</option>
+                        <option value="false">false</option>
+                    </select>
                 </div>
-                <div class="col-3">
-                    <input type="checkbox" name="restart_recruitment" value="true">
+
+                <div class="row pt-3">
+                        <h6 class="col-6">
+                            <fmt:message key="admin.main.page.recruitment.update.restart.recruitment"
+                                         bundle="${content}"/>
+                        </h6>
+                    <label for="restart" class="col-4 pt-1">
+                        <div class="col-6">
+                            <input id="restart" type="checkbox" name="restart_recruitment" value="true">
+                        </div>
+                    </label>
                 </div>
-            </div>
 
-            <div class="row offset-4 p-1">
-                <label class="col-8">
-                    <input type="submit"
-                           value="<fmt:message key="admin.main.page.recruitment.update.submit" bundle="${content}" />"
-                           class="blubtn align-middle">
+                <label class="offset-3 pt-1">
+                    <h6>
+                        <input type="submit"
+                               value="<fmt:message key="admin.main.page.recruitment.update.submit" bundle="${content}" />"
+                               class="btn-primary border">
+                    </h6>
+                    <a class="hr border border-info btn-primary"
+                       href="${pageContext.request.contextPath}/controller?command=go_to_administrator_main_page">
+                        <fmt:message key="btn.back" bundle="${content}"/>
+                    </a>
                 </label>
-
-                <a class="row col-8 ps-5"
-                   href="${pageContext.request.contextPath}/controller?command=go_to_administrator_main_page">
-                    <fmt:message key="btn.back" bundle="${content}"/>
-                </a>
             </div>
         </div>
     </form>

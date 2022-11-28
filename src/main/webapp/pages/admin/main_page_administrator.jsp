@@ -10,12 +10,11 @@
     <jsp:include page="/pages/admin/navbar_header.jsp"/>
     <jsp:include page="/pages/admin/navbar_action.jsp"/>
     <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" type="text/css" rel="stylesheet">
-    <link href="${pageContext.request.contextPath}/css/button.css" type="text/css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/css/main.css" type="text/css" rel="stylesheet">
     <title><fmt:message key="admin.main.page.title" bundle="${content}"/></title>
 </head>
-<body>
+<body class="font-comforta">
 <form class="h-75" action="${pageContext.request.contextPath}/controller" method="get">
-
 
 </form>
 </body>

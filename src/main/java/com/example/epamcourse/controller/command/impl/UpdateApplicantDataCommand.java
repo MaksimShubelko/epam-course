@@ -39,14 +39,14 @@ public class UpdateApplicantDataCommand implements Command {
         ApplicantService applicantService = ApplicantServiceImpl.getInstance();
         FacultyService facultyService = FacultyServiceImpl.getInstance();
         Router router = new Router(PagePath.EDIT_APPLICANT_DATA);
+        router.setType(Router.RouterType.REDIRECT);
         try {
-            Long applicantId = (Long) request.getSession().getAttribute(SessionAttribute.APPLICANT_ID);
-            List<Faculty> faculties = facultyService.findAllFaculties();
-            request.setAttribute(RequestAttribute.FACULTIES, faculties);
+            Long applicantId = (Long) session.getAttribute(SessionAttribute.APPLICANT_ID);
             String name = request.getParameter(RequestParameter.NAME);
             String surname = request.getParameter(RequestParameter.SURNAME);
             String lastname = request.getParameter(RequestParameter.LASTNAME);
             if (applicantService.editApplicantPersonalInformation(applicantId, name, surname, lastname)) {
+                session.setAttribute(SessionAttribute.MESSAGE_RESULT, LocaleMessageKey.PROFILE_EDITED);
                 router.setPage(PagePath.MAIN_PAGE_APPLICANT_REDIRECT);
             }
         } catch (ServiceException e) {

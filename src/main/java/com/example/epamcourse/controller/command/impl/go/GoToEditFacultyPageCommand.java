@@ -41,7 +41,6 @@ public class GoToEditFacultyPageCommand implements Command {
     public Router execute(HttpServletRequest request) throws CommandException {
         Router router = new Router(PagePath.EDIT_FACULTY_PAGE);
         int page = Integer.parseInt(request.getParameter(RequestParameter.PAGE));
-        router.setType(Router.RouterType.REDIRECT);
         try {
             FacultyService facultyService = FacultyServiceImpl.getInstance();
             HttpSession session = request.getSession();

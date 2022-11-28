@@ -67,10 +67,10 @@ public class SubjectServiceImpl implements SubjectService {
         try {
             transactionManager.initTransaction();
             if (subjectDao.findSubjectByApplicantId(applicantId).isEmpty()) {
-                for (Subject.Type type : Subject.Type.values()) {
+                for (Subject.SubjectType subjectType : Subject.SubjectType.values()) {
                     Subject subject = new Subject();
                     subject.setApplicantId(applicantId);
-                    subject.setSubjectType(type);
+                    subject.setSubjectType(subjectType);
                     subjectDao.add(subject);
                 }
             }

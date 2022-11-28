@@ -38,6 +38,7 @@ public class UpdateRecruitmentCommand implements Command {
         HttpSession session = request.getSession();
         RecruitmentService recruitmentService = RecruitmentServiceImpl.getInstance();
         Router router = new Router(PagePath.MAIN_PAGE_ADMINISTRATOR);
+        router.setType(Router.RouterType.REDIRECT);
         try {
             boolean recruitmentStatus = Boolean.parseBoolean(request.getParameter(RequestParameter.RECRUITMENT_STATUS));
             boolean isRestartRecruitment = Boolean.parseBoolean(request.getParameter(RequestParameter.RESTART_RECRUITMENT));
@@ -48,15 +49,17 @@ public class UpdateRecruitmentCommand implements Command {
             LocalDateTime finishRecruitment = LocalDateTime.parse(request.getParameter(RequestParameter.FINISH_RECRUITMENT));
             if (!recruitmentService.isFinishRecruitmentValid(finishRecruitment)) {
                 router.setPage(PagePath.EDIT_RECRUITMENT);
-                request.setAttribute(RequestAttribute.MESSAGE, LocaleMessageKey.INVALID_DATE);
+                session.setAttribute(SessionAttribute.CURRENT_PAGE, PagePath.EDIT_RECRUITMENT_REDIRECT);
+                session.setAttribute(SessionAttribute.MESSAGE, LocaleMessageKey.INVALID_DATE);
             } else {
+                session.setAttribute(SessionAttribute.MESSAGE_RESULT, LocaleMessageKey.RECRUITMENT_UPDATED);
+                session.setAttribute(SessionAttribute.CURRENT_PAGE, PagePath.MAIN_PAGE_ADMINISTRATOR_REDIRECT);
                 recruitmentService.updateRecruitment(recruitmentStatus, finishRecruitment);
             }
         } catch (ServiceException e) {
             logger.log(Level.ERROR, "Updating recruitment failed", e);
             throw new CommandException("Updating recruitment failed", e);
         }
-        session.setAttribute(SessionAttribute.CURRENT_PAGE, router.getPage());
         return router;
     }
 }

@@ -8,9 +8,9 @@ import java.time.LocalDateTime;
  * @author M.Shubelko
  */
 public class Recruitment extends BaseEntity {
-    Long recruitmentId;
-    Boolean recruitmentStatus;
-    LocalDateTime finishRecruitment;
+    private long recruitmentId;
+    private boolean recruitmentStatus;
+    private LocalDateTime finishRecruitment;
 
     /**
      * The public constructor
@@ -84,9 +84,12 @@ public class Recruitment extends BaseEntity {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
+        if (o == null) return false;
         if (!(o instanceof Subject)) return false;
         Recruitment recruitment = (Recruitment) o;
-        if (recruitmentStatus != null ? !recruitmentStatus.equals(recruitment.recruitmentStatus) : recruitment.recruitmentStatus != null) return false;
+        if (recruitmentId != recruitment.recruitmentId) return false;
+        if (recruitmentStatus != recruitment.recruitmentStatus) return false;
+        if (finishRecruitment != null ? !finishRecruitment.equals(recruitment.finishRecruitment) : recruitment.finishRecruitment != null) return false;
         return (finishRecruitment != null ? !finishRecruitment.equals(recruitment.finishRecruitment) : recruitment.finishRecruitment != null);
     }
 
@@ -100,7 +103,7 @@ public class Recruitment extends BaseEntity {
         final int prime = 31;
         int result = 1;
         result = prime * result + Long.hashCode(recruitmentId);
-        result = prime * result + ((recruitmentStatus == null) ? 0 : recruitmentStatus.hashCode());
+        result = prime * result + Boolean.hashCode(recruitmentStatus);
         result = prime * result + ((finishRecruitment == null) ? 0 : finishRecruitment.hashCode());
         return result;
     }

@@ -6,10 +6,10 @@ package com.example.epamcourse.model.entity;
  * @author M.Shubelko
  */
 public class Subject extends BaseEntity {
-    private Long subjectId;
-    private Long applicantId;
-    private Type subjectType;
-    private Integer mark;
+    private long subjectId;
+    private long applicantId;
+    private SubjectType subjectType;
+    private int mark;
 
     /**
      * The public constructor
@@ -21,7 +21,7 @@ public class Subject extends BaseEntity {
     /**
      * The types of subjects
      */
-    public enum Type {
+    public enum SubjectType {
         MATH,
         PHYSIC,
         ENGLISH;
@@ -30,7 +30,7 @@ public class Subject extends BaseEntity {
     /**
      * The public constructor
      */
-    public Subject(Long subjectId, Long applicantId, Type subjectType, Integer mark) {
+    public Subject(long subjectId, long applicantId, SubjectType subjectType, int mark) {
         this.subjectId = subjectId;
         this.applicantId = applicantId;
         this.subjectType = subjectType;
@@ -56,20 +56,20 @@ public class Subject extends BaseEntity {
     }
 
     /**
-     * Get subject type
+     * Get subject subjectType
      *
-     * @return subjectType the subject type
+     * @return subjectType the subject subjectType
      */
-    public Type getSubjectType() {
+    public SubjectType getSubjectType() {
         return subjectType;
     }
 
     /**
-     * Set subject type
+     * Set subject subjectType
      *
-     * @param subjectType the subject type
+     * @param subjectType the subject subjectType
      */
-    public void setSubjectType(Type subjectType) {
+    public void setSubjectType(SubjectType subjectType) {
         this.subjectType = subjectType;
     }
 
@@ -118,11 +118,13 @@ public class Subject extends BaseEntity {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
+        if (o == null) return false;
         if (!(o instanceof Subject)) return false;
         Subject subject = (Subject) o;
+        if (subjectId != subject.subjectId) return false;
         if (subjectType != null ? !subjectType.equals(subject.subjectType) : subject.subjectType != null) return false;
-        if (applicantId != null ? !applicantId.equals(subject.applicantId) : subject.applicantId != null) return false;
-        return mark != null ? mark.equals(subject.mark) : subject.mark == null;
+        if (applicantId != subject.applicantId) return false;
+        return mark == subject.mark;
     }
 
     /**
@@ -136,9 +138,8 @@ public class Subject extends BaseEntity {
         int result = 1;
         result = prime * result + Long.hashCode(subjectId);
         result = prime * result + ((subjectType == null) ? 0 : subjectType.hashCode());
-        result = prime * result + ((mark == null) ? 0 : mark.hashCode());
-        result = prime * result + ((applicantId == null) ? 0 : applicantId.hashCode());
-
+        result = prime * result + Long.hashCode(applicantId);
+        result = prime * result + Integer.hashCode(mark);
         return result;
     }
 

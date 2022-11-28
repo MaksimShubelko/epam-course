@@ -17,6 +17,7 @@ import org.apache.logging.log4j.Logger;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -30,7 +31,9 @@ import static com.example.epamcourse.controller.command.PagePath.MAIN_PAGE_APPLI
  */
 public class ShowRequestsCommand implements Command {
 
-    /** The logger. */
+    /**
+     * The logger.
+     */
     private static final Logger logger = LogManager.getLogger();
 
     /**
@@ -42,10 +45,10 @@ public class ShowRequestsCommand implements Command {
      */
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        final int recordsPerPage = 5;
-        int page = 1;
+        int page;
         long facultyId = 0L;
         HttpSession session = request.getSession();
+        final int recordsPerPage = (int) session.getAttribute(SessionAttribute.ROW_AMOUNT);
         Router router = new Router(MAIN_PAGE_APPLICANT_REDIRECT);
         ApplicantService applicantService = ApplicantServiceImpl.getInstance();
         FacultyService facultyService = FacultyServiceImpl.getInstance();
@@ -53,22 +56,24 @@ public class ShowRequestsCommand implements Command {
             BillService billService = BillServiceImpl.getInstance();
             String facultyIdRequest = request.getParameter(RequestParameter.FACULTY_ID);
             if (facultyIdRequest != null) {
-                facultyId = Long.valueOf(facultyIdRequest);
+                facultyId = Long.parseLong(facultyIdRequest);
             }
             long countOfApplicants = billService.getCountOfBillsInFaculty(facultyId, false);
-            long noOfPages = (long) Math.ceil(countOfApplicants * 1.0 / recordsPerPage);
-            if (request.getParameter(RequestParameter.PAGE) != null) {
-                page = Integer.parseInt(request.getParameter(RequestParameter.PAGE));
+            if (countOfApplicants != 0) {
+                long noOfPages = (long) Math.ceil(countOfApplicants * 1.0 / recordsPerPage);
+                page = (int) session.getAttribute(SessionAttribute.PAGE);
+                List<Applicant> applicants = applicantService.findApplicantsInFaculty(facultyId, page);
+                Optional<Faculty> facultyOptional = facultyService.findFacultyById(facultyId);
+                if (facultyOptional.isPresent()) {
+                    Faculty faculty = facultyOptional.get();
+                    request.setAttribute(RequestAttribute.FACULTY, faculty);
+                }
+                request.setAttribute(RequestAttribute.APPLICANTS, applicants);
+                request.setAttribute(RequestAttribute.PAGE, page);
+                request.setAttribute(RequestAttribute.COUNT_PAGES, noOfPages);
+            } else {
+                session.setAttribute(SessionAttribute.MESSAGE_RESULT, LocaleMessageKey.DATA_NOT_EXIST);
             }
-            List<Applicant> applicants = applicantService.findApplicantsInFaculty(facultyId, page);
-            Optional<Faculty> facultyOptional = facultyService.findFacultyById(facultyId);
-            if (facultyOptional.isPresent()) {
-                Faculty faculty = facultyOptional.get();
-                request.setAttribute(RequestAttribute.FACULTY, faculty);
-            }
-            request.setAttribute(RequestAttribute.APPLICANTS, applicants);
-            request.setAttribute(RequestAttribute.PAGE, page);
-            request.setAttribute(RequestAttribute.COUNT_PAGES, noOfPages);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, "Finding applicants failed", e);
             throw new CommandException("Finding applicants failed", e);

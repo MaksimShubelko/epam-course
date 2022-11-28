@@ -11,7 +11,7 @@ import java.util.Optional;
  *
  * @author M.Shubelko
  */
-public class CommandProvider {
+public class  CommandProvider {
 
     /** The logger. */
     public static final Logger logger = LogManager.getLogger();

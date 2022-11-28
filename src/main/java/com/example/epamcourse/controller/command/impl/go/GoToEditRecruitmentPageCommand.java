@@ -36,7 +36,6 @@ public class GoToEditRecruitmentPageCommand implements Command {
     public Router execute(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
         Router router = new Router(PagePath.EDIT_RECRUITMENT);
-        router.setType(Router.RouterType.REDIRECT);
         try {
             RecruitmentService recruitmentService = RecruitmentServiceImpl.getInstance();
             Recruitment recruitment = recruitmentService.findRecruitment();

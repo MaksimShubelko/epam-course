@@ -10,15 +10,14 @@
     <jsp:include page="/pages/admin/navbar_header.jsp"/>
     <jsp:include page="/pages/admin/navbar_action.jsp"/>
     <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" type="text/css" rel="stylesheet">
-    <link href="${pageContext.request.contextPath}/css/button.css" type="text/css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/css/main.css" type="text/css" rel="stylesheet">
     <title><fmt:message key="show.accounts.title" bundle="${content}"/></title>
 </head>
-<body>
-<form name="applicantPage" action="${pageContext.request.contextPath}/controller" method="get" class="h-75">
-    <div class="col-7 container__content">
-        <table class="table table-bordered table-sm">
-            <tr>
-                <h6>
+<body class="font-comforta">
+<form class="w-auto h-75 container" action="${pageContext.request.contextPath}/controller" method="get">
+    <div class="container__content pt-5 pb-5">
+        <table class="table table-bordered table-responsive-lg">
+            <tr class="text-center text-uppercase">
                     <th><fmt:message key="admin.main.page.accounts.number" bundle="${content}"/></th>
                     <th><fmt:message key="admin.main.page.accounts.login" bundle="${content}"/></th>
                     <th><fmt:message key="admin.main.page.accounts.email" bundle="${content}"/></th>
@@ -27,15 +26,15 @@
                     <th><fmt:message key="admin.main.page.accounts.ip" bundle="${content}"/></th>
                     <th><fmt:message key="admin.main.page.accounts.change.status" bundle="${content}"/></th>
                     <th><fmt:message key="admin.main.page.accounts.delete" bundle="${content}"/></th>
-                </h6>
             </tr>
 
             <c:forEach var="account" items="${accounts}" varStatus="loop">
                 <tr>
-                    <td>${loop.index + 1 + (currentPage - 1) * 5}</td>
-                    <td><a href="${pageContext.request.contextPath}/controller?command=go_to_profile_page&account_id=${account.getAccountId()}">
-                            ${account.getLogin()}
-                    </a>
+                    <td  class="text-center text-uppercase">${loop.index + 1 + (currentPage - 1) * 5}</td>
+                    <td>
+                        <a href="${pageContext.request.contextPath}/controller?command=go_to_profile_page&account_id=${account.getAccountId()}">
+                                ${account.getLogin()}
+                        </a>
                     </td>
                     <td>${account.getEmail()}</td>
                     <td>${account.getRole()}</td>
@@ -62,44 +61,47 @@
             </c:forEach>
         </table>
 
-        <div class="row w-75">
-            <div class="col-3">
-                <c:if test="${currentPage != 1}">
-                    <td>
-                        <a href="${pageContext.request.contextPath}/controller?command=go_to_show_accounts&page=${currentPage - 1}">
-                            <fmt:message key="pagination.previous.page" bundle="${content}"/></a>
-                        </a>
-                    </td>
-                </c:if>
-            </div>
-
-            <div class="col-6">
-                <table border="1" cellpadding="5" cellspacing="5">
-                    <tr>
-                        <c:forEach begin="1" end="${countPages}" var="i">
-                            <c:choose>
-                                <c:when test="${currentPage eq i}">
-                                    <td>${i}</td>
-                                </c:when>
-                                <c:otherwise>
-                                    <td>
-                                        <a href="${pageContext.request.contextPath}/controller?command=go_to_show_accounts&page=${i}">${i}</a>
-                                    </td>
-                                </c:otherwise>
-                            </c:choose>
-                        </c:forEach>
-                    </tr>
-                </table>
-            </div>
-            <div class="col-3">
-                <c:if test="${currentPage lt countPages}">
-                    <td>
-                        <a href="${pageContext.request.contextPath}/controller?command=go_to_show_accounts&page=${currentPage + 1}">
-                            <fmt:message key="pagination.next.page" bundle="${content}"/>
-                        </a>
-                    </td>
-                </c:if>
-            </div>
+            <nav>
+                <ul class="pagination">
+                    <c:if test="${currentPage != 1}">
+                        <li class="page-item">
+                            <a class="page-link"
+                               href="${pageContext.request.contextPath}/controller?command=go_to_show_accounts&page=${currentPage - 1}"
+                               aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                                <span class="sr-only"><fmt:message key="pagination.previous.page"
+                                                                   bundle="${content}"/></span>
+                            </a>
+                        </li>
+                    </c:if>
+                    <c:forEach begin="1" end="${countPages}" var="i">
+                        <c:choose>
+                            <c:when test="${currentPage eq i}">
+                                <li class="page-item">
+                                    <a class="page-link">${i}</a>
+                                </li>
+                            </c:when>
+                            <c:otherwise>
+                                <li class="page-item">
+                                    <a class="page-link"
+                                       href="${pageContext.request.contextPath}/controller?command=go_to_show_accounts&page=${i}">${i}</a>
+                                </li>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:forEach>
+                    <c:if test="${currentPage lt countPages}">
+                        <li class="page-item">
+                            <a class="page-link"
+                               href="${pageContext.request.contextPath}/controller?command=go_to_show_accounts&page=${currentPage + 1}"
+                               aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                                <span class="sr-only"><fmt:message key="pagination.next.page"
+                                                                   bundle="${content}"/></span>
+                            </a>
+                        </li>
+                    </c:if>
+                </ul>
+            </nav>
         </div>
     </div>
 </form>

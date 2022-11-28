@@ -26,7 +26,9 @@ import static com.example.epamcourse.controller.command.PagePath.SHOW_ACCOUNTS_P
  */
 public class GoToShowAccountsPageCommand implements Command {
 
-    /** The logger. */
+    /**
+     * The logger.
+     */
     private static final Logger logger = LogManager.getLogger();
 
 
@@ -39,16 +41,14 @@ public class GoToShowAccountsPageCommand implements Command {
      */
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        int page = 1;
-        final int recordsPerPage = 5;
+        int page;
         HttpSession session = request.getSession();
+        final int recordsPerPage = (int) session.getAttribute(SessionAttribute.ROW_AMOUNT);
         Router router = new Router(SHOW_ACCOUNTS_PAGE);
         AccountService accountService = AccountServiceImpl.getInstance();
         try {
             long noOfPages = (long) Math.ceil(accountService.getCountOfAccount() * 1.0 / recordsPerPage);
-            if (request.getParameter(RequestParameter.PAGE) != null) {
-                page = Integer.parseInt(request.getParameter(RequestParameter.PAGE));
-            }
+            page = (int) session.getAttribute(SessionAttribute.PAGE);
             List<Account> accounts = accountService.findAccountsInPage(page);
             request.setAttribute(RequestAttribute.ACCOUNTS, accounts);
             request.setAttribute(RequestAttribute.PAGE, page);

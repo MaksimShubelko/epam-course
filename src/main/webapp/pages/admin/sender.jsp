@@ -10,51 +10,55 @@
     <jsp:include page="/pages/admin/navbar_header.jsp"/>
     <jsp:include page="/pages/admin/navbar_action.jsp"/>
     <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" type="text/css" rel="stylesheet">
-    <link href="${pageContext.request.contextPath}/css/button.css" type="text/css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/css/main.css" type="text/css" rel="stylesheet">
     <title><fmt:message key="sender.title" bundle="${content}"/></title>
 </head>
-<body>
-<form class="needs-validation h-100" novalidate action="${pageContext.request.contextPath}/controller" method="get">
-    <div class="row">
-        <div class="col-6 p-5 offset-sm-2">
-            <input type="hidden" name="command" value="send_message">
-            <input type="hidden" name="email" value="${email}">
-            <c:set var="title" value="${title}"/>
-            <c:set var="message" value="${message}"/>
+<body class="font-comforta">
+<form class="needs-validation container h-auto pt-5 pb-5 col-8 justify-content-center" novalidate
+      action="${pageContext.request.contextPath}/controller" method="get">
+    <div class="row w-100 container__content col-5 rounded-3 border-1 offset-4 shadow-lg p-3 mb-5 bg-body rounded border-dark border border-2 bg-opacity-50 rounded-3">
+        <input type="hidden" name="command" value="send_message">
+        <input type="hidden" name="email" value="${email}">
+        <c:set var="title" value="${title}"/>
+        <c:set var="message" value="${message}"/>
 
+        <div class="row">
+            <c:if test="${message != null}">
+                <h6 class="text-danger">
+                    <fmt:message key="${message}" bundle="${content}"/>
+                </h6>
+                ${pageContext.request.getSession().removeAttribute("message")}
+            </c:if>
+            <fmt:message key="admin.sender.page.send.to" bundle="${content}"/>
+            <div class="col-3">
+                <h6>${email}</h6>
+            </div>
+        </div>
+
+        <div class="pt-1">
             <div class="row">
-                <c:if test="${message != null}">
-                    <h6 class="text-danger">
-                        <fmt:message key="${message}" bundle="${content}"/>
+                <label>
+                    <input type="text" class="col-12 pb-1 mb-1"
+                           placeholder="<fmt:message key="admin.sender.page.title" bundle="${content}"/>" name="title"
+                           value="${title}">
+                </label>
+                <label>
+                    <textarea type="text" class="col-12 mb-1"
+                      placeholder="<fmt:message key="admin.sender.page.message" bundle="${content}"/>"
+                      name="message"></textarea>
+                </label>
+            </div>
+            <div class="row">
+                <label class="offset-3">
+                    <h6>
+                        <input type="submit" name="submit" class="btn-primary border"
+                               value="<fmt:message key="admin.main.page.applicants.send.message" bundle="${content}"/>">
                     </h6>
-                </c:if>
-                <fmt:message key="admin.sender.page.send.to" bundle="${content}"/>
-                <div class="col-3">
-                    <h6>${email}</h6>
-                </div>
-            </div>
-
-            <div class="row">
-                <input type="text" class="form-control h-25 m-3"
-                       placeholder="<fmt:message key="admin.sender.page.title" bundle="${content}"/>" name="title"
-                       value="${title}" aria-placeholder=""
-                       aria-describedby="basic-addon1">
-                <textarea type="text" class="form-control h-50 m-3"
-                          placeholder="<fmt:message key="admin.sender.page.message" bundle="${content}"/>"
-                          name="message"
-                          aria-describedby="basic-addon1">${message}</textarea>
-
-            </div>
-            <div class="row">
-                <div class="col-3">
-                    <input type="submit" name="submit">
-                </div>
-                <div class="col-3">
-                    <a href="${pageContext.request.contextPath}/controller?command=go_to_show_applicants&page=1">
+                    <a class="hr border border-info btn-primary"
+                       href="${pageContext.request.contextPath}/controller?command=go_to_show_applicants&page=1">
                         <fmt:message key="btn.back" bundle="${content}"/></a>
-                </div>
+                </label>
             </div>
-
         </div>
     </div>
 </form>

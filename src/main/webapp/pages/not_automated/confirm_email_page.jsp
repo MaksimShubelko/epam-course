@@ -5,18 +5,18 @@
 <fmt:setBundle basename="local.content" var="content"/>
 <html>
 <head>
-    <link href="${pageContext.request.contextPath}/css/button.css" type="text/css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/css/main.css" type="text/css" rel="stylesheet">
     <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" type="text/css" rel="stylesheet">
     <jsp:include page="../header.jsp"/>
     <title><fmt:message key="confirm.email.title" bundle="${content}"/></title>
 </head>
-<body>
+<body class="font-comforta">
 <div>
-    <form class="needs-validation h-75 container" novalidate action="${pageContext.request.contextPath}/controller"
-          method="get">
-        <div class="offset-1 p-5 container__content">
+    <form class="needs-validation container h-75 pt-5 col-12 justify-content-center" novalidate action="${pageContext.request.contextPath}/controller"
+          method="post">
+        <div class="row w-100 container__content col-4 rounded-3 border-1 offset-4 shadow-lg p-3 mb-5 bg-body rounded border-dark border border-2 bg-opacity-50 rounded-3">
             <input type="hidden" name="command" value="confirm_email"/>
-            <label class="form-label">
+            <label class="align-content-center text-center pe-1 text-uppercase">
                 <h6>
                     <fmt:message key="confirm.email.enter.code" bundle="${content}"/>
                 </h6>
@@ -28,21 +28,19 @@
             </c:if>
 
             <div class="row">
-                <div class="col-sm-4">
+                <div class="offset-3">
                     <input type="hidden" id="p1" name="email_code_expected" value="${email_code_expected}">
                     <input type="number" id="p2" name="email_code_actual"
                            pattern="^[0-9]{6}$" required/>
                     <div class="invalid-feedback">
-                        <h6>
                             <fmt:message key="email.confirm.error" bundle="${content}"/>
-                        </h6>
                     </div>
                 </div>
             </div>
 
             <div class="row">
-                <div class="col-5 p-3">
-                    <input type="submit" value="<fmt:message key="sing.up.submit.code" bundle="${content}"/>" class="blubtn">
+                <div class="col-5 offset-5 p-2">
+                    <input type="submit" value="<fmt:message key="sing.up.submit.code" bundle="${content}"/>" class="btn-primary border">
                 </div>
             </div>
         </div>

@@ -6,7 +6,7 @@
 <head>
     <title><fmt:message key="blocked.account.title" bundle="${content}"/></title>
 </head>
-<body>
+<body class="font-comforta">
 <h2>
     <fmt:message key="blocked.account.message" bundle="${content}"/>
 </h2>

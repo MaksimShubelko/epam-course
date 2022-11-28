@@ -1,0 +1,37 @@
+
+@font-face {
+    font-family: "Comfortaa";
+    src: url("../fonts/comfortaa/comfortaa.eot"); /* IE9 Compat Modes */
+    src: url("../fonts/comfortaa/comfortaa.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+    url("../fonts/comfortaa/comfortaa.otf") format("opentype"), /* Open Type Font */
+    url("../fonts/comfortaa/comfortaa.svg") format("svg"), /* Legacy iOS */
+    url("../fonts/comfortaa/comfortaa.ttf") format("truetype"), /* Safari, Android, iOS */
+    url("../fonts/comfortaa/comfortaa.woff") format("woff"), /* Modern Browsers */
+    url("../fonts/comfortaa/comfortaa.woff2") format("woff2"); /* Modern Browsers */
+    font-weight: normal;
+    font-style: normal;
+}
+
+.font-comforta {
+    margin: 0;
+    font-family: "Comfortaa", sans-serif;
+    font-size: 1rem;
+    font-weight: normal;
+    line-height: 0.8;
+}
+
+.container__content{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.centered {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 200px;
+    height:100px;
+    background: #ffffff;
+}

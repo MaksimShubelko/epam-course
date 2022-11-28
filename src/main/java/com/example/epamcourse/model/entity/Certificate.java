@@ -6,13 +6,13 @@ package com.example.epamcourse.model.entity;
  * @author M.Shubelko
  */
 public class Certificate extends BaseEntity {
-    private Long certificateId;
-    private Double totalMark;
+    private long certificateId;
+    private double totalMark;
 
     /**
      * The public constructor
      */
-    public Certificate(Long certificateId, Double totalMark) {
+    public Certificate(long certificateId, double totalMark) {
         this.certificateId = certificateId;
         this.totalMark = totalMark;
     }
@@ -68,9 +68,11 @@ public class Certificate extends BaseEntity {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
+        if (o == null) return false;
         if (!(o instanceof Certificate)) return false;
         Certificate certificate = (Certificate) o;
-        return totalMark != null ? totalMark.equals(certificate.totalMark) : certificate.totalMark == null;
+        if (certificateId != certificate.certificateId) return false;
+        return totalMark == certificate.totalMark;
     }
 
     /**
@@ -83,7 +85,7 @@ public class Certificate extends BaseEntity {
         final int prime = 31;
         int result = 1;
         result = prime * result + Long.hashCode(certificateId);
-        result = prime * result + ((totalMark == null) ? 0 : totalMark.hashCode());
+        result = prime * result + Double.hashCode(totalMark);
         return result;
     }
 

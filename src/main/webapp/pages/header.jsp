@@ -6,7 +6,7 @@
 <fmt:setBundle basename="local.content" var="content"/>
 <link href="${pageContext.request.contextPath}/css/header.css" type="text/css" rel="stylesheet">
 <header class="header">
-    <form name="loginForm" action="${pageContext.request.contextPath}/controller" method="get">
+    <form action="${pageContext.request.contextPath}/controller" method="get">
         <div>
             <input type="hidden" name="command" value="locale_command">
             <button name="locale" value="ru_RU" type="submit">RUS</button>

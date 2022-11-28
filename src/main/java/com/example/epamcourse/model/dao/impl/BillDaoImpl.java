@@ -67,12 +67,12 @@ public class BillDaoImpl implements BillDao {
             """;
 
     private static final String ADD_BILL = """
-            INSERT INTO bills (bill_id, applicant_id, faculty_id)
-            VALUE (?, ?, ?)
+            INSERT INTO bills (applicant_id)
+            VALUE (?)
             """;
 
     private static final String FIND_ARCHIVE_BILL_BY_APPLICANT_ID = """
-            SELECT bill_id, applicant_id, faculty_id, archive\040
+            SELECT bill_id, applicant_id, faculty_id, archive
             FROM bills
             WHERE applicant_id = ? AND archive = 1
             """;
@@ -165,9 +165,8 @@ public class BillDaoImpl implements BillDao {
         long billId;
         try {
             billId = jdbcTemplate.executeInsertQuery(ADD_BILL,
-                    bill.getBillId(),
-                    bill.getApplicantId(),
-                    bill.getFacultyId());
+                    bill.getApplicantId());
+            System.out.println("Bill id: " + billId);
         } catch (TransactionException e) {
             logger.log(Level.ERROR, "Error when adding all bills", e);
             throw new DaoException("Error when adding all bills", e);

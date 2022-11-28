@@ -21,7 +21,9 @@ import jakarta.servlet.http.HttpServletRequest;
  */
 public class AddAdministratorSecureInformationCommand implements Command {
 
-    /** The logger. */
+    /**
+     * The logger.
+     */
     private static final Logger logger = LogManager.getLogger();
 
     /**
@@ -42,13 +44,14 @@ public class AddAdministratorSecureInformationCommand implements Command {
         Router router = new Router(PagePath.ADMIN_ADD_PERSONAL_INF);
         try {
             if (administratorService.addPersonalInformation(name, surname, lastname, accountId)) {
+                session.setAttribute(SessionAttribute.MESSAGE_RESULT, LocaleMessageKey.PROFILE_CREATED);
                 router.setPage(PagePath.MAIN_PAGE_ADMINISTRATOR);
             }
         } catch (ServiceException e) {
             logger.log(Level.ERROR, "Adding administrator secure information failed.", e);
             throw new CommandException("Adding administrator secure information failed", e);
         }
-
+        router.setType(Router.RouterType.REDIRECT);
         return router;
     }
 }

@@ -12,7 +12,7 @@ public class FacultyValidatorImpl implements FacultyValidator {
     /**
      * The constant FACULTY_NAME_REGEX
      **/
-    private static final String FACULTY_NAME_REGEX = "^[A-ЯЁ]([а-яё]+\\s?)+$";
+    private static final String FACULTY_NAME_REGEX = "^([A-ЯЁ]([а-яё]+\\s?)){5,25}$";
 
     /**
      * The constant MIN_APPLICANTS

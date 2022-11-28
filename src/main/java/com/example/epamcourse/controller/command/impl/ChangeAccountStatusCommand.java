@@ -6,6 +6,7 @@ import com.example.epamcourse.model.exception.CommandException;
 import com.example.epamcourse.model.exception.ServiceException;
 import com.example.epamcourse.model.service.AccountService;
 import com.example.epamcourse.model.service.impl.AccountServiceImpl;
+import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -32,7 +33,7 @@ public class ChangeAccountStatusCommand implements Command {
      */
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        Account account;
+        HttpSession session = request.getSession();
         AccountService accountService = AccountServiceImpl.getInstance();
         int page = Integer.parseInt(request.getParameter(RequestParameter.PAGE));
         Router router = new Router(PagePath.SHOW_ACCOUNTS_PAGE_REDIRECT + page);
@@ -40,6 +41,7 @@ public class ChangeAccountStatusCommand implements Command {
             Long accountId = Long.valueOf(request.getParameter(RequestParameter.ACCOUNT_ID));
             Optional<Account> accountOptional = accountService.findAccountById(accountId);
             accountService.changeStatus(accountOptional);
+            session.setAttribute(SessionAttribute.MESSAGE_RESULT, LocaleMessageKey.ACCOUNT_STATUS_CHANGED);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, "Changing account status failed", e);
             throw new CommandException("Changing account status failed", e);

@@ -5,14 +5,10 @@ import com.example.epamcourse.model.dao.mapper.impl.ApplicantResultSetHandler;
 import com.example.epamcourse.model.entity.Applicant;
 import com.example.epamcourse.model.exception.DaoException;
 import com.example.epamcourse.model.exception.TransactionException;
-import com.example.epamcourse.model.pool.ConnectionPool;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,7 +45,7 @@ public class ApplicantDaoImpl implements ApplicantDao {
             LIMIT ?, ?
             """;
 
-    private static final String FIND_APPLICANTS_BY_SURNAME_IN_ORDER_BY_MARK_IN_FACULTY = """
+    private static final String FIND_APPLICANTS_IN_ORDER_BY_MARK_IN_FACULTY_DEP_ON_STATUS = """
             SELECT applicants.applicant_id, surname, firstname, lastname, account_id, beneficiary, certificate_id,
             (SELECT SUM(mark) FROM subjects WHERE applicant_id = applicants.applicant_id)           as subjects_mark,
             (SELECT middle_mark FROM certificates WHERE certificate_id = applicants.certificate_id) as certificate_mark
@@ -168,13 +164,12 @@ public class ApplicantDaoImpl implements ApplicantDao {
 
         List<Applicant> applicants;
         try {
-            applicants = jdbcTemplate.executeSelectQuery(FIND_APPLICANTS_BY_SURNAME_IN_ORDER_BY_MARK_IN_FACULTY, facultyId, isArchive,
+            applicants = jdbcTemplate.executeSelectQuery(FIND_APPLICANTS_IN_ORDER_BY_MARK_IN_FACULTY_DEP_ON_STATUS, facultyId, isArchive,
                     applicantsSkip, applicantsTake, rowSkip, rowNext);
         } catch (TransactionException e) {
             logger.log(Level.ERROR, "Error when finding applicants in faculty in order by mark", e);
             throw new DaoException("Error when finding applicants in faculty in order by mark", e);
         }
-
         return applicants;
     }
 

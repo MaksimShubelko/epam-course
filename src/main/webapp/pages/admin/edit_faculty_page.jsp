@@ -11,90 +11,89 @@
     <jsp:include page="/pages/admin/navbar_header.jsp"/>
     <jsp:include page="/pages/admin/navbar_action.jsp"/>
     <link href="${pageContext.request.contextPath}/css/bootstrap.min.css" type="text/css" rel="stylesheet">
-    <link href="${pageContext.request.contextPath}/css/button.css" type="text/css" rel="stylesheet">
+    <link href="${pageContext.request.contextPath}/css/main.css" type="text/css" rel="stylesheet">
     <title><fmt:message key="edition.faculty.title" bundle="${content}"/></title>
 </head>
-<body>
+<body class="font-comforta">
 <div>
-    <form class="container needs-validation h-75" novalidate name="loginForm"
-          action="${pageContext.request.contextPath}/controller" method="get">
+    <form class="needs-validation container h-auto pt-5 col-12 justify-content-center" novalidate name="loginForm"
+          action="${pageContext.request.contextPath}/controller" method="post">
         <input type="hidden" name="command" value="edit_faculty"/>
         <input type="hidden" name="faculty_id" value="${faculty.getFacultyId()}">
-        <div class="p-5 offset-3">
-            <div class="offset-4 p-3">
+        <div class="row w-100 container__content col-4 rounded-3 border-1 offset-4 shadow-lg p-3 mb-5 bg-body rounded border-dark border border-2 bg-opacity-50 rounded-3">
+            <label class="align-content-center text-center pe-1 text-uppercase">
                 <h6>
                     <fmt:message key="edit.faculty.page" bundle="${content}"/>
                 </h6>
+                ${pageContext.request.getSession().removeAttribute("message")}
+            </label>
+            <c:if test="${message != null}">
+            <h6 class="text-danger" id="message">
+                <fmt:message key="${message}" bundle="${content}"/>
+            </h6>
+            </c:if>
+            <div>
+                ${pageContext.request.getSession().removeAttribute("message")}
             </div>
-            <div class="offset-3 p-3">
-                <c:if test="${message != null}">
-                    <h6 class="text-danger">
-                        <fmt:message key="${message}" bundle="${content}"/>
-                    </h6>
-                </c:if>
-            </div>
-            <div class="row offset-1">
-                <label class="col-4 col-form-label">
-                    <h6>
-                        <fmt:message key="edit.faculty.page.faculty.name" bundle="${content}"/>
-                    </h6>
-                </label>
-                <div class="col-8">
-                    <input type="text" name="faculty_name" pattern="^[A-ЯЁ]([а-яё]+\s?)+$"
-                           value="${faculty.getFacultyName()}" required>
-                    <div class="invalid-feedback">
+
+            <div class="pt-1">
+                <div class="row">
+                    <label class="col-4 col-form-label">
                         <h6>
+                            <fmt:message key="edit.faculty.page.faculty.name" bundle="${content}"/>
+                        </h6>
+                    </label>
+                    <div class="col-5 offset-2 pe-5">
+                        <input type="text" name="faculty_name" pattern="^[A-ЯЁ]([а-яё]+\s?)+$"
+                               value="${faculty.getFacultyName()}" required>
+                        <div class="invalid-feedback">
                             <fmt:message key="faculty.name.error" bundle="${content}"/>
-                        </h6>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="row offset-1">
-                <label class="col-4 col-form-label">
-                    <h6>
-                        <fmt:message key="edit.faculty.page.faculty.recruitment.plan.free" bundle="${content}"/>
-                    </h6>
-                </label>
-                <div class="col-8">
-                    <input type="number" name="recruitment_plan_free"
-                           min="10" max="80" value="${faculty.getRecruitmentPlanFree()}" required>
-                    <div class="invalid-feedback">
+                <div class="row">
+                    <label class="col-4 col-form-label">
                         <h6>
-                            <fmt:message key="faculty.recruitment.plan.error" bundle="${content}"/>
+                            <fmt:message key="edit.faculty.page.faculty.recruitment.plan.free" bundle="${content}"/>
                         </h6>
+                    </label>
+                    <div class="col-4 offset-2">
+                        <input type="number" name="recruitment_plan_free"
+                               min="10" max="80" value="${faculty.getRecruitmentPlanFree()}" required>
+                        <div class="invalid-feedback">
+                            <fmt:message key="faculty.recruitment.plan.error" bundle="${content}"/>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="row offset-1">
-                <label class="col-4 col-form-label">
-                    <h6>
-                        <fmt:message key="edit.faculty.page.faculty.recruitment.plan.canvas" bundle="${content}"/>
-                    </h6>
-                </label>
-                <div class="col-8">
-                    <input type="number" name="recruitment_plan_canvas"
-                           min="10" max="80" value="${faculty.getRecruitmentPlanCanvas()}" required>
-                    <div class="invalid-feedback">
+                <div class="row">
+                    <label class="col-4 col-form-label">
                         <h6>
-                            <fmt:message key="faculty.recruitment.plan.error" bundle="${content}"/>
+                            <fmt:message key="edit.faculty.page.faculty.recruitment.plan.canvas" bundle="${content}"/>
                         </h6>
+                    </label>
+                    <div class="col-4 offset-2">
+                        <input type="number" name="recruitment_plan_canvas" min="10" max="80"
+                               value="${faculty.getRecruitmentPlanCanvas()}" required>
+                        <div class="invalid-feedback">
+                            <fmt:message key="faculty.recruitment.plan.error" bundle="${content}"/>
+                        </div>
                     </div>
                 </div>
+
+                <label class="offset-5">
+                    <h6>
+                        <input type="submit" value="<fmt:message key="edit.faculty.page.edit" bundle="${content}" />"
+                               class="btn-primary border">
+                    </h6>
+                    <a class="hr border border-info btn-primary"
+                       href="${pageContext.request.contextPath}/controller?command=go_to_administrator_main_page">
+                        <fmt:message key="btn.back" bundle="${content}"/>
+                    </a>
+                </label>
             </div>
 
-            <div class="row offset-4 p-1">
-                <label class="col-8">
-                    <input type="submit" value="<fmt:message key="edit.faculty.page.edit" bundle="${content}" />"
-                           class="blubtn align-middle">
-                </label>
-                <a href="${pageContext.request.contextPath}/controller?command=go_to_show_faculties&page=${page}"
-                   class="row col-8 ps-5">
-                    <fmt:message key="btn.back" bundle="${content}"/>
-                </a>
-            </div>
-        </div>
     </form>
 </div>
 <script src="${pageContext.request.contextPath}/js/validation.js"></script>

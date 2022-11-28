@@ -1,9 +1,6 @@
 package com.example.epamcourse.controller.command.impl;
 
-import com.example.epamcourse.controller.command.Command;
-import com.example.epamcourse.controller.command.PagePath;
-import com.example.epamcourse.controller.command.RequestParameter;
-import com.example.epamcourse.controller.command.Router;
+import com.example.epamcourse.controller.command.*;
 import com.example.epamcourse.model.entity.Account;
 import com.example.epamcourse.model.exception.CommandException;
 import com.example.epamcourse.model.exception.ServiceException;
@@ -11,6 +8,7 @@ import com.example.epamcourse.model.service.AccountService;
 import com.example.epamcourse.model.service.FacultyService;
 import com.example.epamcourse.model.service.impl.AccountServiceImpl;
 import com.example.epamcourse.model.service.impl.FacultyServiceImpl;
+import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,12 +34,14 @@ public class DeleteAccountCommand implements Command {
      */
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
+        HttpSession session = request.getSession();
         AccountService accountService = AccountServiceImpl.getInstance();
         int page = Integer.parseInt(request.getParameter(RequestParameter.PAGE));
         Router router = new Router(PagePath.SHOW_ACCOUNTS_PAGE_REDIRECT + page);
         try {
             Long accountId = Long.valueOf(request.getParameter(RequestParameter.ACCOUNT_ID));
             accountService.deleteAccount(accountId);
+            session.setAttribute(SessionAttribute.MESSAGE_RESULT, LocaleMessageKey.ACCOUNT_DELETED);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, "Deleting account failed", e);
             throw new CommandException("Deleting account failed", e);

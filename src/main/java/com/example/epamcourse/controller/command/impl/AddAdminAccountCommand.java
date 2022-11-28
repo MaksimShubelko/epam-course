@@ -40,12 +40,13 @@ public class AddAdminAccountCommand implements Command {
         String password = request.getParameter(RequestParameter.PASSWORD);
         String passwordCheck = request.getParameter(RequestParameter.PASSWORD_CHECK);
         Router router = new Router(PagePath.ADD_ADMIN_ACCOUNT_PAGE);
-        router.setType(Router.RouterType.REDIRECT);
+        router.setType(Router.RouterType.FORWARD);
         try {
             if (accountService.isAccountLoginExist(login)) {
                 session.setAttribute(SessionAttribute.MESSAGE, LocaleMessageKey.LOGIN_PRESENT_ERROR);
             } else {
                 if (accountService.addAdminAccount(login, password, passwordCheck)) {
+                    session.setAttribute(SessionAttribute.MESSAGE_RESULT, LocaleMessageKey.ADMIN_ADDED);
                     router.setPage(PagePath.MAIN_PAGE_ADMINISTRATOR);
                 }
             }

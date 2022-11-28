@@ -8,11 +8,11 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/footer.css">
-    <link rel="script" href="${pageContext.request.contextPath}/css/button.css">
+
 </head>
 
 <body>
-<div class="h-25 container__content d-flex justify-content-center bg-opacity-50 bg-success">
+<div class="container__content h-25 d-flex justify-content-center footer-basic">
    <h6>
        <ctg:footer-tag/>
    </h6>

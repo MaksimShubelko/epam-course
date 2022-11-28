@@ -5,6 +5,7 @@ import com.example.epamcourse.model.exception.CommandException;
 import com.example.epamcourse.model.exception.ServiceException;
 import com.example.epamcourse.model.service.FacultyService;
 import com.example.epamcourse.model.service.impl.FacultyServiceImpl;
+import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,17 +31,20 @@ public class AddFacultyCommand implements Command {
      */
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
+        HttpSession session = request.getSession();
         FacultyService facultyService = FacultyServiceImpl.getInstance();
         Router router = new Router(PagePath.ADD_FACULTY_PAGE);
+        router.setType(Router.RouterType.REDIRECT);
         try {
             String facultyName = request.getParameter(RequestParameter.FACULTY_NAME);
             int recruitmentPlanFree = Integer.parseInt(request.getParameter(RequestParameter.RECRUITMENT_PLAN_FREE));
             int recruitmentPlanCanvas = Integer.parseInt(request.getParameter(RequestParameter.RECRUITMENT_PLAN_CANVAS));
             if (facultyService.isFacultyNameExist(facultyName)) {
-                request.setAttribute(RequestAttribute.MESSAGE, LocaleMessageKey.FACULTY_NAME_EXIST_ERROR);
+                session.setAttribute(SessionAttribute.MESSAGE, LocaleMessageKey.FACULTY_NAME_EXIST_ERROR);
             } else {
                 if (facultyService.addFaculty(facultyName, recruitmentPlanFree, recruitmentPlanCanvas)) {
                     router.setPage(PagePath.MAIN_PAGE_ADMINISTRATOR);
+                    session.setAttribute(SessionAttribute.MESSAGE_RESULT, LocaleMessageKey.FACULTY_ADDED);
                 }
             }
         } catch (ServiceException e) {

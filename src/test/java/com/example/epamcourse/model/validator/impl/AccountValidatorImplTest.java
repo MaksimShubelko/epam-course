@@ -19,29 +19,40 @@ public class AccountValidatorImplTest {
     @DataProvider(name = "dataForPasswordFieldCheck")
     private Object[][] dataForPasswordField() {
         return new Object[][]{
-                {"1", false},
+                /*{"1", false},
                 {"m", false},
                 {"123456789", false},
                 {"12345mfhdg111", false},
                 {"1234567891fdfd2345mZ", false},
-                {"123123123mM", true},
+                {"1231mM", true},
                 {"<script>alert(123)</script>", false},
                 {"", false},
-                {null, false}
+                {null, false}*/
+                {"121mM", false},
+                {"121mMM", true},
+                {"121mMMM", true},
+                {"1234512345123mM", true},
+                {"1234512345123mMM", false}
+
         };
     }
 
     @DataProvider(name = "dataForLoginFieldCheck")
     private Object[][] dataForLoginField() {
         return new Object[][]{
-                {"1", false},
+                /*{"1", false},
                 {"m", false},
                 {"lemon-leo", true},
                 {"Lemon-leopard1", false},
                 {"maxim123", true},
                 {"<script>alert(123)</script>", false},
                 {"", false},
-                {null, false}
+                {null, false}*/
+                {"abc", false},
+                {"abcd", true},
+                {"abcde", true},
+                {"abcabcabce", true},
+                {"ababcdefgabcde", false}
         };
     }
 

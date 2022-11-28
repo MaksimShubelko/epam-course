@@ -29,7 +29,6 @@ public class GoToAddFacultyPageCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         Router router = new Router(PagePath.ADD_FACULTY_PAGE);
-        router.setType(Router.RouterType.REDIRECT);
         HttpSession session = request.getSession();
         session.setAttribute(SessionAttribute.CURRENT_PAGE, PagePath.ADD_FACULTY_PAGE_REDIRECT);
         return router;

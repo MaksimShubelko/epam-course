@@ -38,11 +38,10 @@ public class GoToShowApplicantsPageCommand implements Command {
      */
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        final int recordsPerPage = 5;
-        int page = 1;
         HttpSession session = request.getSession();
-        long facultyId = 0L;
-        String recruitmentStatus = ApplicantFindingType.ALL.name();
+        final int recordsPerPage = (int) session.getAttribute(SessionAttribute.ROW_AMOUNT);
+        long facultyId = 0;
+        String recruitmentStatus;
         Router router = new Router(PagePath.SHOW_APPLICANTS_PAGE);
         router.setType(Router.RouterType.REDIRECT);
         AccountService accountService = AccountServiceImpl.getInstance();
@@ -51,34 +50,39 @@ public class GoToShowApplicantsPageCommand implements Command {
         ApplicantService applicantService = ApplicantServiceImpl.getInstance();
         FacultyService facultyService = FacultyServiceImpl.getInstance();
         try {
+            int page;
             List<Faculty> faculties = facultyService.findAllFaculties();
             session.setAttribute(RequestAttribute.FACULTIES, faculties);
             if (!Objects.equals(request.getParameter(RequestParameter.FACULTY_ID), null)) {
                 facultyId = Long.parseLong(request.getParameter(RequestParameter.FACULTY_ID));
             }
-            System.out.println(facultyId);
             recruitmentStatus = request.getParameter(RequestParameter.RECRUITMENT_STATUS);
-            page = request.getParameter(RequestParameter.PAGE) != null
-                    ? Integer.parseInt(request.getParameter(RequestParameter.PAGE)) : page;
+            page = (int) session.getAttribute(SessionAttribute.PAGE);
             List<Applicant> applicants = applicantService.findApplicantsByFacultyIdAndRecruitmentStatus(facultyId, page,
                     recruitmentStatus);
             long countOfApplicants = applicants.size();
-            long noOfPages = (long) Math.ceil(countOfApplicants * 1.0 / recordsPerPage);
-            List<List<Subject>> subjects = new ArrayList<>();
-            List<Account> accounts = new ArrayList<>();
-            List<Certificate> certificates = new ArrayList<>();
-            for (Applicant applicant : applicants) {
-                subjects.add(subjectService.findSubject(applicant.getApplicantId()));
-                accounts.add(accountService.findAccountById(applicant.getAccountId()).orElseGet(null));
-                certificates.add(certificateService.findCertificate(applicant.getApplicantId()).orElseGet(null));
-            };
-            session.setAttribute(RequestParameter.ACCOUNTS, accounts);
-            session.setAttribute(RequestParameter.CERTIFICATES, certificates);
-            session.setAttribute(RequestAttribute.SUBJECTS, subjects);
-            session.setAttribute(RequestAttribute.FACULTY_ID, facultyId);
-            session.setAttribute(RequestAttribute.APPLICANTS, applicants);
+            if (countOfApplicants != 0) {
+                long noOfPages = (long) Math.ceil(countOfApplicants * 1.0 / recordsPerPage);
+                List<List<Subject>> subjects = new ArrayList<>();
+                List<Account> accounts = new ArrayList<>();
+                List<Certificate> certificates = new ArrayList<>();
+                for (Applicant applicant : applicants) {
+                    subjects.add(subjectService.findSubject(applicant.getApplicantId()));
+                    accounts.add(accountService.findAccountById(applicant.getAccountId()).orElseGet(null));
+                    certificates.add(certificateService.findCertificate(applicant.getApplicantId()).orElseGet(null));
+                };
+                session.setAttribute(RequestParameter.ACCOUNTS, accounts);
+                session.setAttribute(RequestParameter.CERTIFICATES, certificates);
+                session.setAttribute(RequestAttribute.SUBJECTS, subjects);
+                session.setAttribute(RequestAttribute.FACULTY_ID, facultyId);
+                session.setAttribute(RequestAttribute.APPLICANTS, applicants);
+                session.setAttribute(RequestAttribute.COUNT_PAGES, noOfPages);
+            } else {
+                if (facultyId != 0) {
+                session.setAttribute(SessionAttribute.MESSAGE_RESULT, LocaleMessageKey.DATA_NOT_EXIST);
+                }
+            }
             session.setAttribute(RequestAttribute.PAGE, page);
-            session.setAttribute(RequestAttribute.COUNT_PAGES, noOfPages);
         } catch (ServiceException e) {
             logger.log(Level.ERROR, "Finding applicants failed", e);
             throw new CommandException("Finding applicants failed", e);

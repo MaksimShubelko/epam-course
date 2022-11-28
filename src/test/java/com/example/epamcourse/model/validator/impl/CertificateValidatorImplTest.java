@@ -15,16 +15,17 @@ public class CertificateValidatorImplTest {
         validator = CertificateValidatorImpl.getInstance();
     }
 
-    @DataProvider(name = "dataForCertificateMarkFieldCheck")
+    @DataProvider(name = "dataForSubjectMarkFieldCheck")
     private Object[][] dataForPasswordField() {
         return new Object[][]{
                 {0, false},
-                {-1.7, false},
+                //{-1.7, false},
                 {3.0, true},
-                {4.09, false},
+                {5.0, true},
+                //{4.09, false},
                 {10.0, true},
                 {11.0, false},
-                {12, false}
+                //{12, false}
         };
     }
 

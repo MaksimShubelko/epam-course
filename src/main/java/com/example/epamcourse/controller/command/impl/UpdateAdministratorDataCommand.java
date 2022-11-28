@@ -52,6 +52,7 @@ public class UpdateAdministratorDataCommand implements Command {
             logger.log(Level.ERROR, "Updating administrator secure information failed", e);
             throw new CommandException("Updating administrator secure information failed", e);
         }
+        router.setType(Router.RouterType.REDIRECT);
         session.setAttribute(SessionAttribute.CURRENT_PAGE, router.getPage());
         return router;
     }

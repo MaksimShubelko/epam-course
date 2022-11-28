@@ -1,26 +1,14 @@
-/*body {
-    height: 100vh;
-    font-family: 'Lato', sans-serif;
-    font-weight: 700;
-    font-size: 16px;
-    line-height: 1.7;
-    color: #42a392;
-    background-color: rgba(34,255,0,0.3);
-}*/
-
 .header {
-    height: 25%;
-    background-image:
-            linear-gradient(to right bottom,
-            rgba(76, 216, 25, 0.3),
-            rgba(30, 198, 217, 0.8)),
-            url('https://www.b17.ru/foto/uploaded/upl_1605692015_597175_u5wq8.jpg');
-
+    height: 20%;
     background-size: cover;
-    background-position: top;
     position: relative;
-
-    clip-path: polygon(0 3px, 100% 0, 100% 75vh, 0 100%);
+    background: -o-linear-gradient(to bottom right,
+    rgba(76, 216, 25, 0.3),
+    rgba(30, 198, 217, 0.8));
+    background: linear-gradient(to bottom right,
+    rgba(76, 216, 25, 0.3),
+    rgba(30, 198, 217, 0.8));
+    clip-path: polygon(0 3px, 100% 0, 100% 50vh, 0 100%);
 }
 
 .brand-box {
